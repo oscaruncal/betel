@@ -1,0 +1,2376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="color-scheme" content="light"/>
+  <title>Betel | Oscar Uncal</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── TEMA CLARO / FE ── */
+    :root {
+      --bg:        #FAF8F4;
+      --bg2:       #F2EDE3;
+      --bg3:       #E8E0D0;
+      --border:    rgba(0,0,0,0.09);
+      --gold:      #7B5EA7;
+      --gold2:     #634A8A;
+      --text:      #1E1A2E;
+      --muted:     rgba(30,26,46,0.55);
+      --muted2:    rgba(30,26,46,0.3);
+      --accent-subtle: rgba(123,94,167,0.1);
+      --nav-bg:    rgba(250,248,244,0.97);
+      --footer-bg: #1E1A2E;
+      --footer-text: #F2EDE3;
+      --footer-muted: rgba(242,237,227,0.6);
+      --footer-border: rgba(255,255,255,0.08);
+      --font-heading: 'Libre Baskerville', serif;
+      --font-body:    'Karla', sans-serif;
+
+      --duration-fast:   150ms;
+      --duration-normal: 250ms;
+      --duration-slow:   400ms;
+      --ease-standard:   cubic-bezier(0.4, 0, 0.2, 1);
+      --ease-spring:     cubic-bezier(0.34, 1.56, 0.64, 1);
+
+      --font-size-xs:  clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+      --font-size-sm:  clamp(0.875rem, 0.8rem  + 0.375vw, 1rem);
+      --font-size-base:clamp(1rem,     0.9rem  + 0.5vw,   1.25rem);
+      --font-size-lg:  clamp(1.25rem,  1.1rem  + 0.75vw,  1.75rem);
+      --font-size-xl:  clamp(1.75rem,  1.5rem  + 1.25vw,  2.5rem);
+      --font-size-2xl: clamp(2.5rem,   2rem    + 2.5vw,   4rem);
+      --font-size-3xl: clamp(3.5rem,   2.5rem  + 5vw,     6rem);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    a, button { touch-action: manipulation; }
+
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      z-index: 9999;
+      background: var(--gold);
+      color: #0F0E0D;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: 0 0 6px 6px;
+      text-decoration: none;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 5%;
+      min-height: 64px;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    .nav-logo span { color: var(--text); font-weight: 400; font-style: italic; }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 2.5rem;
+      flex-shrink: 0;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+      transition: color var(--duration-normal) var(--ease-standard);
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      white-space: nowrap;
+    }
+
+    .nav-links li {
+      min-width: max-content;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ── LANGUAGE SWITCHER ── */
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-left: 1.5rem;
+      padding-left: 1.5rem;
+      border-left: 1px solid var(--border);
+    }
+
+    .lang-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.3rem;
+      line-height: 1;
+      padding: 4px;
+      border-radius: 4px;
+      opacity: 0.35;
+      transition: opacity var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
+    }
+
+    .lang-btn.active { opacity: 1; transform: scale(1.15); }
+    .lang-btn:hover { opacity: 0.8; }
+
+    /* ── ÍCONOS SOCIALES NAV ── */
+    .nav-social-icons {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-left: 1rem;
+      border-left: 1px solid var(--border);
+      margin-left: 0.5rem;
+    }
+
+    .nav-social-icons a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      transition: color var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
+      min-height: auto;
+      letter-spacing: 0;
+      text-transform: none;
+      font-size: 0;
+    }
+
+    .nav-social-icons a:hover { color: var(--gold); transform: translateY(-2px); }
+
+    /* ── LINKS DROPDOWN ── */
+    .nav-links-dropdown {
+      position: relative;
+    }
+
+    .nav-links-dropdown > a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .nav-links-dropdown > a::after {
+      content: '▾';
+      font-size: 0.65rem;
+      color: var(--muted);
+      transition: transform var(--duration-fast) var(--ease-standard);
+    }
+
+    .nav-links-dropdown:hover > a::after,
+    .nav-links-dropdown:focus-within > a::after {
+      transform: rotate(180deg);
+      color: var(--gold);
+    }
+
+    .nav-dropdown-panel {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      min-width: 240px;
+      background: var(--nav-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+      padding: 0.75rem 0;
+      z-index: 200;
+      /* puente invisible para no perder el hover */
+      padding-top: 1rem;
+      margin-top: -0.5rem;
+    }
+
+    .nav-links-dropdown:hover .nav-dropdown-panel,
+    .nav-links-dropdown:focus-within .nav-dropdown-panel {
+      display: block;
+    }
+
+    .nav-dropdown-panel a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 1.2rem;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: none;
+      transition: background var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+      min-height: auto;
+    }
+
+    .dropdown-label { display: flex; flex-direction: column; gap: 0.1rem; flex: 1; }
+    .dropdown-label-sub { display: block; font-size: 0.68rem; color: var(--muted); font-weight: 400; }
+    .nav-dropdown-panel a:hover .dropdown-label-sub { color: var(--gold); opacity: 0.7; }
+    .dropdown-soon { color: var(--muted2) !important; font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase; }
+
+    .nav-dropdown-panel a:hover { background: var(--bg2); color: var(--gold); }
+
+    .nav-dropdown-panel .dropdown-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-dropdown-panel .dropdown-soon {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted2);
+      margin-left: auto;
+    }
+
+    .nav-dropdown-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0.4rem 0;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+
+    :focus:not(:focus-visible) { outline: none; }
+
+    /* ── HERO ── */
+    #inicio {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-img {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(10,8,20,0.82) 0%, rgba(10,8,20,0.75) 50%, rgba(10,8,20,0.95) 100%),
+        url('https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=1600&q=80') center/cover no-repeat;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 8rem 5% 5rem;
+    }
+
+    .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .label::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .hero-content { color: #F5F0E8; }
+    .hero-content .label { color: #E8C97A; }
+    .hero-content .label::before { background: #E8C97A; }
+    .hero-content p { color: rgba(245,240,232,0.8); }
+
+    .hero-content h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+      color: #FFFFFF;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.6);
+      text-wrap: balance;
+    }
+
+    .hero-content h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-content p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+    }
+
+    .verse-highlight {
+      display: inline-block;
+      border-left: 3px solid #E8C97A;
+      padding: 1rem 1.5rem;
+      background: rgba(0,0,0,0.35);
+      font-family: var(--font-heading);
+      font-style: italic;
+      font-size: 1rem;
+      color: #FFFFFF;
+      max-width: 500px;
+      line-height: 1.6;
+    }
+
+    .verse-ref {
+      display: block;
+      font-family: var(--font-body);
+      font-style: normal;
+      font-size: 0.75rem;
+      color: var(--gold);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 0.6rem;
+    }
+
+    /* ── SECCIÓN GENÉRICA ── */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 7rem 5%;
+    }
+
+    .section-header {
+      margin-bottom: 4rem;
+    }
+
+    .section-header h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-top: 0.5rem;
+      text-wrap: balance;
+    }
+
+    .section-header h2 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .section-header p {
+      color: var(--muted);
+      max-width: 540px;
+      margin-top: 1rem;
+    }
+
+    /* ── VIDEOS GRID ── */
+    #videos { background: var(--bg2); }
+
+    .videos-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 7rem 5%;
+    }
+
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    /* Primer video de la primera página: ocupa 2 columnas */
+    .video-card--featured {
+      grid-column: span 2;
+    }
+
+    .video-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: border-color var(--duration-normal) var(--ease-standard), transform var(--duration-normal) var(--ease-standard);
+    }
+
+    .video-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+    }
+
+    .video-embed {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      background: #000;
+    }
+
+    .video-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .video-body {
+      padding: 1.2rem 1.4rem 1.5rem;
+    }
+
+    .video-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .video-title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 0.4rem;
+    }
+
+    .video-card--featured .video-title {
+      font-size: 1.2rem;
+    }
+
+    .video-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── SECCIONES CANAL / RECIENTES / VISTOS ── */
+    #recientes { background: var(--bg); }
+    #vistos { background: var(--bg2); }
+    .videos-wrap--canal,
+    .videos-wrap--vistos { border-top: 1px solid var(--border); }
+
+    /* Título como link */
+    .video-title-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+    .video-title-link:hover {
+      color: var(--gold);
+      text-decoration: underline;
+    }
+
+    /* Meta línea (duración · fecha · vistas) */
+    .video-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-top: 0.5rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .vm-sep { opacity: 0.4; }
+    .vm-duration { color: var(--gold); }
+
+    /* Badge Nuevo */
+    .yt-badge-new {
+      position: absolute;
+      top: 0.6rem;
+      left: 0.6rem;
+      background: var(--gold);
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border-radius: 2px;
+    }
+
+    /* Contador de videos en header */
+    .yt-total {
+      display: inline-block;
+      margin-top: 0.6rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.2rem 0.8rem;
+    }
+
+    /* Botón Ver en YouTube */
+    .yt-channel-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      padding: 0.7rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .yt-channel-btn:hover {
+      border-color: #f00;
+      color: #f00;
+    }
+
+    /* ── VIDEOS DINÁMICOS ── */
+    .yt-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 3rem 0;
+      color: var(--muted);
+    }
+
+    .yt-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: yt-spin 0.8s linear infinite;
+    }
+
+    @keyframes yt-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .yt-error {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+    }
+
+    .yt-error a {
+      color: var(--gold);
+      text-decoration: underline;
+    }
+
+    /* Thumbnail clickable — abre en YouTube */
+    .video-thumb-wrap {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      background: #000;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .video-thumb-wrap img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .video-card:hover .video-thumb-wrap img {
+      transform: scale(1.04);
+    }
+
+    .yt-play-btn {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.25);
+      transition: background 0.2s;
+    }
+
+    .video-card:hover .yt-play-btn {
+      background: rgba(0,0,0,0.45);
+    }
+
+    .yt-play-btn svg {
+      width: 56px;
+      height: 56px;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+    }
+
+    /* Paginación */
+    .yt-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .yt-prev, .yt-next {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.6rem 1.4rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .yt-prev:hover:not(:disabled), .yt-next:hover:not(:disabled) {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .yt-prev:disabled, .yt-next:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .yt-page-info {
+      font-size: 0.8rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ── VERSÍCULO DEL DÍA ── */
+    #versiculo {
+      background: var(--bg3);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .verse-banner {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 6rem 5%;
+      text-align: center;
+    }
+
+    .verse-banner blockquote {
+      font-family: var(--font-heading);
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-style: italic;
+      line-height: 1.5;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+
+    .verse-banner blockquote::before { content: '\201C'; color: var(--gold); }
+    .verse-banner blockquote::after  { content: '\201D'; color: var(--gold); }
+
+    .verse-banner cite {
+      font-size: 0.8rem;
+      font-style: normal;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    /* ── TEMAS / CATEGORÍAS ── */
+    /* ── ACORDEÓN DE TEMAS ── */
+    .topics-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .topic-item {
+      background: var(--bg2);
+    }
+
+    .topic-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.6rem 2rem;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text);
+      font-family: var(--font-body);
+      text-align: left;
+      transition: background var(--duration-fast) var(--ease-standard);
+      gap: 1rem;
+    }
+
+    .topic-trigger:hover { background: var(--bg3); }
+
+    .topic-trigger-left {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .topic-icon { font-size: 1.5rem; line-height: 1; }
+
+    .topic-name {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .topic-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .topic-arrow {
+      color: var(--gold);
+      font-size: 1.2rem;
+      transition: transform var(--duration-normal) var(--ease-standard);
+      flex-shrink: 0;
+    }
+
+    .topic-item.open .topic-arrow { transform: rotate(180deg); }
+
+    .topic-body-outer {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition:
+        grid-template-rows 0.4s var(--ease-standard);
+    }
+
+    .topic-item.open .topic-body-outer {
+      grid-template-rows: 1fr;
+    }
+
+    .topic-body {
+      overflow: hidden;
+      padding: 0 2rem 0 4.7rem;
+      border-top: 1px solid var(--border);
+      opacity: 0;
+      transform: translateY(-6px);
+      transition:
+        opacity 0.3s var(--ease-standard),
+        transform 0.3s var(--ease-standard),
+        padding 0.4s var(--ease-standard);
+    }
+
+    .topic-item.open .topic-body {
+      opacity: 1;
+      transform: translateY(0);
+      padding: 1.8rem 2rem 2rem 4.7rem;
+    }
+
+
+    /* Intro text */
+    .topic-body .topic-intro {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.85;
+      margin-bottom: 1.8rem;
+      max-width: 680px;
+    }
+
+    /* Subtítulo de sección interna */
+    .topic-body .topic-subtitle {
+      font-family: var(--font-heading);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .topic-body .topic-subtitle::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Lista de puntos clave */
+    .topic-body ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .topic-body li {
+      display: flex;
+      gap: 0.9rem;
+      align-items: flex-start;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .topic-body li::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      margin-top: 0.55rem;
+      flex-shrink: 0;
+    }
+
+    .topic-body li strong {
+      color: var(--text);
+    }
+
+    /* Versículo destacado */
+    .topic-verse {
+      display: block;
+      border-left: 3px solid var(--gold);
+      padding: 1rem 1.4rem;
+      background: var(--accent-subtle);
+      font-family: var(--font-heading);
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.7;
+      margin-top: 0.5rem;
+      max-width: 600px;
+    }
+
+    .topic-verse cite {
+      display: block;
+      font-style: normal;
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      margin-top: 0.6rem;
+    }
+
+    /* ── NEWSLETTER / CTA ── */
+    /* ── LINKS SECTION ── */
+    #links { background: var(--bg); }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .link-card {
+      background: var(--bg2);
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 1.8rem 2rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: background var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+    }
+
+    .link-card:hover { background: var(--bg3); color: var(--gold); }
+
+    .link-card.disabled {
+      opacity: 0.45;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .link-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .link-card-info { display: flex; flex-direction: column; gap: 0.2rem; }
+
+    .link-card-name {
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .link-card-desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .link-card-soon {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted2);
+      margin-top: 0.1rem;
+    }
+
+    /* ── CTA ── */
+    .cta-band {
+      background: linear-gradient(135deg, var(--bg3) 0%, rgba(181,152,106,0.08) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cta-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 6rem 5%;
+      text-align: center;
+    }
+
+    .cta-inner h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      margin-bottom: 1rem;
+      line-height: 1.25;
+    }
+
+    .cta-inner h2 em { color: var(--gold); font-style: italic; }
+
+    .cta-inner p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .cta-form {
+      display: flex;
+      gap: 0.75rem;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .cta-form input {
+      flex: 1;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.85rem 1.2rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      border-radius: 2px;
+      outline: 2px solid transparent;
+      transition: border-color var(--duration-fast) var(--ease-standard), outline-color var(--duration-fast) var(--ease-standard);
+    }
+
+    .cta-form input:focus { border-color: var(--gold); }
+    .cta-form input:focus-visible { outline-color: var(--gold); }
+    .cta-form input::placeholder { color: var(--muted2); }
+
+    .btn-gold {
+      background: var(--gold);
+      color: #0F0E0D;
+      border: none;
+      padding: 0.85rem 1.8rem;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-gold:hover { background: var(--gold2); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--footer-bg);
+      border-top: 1px solid var(--footer-border);
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 5% 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .footer-brand {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-brand span { color: var(--footer-text); font-style: italic; font-weight: 400; }
+
+    .footer-tagline {
+      color: var(--footer-muted);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      max-width: 300px;
+    }
+
+    .footer-col h5 {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .footer-col a {
+      color: var(--footer-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover { color: var(--gold); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--footer-border);
+      padding: 1.5rem 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--footer-muted);
+    }
+
+    /* ── SCROLL FADE ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .links-grid { grid-template-columns: repeat(2, 1fr); }
+      .videos-grid { grid-template-columns: 1fr; }
+      .video-card:first-child { grid-column: span 1; }
+      .topics-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      /* Paddings de secciones reducidos */
+      .section { padding: 4rem 5%; }
+      .videos-wrap { padding: 4rem 5%; }
+      .verse-banner { padding: 3.5rem 5%; }
+      .cta-inner { padding: 4rem 5%; }
+      .footer-inner { padding: 3rem 5% 1.5rem; }
+
+      /* Hero menos espacio arriba */
+      .hero-content { padding: 6rem 5% 3.5rem; }
+
+      /* Videos en tablet: 1 columna */
+      .videos-grid { grid-template-columns: 1fr; }
+      .video-card:first-child { grid-column: span 1; }
+    }
+
+    @media (max-width: 640px) {
+      .links-grid { grid-template-columns: 1fr; }
+      .videos-grid { grid-template-columns: 1fr; }
+      .video-card:first-child { grid-column: span 1; }
+      .topics-grid { grid-template-columns: 1fr 1fr; }
+      .cta-form { flex-direction: column; }
+      .footer-inner { grid-template-columns: 1fr; }
+
+      /* Paddings mínimos en mobile */
+      .section { padding: 3rem 5%; }
+      .videos-wrap { padding: 3rem 5%; }
+      .verse-banner { padding: 2.5rem 5%; }
+      .cta-inner { padding: 3rem 5%; }
+      .hero-content { padding: 5rem 5% 3rem; }
+      .topic-body-outer { padding: 0; }
+      .topic-trigger { padding: 1.2rem 1rem; }
+      .topic-item.open .topic-body { padding: 1.2rem 1rem 1.5rem 1rem; }
+    }
+
+    @media (max-width: 400px) {
+      /* Pantallas muy pequeñas */
+      .topics-grid { grid-template-columns: 1fr; }
+      .links-grid { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr; }
+    }
+
+    /* ── HAMBURGER MOBILE ── */
+    .nav-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+      padding: 8px;
+      line-height: 1;
+    }
+
+    .nav-hamburger svg { width: 26px; height: 26px; display: block; }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: var(--nav-bg);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .mobile-menu.open { display: flex; }
+
+    .mobile-menu-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .mobile-menu-close {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      padding: 10px;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    .mobile-menu-close:hover { color: var(--text); }
+    .mobile-menu-close svg { width: 24px; height: 24px; display: block; }
+
+    .mobile-nav {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .mobile-nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      transition: color 0.2s, background 0.2s;
+      padding: 1.3rem 2rem;
+      width: 100%;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-nav a:first-child { border-top: 1px solid var(--border); }
+    .mobile-nav a:hover { color: var(--gold); background: var(--bg2); }
+
+    .mobile-lang {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+      .lang-switcher { border-left: none; padding-left: 0; margin-left: 0; }
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in { opacity: 1 !important; transform: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#inicio" class="skip-link" id="t-skip-link">Ir al contenido</a>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#inicio" class="nav-logo" translate="no">Betel<span> · Oscar Uncal</span></a>
+      <ul class="nav-links">
+        <li><a href="#versiculo" id="t-nav-word">La Palabra</a></li>
+        <li><a href="#videos" id="t-nav-sermons">Predicaciones</a></li>
+        <li><a href="#recientes" id="t-nav-recientes">Recientes</a></li>
+        <li><a href="#vistos" id="t-nav-vistos">Más vistos</a></li>
+        <li><a href="#temas" id="t-nav-teachings">Enseñanzas</a></li>
+        <li class="nav-links-dropdown">
+          <a href="#links" id="t-nav-links">Links</a>
+          <div class="nav-dropdown-panel">
+            <a href="https://www.youtube.com/@beteldeoscaruncal2876" target="_blank" rel="noopener">
+              <span class="dropdown-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="#FF0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"/></svg></span>
+              <span class="dropdown-label"><span id="t-drop-dev">Devocionales (español)</span><span class="dropdown-label-sub" id="t-drop-dev-sub">Mensajes cortos diarios</span></span>
+            </a>
+            <a href="https://youtube.com/@devocionaleseningles" target="_blank" rel="noopener">
+              <span class="dropdown-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="#FF0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"/></svg></span>
+              <span class="dropdown-label"><span id="t-drop-yt-en">Devocionales (inglés)</span><span class="dropdown-label-sub" id="t-drop-yt-en-sub">Short daily messages in English</span></span>
+            </a>
+            <div class="nav-dropdown-divider"></div>
+            <a href="https://open.spotify.com/show/523tT6ys5hpIveGB9fTjJs" target="_blank" rel="noopener">
+              <span class="dropdown-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg></span>
+              <span class="dropdown-label"><span id="t-drop-spotify">Spotify</span><span class="dropdown-label-sub" id="t-drop-spotify-sub">Escuchá los mensajes</span></span>
+            </a>
+            <div class="nav-dropdown-divider"></div>
+            <a style="opacity:0.45;pointer-events:none">
+              <span class="dropdown-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="#E1306C"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></span>
+              <span class="dropdown-label"><span id="t-drop-ig">Instagram</span><span class="dropdown-label-sub dropdown-soon" id="t-drop-ig-soon">Próximamente</span></span>
+            </a>
+            <a style="opacity:0.45;pointer-events:none">
+              <span class="dropdown-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg></span>
+              <span class="dropdown-label"><span id="t-drop-tt">TikTok</span><span class="dropdown-label-sub dropdown-soon" id="t-drop-tt-soon">Próximamente</span></span>
+            </a>
+            <a style="opacity:0.45;pointer-events:none">
+              <span class="dropdown-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="#1877F2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.887v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg></span>
+              <span class="dropdown-label"><span id="t-drop-fb">Facebook</span><span class="dropdown-label-sub dropdown-soon" id="t-drop-fb-soon">Próximamente</span></span>
+            </a>
+          </div>
+        </li>
+      </ul>
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('es')" id="btn-es" aria-label="Español" title="Español">🇦🇷</button>
+        <button class="lang-btn" onclick="setLang('en')" id="btn-en" aria-label="English" title="English">🇺🇸</button>
+      </div>
+      <button class="nav-hamburger" onclick="openMobileMenu()" aria-label="Abrir menú" aria-expanded="false" id="nav-hamburger">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true" onclick="handleMobileOverlay(event)">
+    <div class="mobile-menu-inner">
+      <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Cerrar menú">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <nav class="mobile-nav">
+        <a href="#versiculo" onclick="closeMobileMenu()" id="t-mnav-word">La Palabra</a>
+        <a href="#videos" onclick="closeMobileMenu()" id="t-mnav-sermons">Predicaciones</a>
+        <a href="#recientes" onclick="closeMobileMenu()" id="t-mnav-recientes">Recientes</a>
+        <a href="#vistos" onclick="closeMobileMenu()" id="t-mnav-vistos">Más vistos</a>
+        <a href="#temas" onclick="closeMobileMenu()" id="t-mnav-teachings">Enseñanzas</a>
+        <a href="#links" onclick="closeMobileMenu()" id="t-mnav-links">Links</a>
+      </nav>
+      <div class="mobile-lang">
+        <button class="lang-btn active" onclick="setLang('es')" id="btn-es-m" aria-label="Español">🇦🇷</button>
+        <button class="lang-btn" onclick="setLang('en')" id="btn-en-m" aria-label="English">🇺🇸</button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+
+  <!-- HERO -->
+  <section id="inicio">
+    <div class="hero-bg-img" role="img" aria-label="Luz del amanecer sobre el horizonte"></div>
+    <div class="hero-content">
+      <div class="label" id="t-hero-label">Bienvenido</div>
+      <h1 id="t-hero-h1">La Palabra de Dios<br/>para tu <em>vida de hoy</em></h1>
+      <p id="t-hero-p">Predicaciones, alabanzas y reflexiones bíblicas para fortalecer tu fe y acercarte a Dios cada día.</p>
+      <blockquote class="verse-highlight">
+        <span id="t-hero-verse">"Lámpara es a mis pies tu palabra, y lumbrera a mi camino."</span>
+        <cite class="verse-ref" id="t-hero-verse-ref">Salmos 119:105</cite>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- VERSÍCULO DEL DÍA -->
+  <div id="versiculo">
+    <div class="verse-banner">
+      <div class="label" style="justify-content:center" id="t-verse-label">Versículo del día</div>
+      <blockquote id="t-verse-text">
+        Sabiendo que la prueba de vuestra fe produce paciencia. Mas tenga la paciencia su obra completa, para que seáis perfectos y cabales.
+      </blockquote>
+      <cite id="t-verse-ref">Santiago 1:3-4</cite>
+    </div>
+  </div>
+
+  <!-- VIDEOS DESTACADOS (top 4 más vistos, dinámico) -->
+  <section id="videos">
+    <div class="videos-wrap">
+      <div class="section-header fade-in">
+        <div class="label" id="t-vid-label">Predicaciones</div>
+        <h2 id="t-vid-h2">Los más vistos del<br/><em>canal</em></h2>
+        <p id="t-vid-p">Los 4 mensajes que más llegaron al corazón de la gente.</p>
+      </div>
+      <div id="yt-top-loading" class="yt-loading">
+        <div class="yt-spinner"></div>
+      </div>
+      <div class="videos-grid" id="yt-top-grid"></div>
+    </div>
+  </section>
+
+  <!-- MÁS RECIENTES -->
+  <section id="recientes">
+    <div class="videos-wrap videos-wrap--canal">
+      <div class="section-header fade-in">
+        <div class="label" id="t-rec-label">Canal de YouTube</div>
+        <h2 id="t-rec-h2">Los más<br/><em>recientes</em></h2>
+        <p id="t-rec-p">Los últimos mensajes subidos al canal de Oscar Uncal.</p>
+        <span class="yt-total" id="yt-rec-total" style="display:none"></span>
+      </div>
+      <div id="yt-rec-loading" class="yt-loading">
+        <div class="yt-spinner"></div>
+        <p>Cargando videos...</p>
+      </div>
+      <div id="yt-rec-error" class="yt-error" style="display:none">
+        <p>No se pudieron cargar los videos. <a href="https://www.youtube.com/@beteldeoscaruncal2876" target="_blank" rel="noopener">Ver canal →</a></p>
+      </div>
+      <div class="videos-grid" id="yt-rec-grid"></div>
+      <div class="yt-pagination" id="yt-rec-pag" style="display:none">
+        <button class="yt-prev" id="yt-rec-prev" onclick="ytPage('rec',-1)" disabled>← <span>Anterior</span></button>
+        <span class="yt-page-info" id="yt-rec-info"></span>
+        <button class="yt-next" id="yt-rec-next" onclick="ytPage('rec',1)"><span>Siguiente</span> →</button>
+      </div>
+      <div style="text-align:center">
+        <a id="yt-rec-channel-btn" href="https://www.youtube.com/@beteldeoscaruncal2876" target="_blank" rel="noopener" class="yt-channel-btn">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="#FF0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"/></svg>
+          <span id="t-yt-rec-btn">Ver canal en YouTube</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MÁS VISTOS -->
+  <section id="vistos">
+    <div class="videos-wrap videos-wrap--vistos">
+      <div class="section-header fade-in">
+        <div class="label" id="t-vis-label">Lo más visto</div>
+        <h2 id="t-vis-h2">Los más<br/><em>vistos</em></h2>
+        <p id="t-vis-p">Los mensajes que más llegaron al corazón de la gente.</p>
+        <span class="yt-total" id="yt-vis-total" style="display:none"></span>
+      </div>
+      <div id="yt-vis-loading" class="yt-loading">
+        <div class="yt-spinner"></div>
+        <p>Cargando videos...</p>
+      </div>
+      <div id="yt-vis-error" class="yt-error" style="display:none">
+        <p>No se pudieron cargar los videos. <a href="https://www.youtube.com/@beteldeoscaruncal2876" target="_blank" rel="noopener">Ver canal →</a></p>
+      </div>
+      <div class="videos-grid" id="yt-vis-grid"></div>
+      <div class="yt-pagination" id="yt-vis-pag" style="display:none">
+        <button class="yt-prev" id="yt-vis-prev" onclick="ytPage('vis',-1)" disabled>← <span>Anterior</span></button>
+        <span class="yt-page-info" id="yt-vis-info"></span>
+        <button class="yt-next" id="yt-vis-next" onclick="ytPage('vis',1)"><span>Siguiente</span> →</button>
+      </div>
+      <div style="text-align:center">
+        <a id="yt-vis-channel-btn" href="https://www.youtube.com/@beteldeoscaruncal2876" target="_blank" rel="noopener" class="yt-channel-btn">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="#FF0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"/></svg>
+          <span id="t-yt-vis-btn">Ver canal en YouTube</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEMAS -->
+  <section id="temas">
+    <div class="section">
+      <div class="section-header fade-in">
+        <div class="label" id="t-teach-label">La Palabra</div>
+        <h2 id="t-teach-h2">Fundamentos de la <em>fe cristiana</em></h2>
+        <p id="t-teach-p">Hacé click en cada tema para leer la enseñanza bíblica completa.</p>
+      </div>
+      <div class="topics-list fade-in">
+
+        <!-- ORACIÓN -->
+        <div class="topic-item">
+          <button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false">
+            <div class="topic-trigger-left">
+              <div class="topic-icon">🙏</div>
+              <div>
+                <div class="topic-name" id="t-t1-name">Cómo acercarse a Dios en oración</div>
+                <div class="topic-sub" id="t-t1-sub">La comunicación sincera con el Padre</div>
+              </div>
+            </div>
+            <span class="topic-arrow">▼</span>
+          </button>
+          <div class="topic-body-outer"><div class="topic-body">
+            <p class="topic-intro" id="t-t1-intro">Acercarse a Dios en oración es un acto de comunicación sincera y personal. Implica abrir el corazón con honestidad, orar con fe en cualquier lugar y momento, y buscar la voluntad divina sobre la nuestra propia. La clave es reconocer quién es Dios, agradecerle, pedirle perdón y su guía — siempre en el Nombre de Jesús.</p>
+            <div class="topic-subtitle" id="t-t1-subtitle">Esquema de la Oración</div>
+            <ul id="t-t1-list">
+              <li>1ro. Glorificamos al Padre</li>
+              <li>2do. Pedimos por su voluntad</li>
+              <li>3ro. Hacemos nuestras peticiones</li>
+              <li>4to. Pedimos perdón por nuestros pecados</li>
+            </ul>
+            <blockquote class="topic-verse">
+              <span id="t-t1-verse">"Lámpara es a mis pies tu palabra, y lumbrera a mi camino."</span>
+              <cite id="t-t1-verse-ref">Salmos 119:105</cite>
+            </blockquote>
+          </div></div>
+        </div>
+
+        <!-- SALVACIÓN -->
+        <div class="topic-item">
+          <button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false">
+            <div class="topic-trigger-left">
+              <div class="topic-icon">✝️</div>
+              <div>
+                <div class="topic-name" id="t-t2-name">Plan de salvación</div>
+                <div class="topic-sub" id="t-t2-sub">El regalo de la gracia de Dios</div>
+              </div>
+            </div>
+            <span class="topic-arrow">▼</span>
+          </button>
+          <div class="topic-body-outer"><div class="topic-body">
+            <p class="topic-intro" id="t-t2-intro">El plan de salvación es un regalo de Dios a la humanidad llamado gracia. Jesucristo se hizo hombre y murió en la cruz para rescatarnos del pecado y la muerte eterna. La gracia se recibe no por obras, sino mediante la fe en Jesús como Salvador, arrepintiéndose y confesándolo como Señor.</p>
+            <div class="topic-subtitle" id="t-t2-subtitle">Puntos clave</div>
+            <ul id="t-t2-list">
+              <li><strong>La Necesidad (el pecado):</strong> Todos han pecado y están destituidos de la gloria de Dios (Romanos 3:23, 6:23).</li>
+              <li><strong>La Provisión (Jesucristo):</strong> Dios, por amor, envió a su Hijo Jesús para morir en la cruz (Juan 3:16).</li>
+              <li><strong>El Medio (fe y gracia):</strong> La salvación es un regalo inmerecido que se recibe únicamente a través de la fe.</li>
+              <li><strong>La Respuesta (arrepentimiento):</strong> Reconocer el pecado, arrepentirse y aceptar a Jesús como Salvador (Hechos 16:31).</li>
+            </ul>
+            <blockquote class="topic-verse">
+              <span id="t-t2-verse">"Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna."</span>
+              <cite id="t-t2-verse-ref">Juan 3:16</cite>
+            </blockquote>
+          </div></div>
+        </div>
+
+        <!-- FE Y PRUEBAS -->
+        <div class="topic-item">
+          <button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false">
+            <div class="topic-trigger-left">
+              <div class="topic-icon">💪</div>
+              <div>
+                <div class="topic-name" id="t-t3-name">La fe y las pruebas</div>
+                <div class="topic-sub" id="t-t3-sub">Fortaleza y propósito en los tiempos difíciles</div>
+              </div>
+            </div>
+            <span class="topic-arrow">▼</span>
+          </button>
+          <div class="topic-body-outer"><div class="topic-body">
+            <p class="topic-intro" id="t-t3-intro">Las pruebas no son para destrucción, sino para refinar y fortalecer la fe. Dios permite estas dificultades con propósitos divinos, prometiendo estar presente y asegurar que la prueba no exceda la capacidad del creyente. La fe bíblica se prueba para demostrar que es real y para fortalecer el carácter espiritual.</p>
+            <div class="topic-subtitle" id="t-t3-subtitle">Puntos clave</div>
+            <ul id="t-t3-list">
+              <li><strong>Propósito de las pruebas:</strong> Purificar la fe, más valiosa que el oro, y desarrollar un carácter semejante al de Cristo.</li>
+              <li><strong>Actitud ante la prueba:</strong> Considerarlas con "sumo gozo", ya que producen paciencia y madurez (Santiago 1:2-4).</li>
+              <li><strong>Perseverancia y recompensa:</strong> El que persevera bajo la prueba recibirá la "corona de vida".</li>
+              <li><strong>El respaldo divino:</strong> Dios nunca abandona al creyente; está más cerca en los momentos difíciles.</li>
+            </ul>
+            <blockquote class="topic-verse">
+              <span id="t-t3-verse">"Nos gloriamos en las tribulaciones, sabiendo que la tribulación produce paciencia; y la paciencia, prueba; y la prueba, esperanza."</span>
+              <cite id="t-t3-verse-ref">Romanos 5:3-4</cite>
+            </blockquote>
+          </div></div>
+        </div>
+
+        <!-- AMOR Y FAMILIA -->
+        <div class="topic-item">
+          <button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false">
+            <div class="topic-trigger-left">
+              <div class="topic-icon">❤️</div>
+              <div>
+                <div class="topic-name" id="t-t4-name">El amor y la familia</div>
+                <div class="topic-sub" id="t-t4-sub">Instituciones divinas para reflejar el amor de Dios</div>
+              </div>
+            </div>
+            <span class="topic-arrow">▼</span>
+          </button>
+          <div class="topic-body-outer"><div class="topic-body">
+            <p class="topic-intro" id="t-t4-intro">El amor y la familia son instituciones divinas diseñadas para reflejar el amor incondicional de Dios. El amor bíblico —el ágape— es paciente, bondadoso y desinteresado. La familia es el refugio más significativo después de la relación con Dios, y su base es la unidad, el respeto y la fidelidad.</p>
+            <div class="topic-subtitle" id="t-t4-subtitle">Fundamentos bíblicos</div>
+            <ul id="t-t4-list">
+              <li><strong>Fundamento divino:</strong> La familia fue creada por Dios (Génesis 2:24), el vínculo más significativo después de la relación con Él.</li>
+              <li><strong>El amor ágape:</strong> Paciente, bondadoso, no envidioso, no orgulloso, no egoísta ni rencoroso (1 Corintios 13:4-5).</li>
+              <li><strong>Matrimonio:</strong> Dos se convierten en "una sola carne", una unión que Dios ha unido (Marcos 10:6-9).</li>
+              <li><strong>Hijos:</strong> Llamados a honrar, obedecer y respetar a sus padres (Efesios 6:1).</li>
+              <li><strong>Amor fraternal:</strong> Amarse unos a otros respetándose y honrándose mutuamente (Romanos 12:10).</li>
+            </ul>
+            <blockquote class="topic-verse">
+              <span id="t-t4-verse">"El amor es sufrido, es benigno; el amor no tiene envidia, el amor no es jactancioso, no se envanece; no hace nada indebido, no busca lo suyo."</span>
+              <cite id="t-t4-verse-ref">1 Corintios 13:4-5</cite>
+            </blockquote>
+          </div></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- LINKS -->
+  <section id="links">
+    <div class="section">
+      <div class="section-header fade-in">
+        <div class="label" id="t-links-label">Comunidad</div>
+        <h2 id="t-links-h2">Seguinos en todas las <em>plataformas</em></h2>
+        <p id="t-links-p">Encontrá el contenido de Oscar Uncal donde sea que estés.</p>
+      </div>
+      <div class="links-grid fade-in">
+
+        <a href="https://www.youtube.com/@beteldeoscaruncal2876" target="_blank" rel="noopener" class="link-card">
+          <div class="link-card-icon" style="background:#FF000015">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="#FF0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"/></svg>
+          </div>
+          <div class="link-card-info">
+            <div class="link-card-name" id="t-lc1-name">Devocionales (español)</div>
+            <div class="link-card-desc" id="t-lc1-desc">Mensajes cortos diarios</div>
+          </div>
+        </a>
+
+        <a href="https://youtube.com/@devocionaleseningles" target="_blank" rel="noopener" class="link-card">
+          <div class="link-card-icon" style="background:#FF000015">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="#FF0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"/></svg>
+          </div>
+          <div class="link-card-info">
+            <div class="link-card-name" id="t-lc3-name">Devocionales (inglés)</div>
+            <div class="link-card-desc" id="t-lc3-desc">Short daily messages in English</div>
+          </div>
+        </a>
+
+        <a href="https://open.spotify.com/show/523tT6ys5hpIveGB9fTjJs" target="_blank" rel="noopener" class="link-card">
+          <div class="link-card-icon" style="background:#1DB95415">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+          </div>
+          <div class="link-card-info">
+            <div class="link-card-name">Spotify</div>
+            <div class="link-card-desc" id="t-lc4-desc">Escuchá los mensajes</div>
+          </div>
+        </a>
+
+        <a class="link-card disabled">
+          <div class="link-card-icon" style="background:#E1306C15">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="#E1306C"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+          </div>
+          <div class="link-card-info">
+            <div class="link-card-name">Instagram</div>
+            <div class="link-card-soon" id="t-ig-soon">Próximamente</div>
+          </div>
+        </a>
+
+        <a class="link-card disabled">
+          <div class="link-card-icon" style="background:rgba(0,0,0,0.06)">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+          </div>
+          <div class="link-card-info">
+            <div class="link-card-name">TikTok</div>
+            <div class="link-card-soon" id="t-tt-soon">Próximamente</div>
+          </div>
+        </a>
+
+        <a class="link-card disabled">
+          <div class="link-card-icon" style="background:#1877F215">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="#1877F2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.887v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+          </div>
+          <div class="link-card-info">
+            <div class="link-card-name">Facebook</div>
+            <div class="link-card-soon" id="t-fb-soon">Próximamente</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA NEWSLETTER -->
+  <div class="cta-band">
+    <div class="cta-inner fade-in">
+      <div class="label" style="justify-content:center;margin-bottom:1rem" id="t-cta-label">Comunidad</div>
+      <h2 id="t-cta-h2">Te avisamos cuando hay<br/>un nuevo <em>devocional</em></h2>
+      <p id="t-cta-p">Dejá tu email y te notificamos cada vez que Oscar sube un devocional nuevo.</p>
+      <form class="cta-form" onsubmit="handleSub(event)">
+        <label for="sub-email" class="visually-hidden" id="t-cta-input-label">Tu email</label>
+        <input id="sub-email" type="email" placeholder="tu@email.com" autocomplete="email" required/>
+        <button type="submit" class="btn-gold" id="t-cta-btn">Avisarme</button>
+      </form>
+    </div>
+  </div>
+
+  </main>
+  <div id="lang-announce" role="status" aria-live="polite" aria-atomic="true" class="visually-hidden"></div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand" translate="no">Betel<span> · Oscar Uncal</span></div>
+        <p class="footer-tagline" id="t-footer-tagline">Enseñanzas bíblicas de Oscar Uncal para fortalecer tu fe y crecer en el conocimiento de la Palabra de Dios.</p>
+      </div>
+      <div class="footer-col">
+        <h5 id="t-footer-h-sections">Secciones</h5>
+        <ul>
+          <li><a href="#videos" id="t-footer-sermons">Predicaciones</a></li>
+          <li><a href="#temas" id="t-footer-teachings">Temas</a></li>
+          <li><a href="#versiculo" id="t-footer-word">La Palabra</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5 id="t-footer-h-sermons">Predicaciones</h5>
+        <ul>
+          <li><a href="https://www.youtube.com/watch?v=pBZU7CVIZJ8" target="_blank" rel="noopener" id="t-footer-v1">El poder del silencio</a></li>
+          <li><a href="https://www.youtube.com/watch?v=5FPeMRjX-ME" target="_blank" rel="noopener" id="t-footer-v2">Elías, el silbo apacible</a></li>
+          <li><a href="https://www.youtube.com/watch?v=c3kLjALlnq4" target="_blank" rel="noopener" id="t-footer-v3">Las dos simientes</a></li>
+          <li><a href="https://www.youtube.com/watch?v=HsPEFlC2SeU" target="_blank" rel="noopener" id="t-footer-v4">El cordón de grana</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Links</h5>
+        <ul>
+          <li><a href="https://www.youtube.com/@beteldeoscaruncal2876" target="_blank" rel="noopener" id="t-footer-dev">📖 Devocionales (español)</a></li>
+          <li><a href="https://youtube.com/@devocionaleseningles" target="_blank" rel="noopener" id="t-footer-yt-en">📖 Devocionales (inglés)</a></li>
+          <li><a href="https://open.spotify.com/show/523tT6ys5hpIveGB9fTjJs" target="_blank" rel="noopener">🎵 Spotify</a></li>
+          <li><a href="#" target="_blank" rel="noopener" style="color:var(--muted2)" id="t-footer-ig">Instagram — Próximamente</a></li>
+          <li><a href="#" target="_blank" rel="noopener" style="color:var(--muted2)" id="t-footer-tt">TikTok — Próximamente</a></li>
+          <li><a href="#" target="_blank" rel="noopener" style="color:var(--muted2)" id="t-footer-fb">Facebook — Próximamente</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p id="t-footer-copy">© 2026 Betel · Oscar Uncal. Hecho con fe.</p>
+      <p id="t-footer-quote">"La fe es la certeza de lo que se espera." — Heb 11:1</p>
+    </div>
+  </footer>
+
+  <script>
+    /* ── LANGUAGE SWITCHER ── */
+    var translations = {
+      es: {
+        'title': 'Betel | Oscar Uncal',
+        't-skip-link': 'Ir al contenido',
+        't-mnav-word': 'La Palabra',
+        't-mnav-sermons': 'Predicaciones',
+        't-mnav-recientes': 'Recientes',
+        't-mnav-vistos': 'Más vistos',
+        't-mnav-teachings': 'Enseñanzas',
+        't-mnav-links': 'Links',
+        't-nav-sermons': 'Predicaciones',
+        't-nav-recientes': 'Recientes',
+        't-nav-vistos': 'Más vistos',
+        't-nav-word': 'La Palabra',
+        't-nav-teachings': 'Enseñanzas',
+        't-nav-links': 'Links',
+        't-drop-dev': 'Devocionales (español)',
+        't-drop-dev-sub': 'Mensajes cortos diarios',
+        't-drop-yt-en': 'Devocionales (inglés)',
+        't-drop-yt-en-sub': 'Mensajes cortos diarios en inglés',
+        't-drop-spotify': 'Spotify',
+        't-drop-spotify-sub': 'Escuchá los mensajes',
+        't-drop-ig': 'Instagram',
+        't-drop-ig-soon': 'Próximamente',
+        't-drop-tt': 'TikTok',
+        't-drop-tt-soon': 'Próximamente',
+        't-drop-fb': 'Facebook',
+        't-drop-fb-soon': 'Próximamente',
+        't-hero-label': 'Bienvenido',
+        't-hero-h1': 'La Palabra de Dios<br/>para tu <em>vida de hoy</em>',
+        't-hero-p': 'Predicaciones, alabanzas y reflexiones bíblicas para fortalecer tu fe y acercarte a Dios cada día.',
+        't-hero-verse': '"Lámpara es a mis pies tu palabra, y lumbrera a mi camino."',
+        't-hero-verse-ref': 'Salmos 119:105',
+        't-verse-label': 'Versículo del día',
+        't-verse-text': 'Sabiendo que la prueba de vuestra fe produce paciencia. Mas tenga la paciencia su obra completa, para que seáis perfectos y cabales.',
+        't-verse-ref': 'Santiago 1:3-4',
+        't-vid-label': 'Predicaciones',
+        't-vid-h2': 'Los más vistos del<br/><em>canal</em>',
+        't-vid-p': 'Los 4 mensajes que más llegaron al corazón de la gente.',
+        't-rec-label': 'Canal de YouTube',
+        't-rec-h2': 'Los más<br/><em>recientes</em>',
+        't-rec-p': 'Los últimos mensajes subidos al canal de Oscar Uncal.',
+        't-vis-label': 'Lo más visto',
+        't-vis-h2': 'Los más<br/><em>vistos</em>',
+        't-vis-p': 'Los mensajes que más llegaron al corazón de la gente.',
+        't-yt-rec-btn': 'Ver canal en YouTube',
+        't-yt-vis-btn': 'Ver canal en YouTube',
+        't-t1-intro': 'Acercarse a Dios en oración es un acto de comunicación sincera y personal. Implica abrir el corazón con honestidad, orar con fe en cualquier lugar y momento, y buscar la voluntad divina sobre la nuestra propia. La clave es reconocer quién es Dios, agradecerle, pedirle perdón y su guía — siempre en el Nombre de Jesús.',
+        't-t1-subtitle': 'Esquema de la Oración',
+        't-t1-list': '<li>1ro. Glorificamos al Padre</li><li>2do. Pedimos por su voluntad</li><li>3ro. Hacemos nuestras peticiones</li><li>4to. Pedimos perdón por nuestros pecados</li>',
+        't-t1-verse': '"Lámpara es a mis pies tu palabra, y lumbrera a mi camino."',
+        't-t1-verse-ref': 'Salmos 119:105',
+        't-t2-intro': 'El plan de salvación es un regalo de Dios a la humanidad llamado gracia. Jesucristo se hizo hombre y murió en la cruz para rescatarnos del pecado y la muerte eterna. La gracia se recibe no por obras, sino mediante la fe en Jesús como Salvador, arrepintiéndose y confesándolo como Señor.',
+        't-t2-subtitle': 'Puntos clave',
+        't-t2-list': '<li><strong>La Necesidad (el pecado):</strong> Todos han pecado y están destituidos de la gloria de Dios (Romanos 3:23, 6:23).</li><li><strong>La Provisión (Jesucristo):</strong> Dios, por amor, envió a su Hijo Jesús para morir en la cruz (Juan 3:16).</li><li><strong>El Medio (fe y gracia):</strong> La salvación es un regalo inmerecido que se recibe únicamente a través de la fe.</li><li><strong>La Respuesta (arrepentimiento):</strong> Reconocer el pecado, arrepentirse y aceptar a Jesús como Salvador (Hechos 16:31).</li>',
+        't-t2-verse': '"Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna."',
+        't-t2-verse-ref': 'Juan 3:16',
+        't-t3-intro': 'Las pruebas no son para destrucción, sino para refinar y fortalecer la fe. Dios permite estas dificultades con propósitos divinos, prometiendo estar presente y asegurar que la prueba no exceda la capacidad del creyente. La fe bíblica se prueba para demostrar que es real y para fortalecer el carácter espiritual.',
+        't-t3-subtitle': 'Puntos clave',
+        't-t3-list': '<li><strong>Propósito de las pruebas:</strong> Purificar la fe, más valiosa que el oro, y desarrollar un carácter semejante al de Cristo.</li><li><strong>Actitud ante la prueba:</strong> Considerarlas con "sumo gozo", ya que producen paciencia y madurez (Santiago 1:2-4).</li><li><strong>Perseverancia y recompensa:</strong> El que persevera bajo la prueba recibirá la "corona de vida".</li><li><strong>El respaldo divino:</strong> Dios nunca abandona al creyente; está más cerca en los momentos difíciles.</li>',
+        't-t3-verse': '"Nos gloriamos en las tribulaciones, sabiendo que la tribulación produce paciencia; y la paciencia, prueba; y la prueba, esperanza."',
+        't-t3-verse-ref': 'Romanos 5:3-4',
+        't-t4-intro': 'El amor y la familia son instituciones divinas diseñadas para reflejar el amor incondicional de Dios. El amor bíblico —el ágape— es paciente, bondadoso y desinteresado. La familia es el refugio más significativo después de la relación con Dios, y su base es la unidad, el respeto y la fidelidad.',
+        't-t4-subtitle': 'Fundamentos bíblicos',
+        't-t4-list': '<li><strong>Fundamento divino:</strong> La familia fue creada por Dios (Génesis 2:24), el vínculo más significativo después de la relación con Él.</li><li><strong>El amor ágape:</strong> Paciente, bondadoso, no envidioso, no orgulloso, no egoísta ni rencoroso (1 Corintios 13:4-5).</li><li><strong>Matrimonio:</strong> Dos se convierten en "una sola carne", una unión que Dios ha unido (Marcos 10:6-9).</li><li><strong>Hijos:</strong> Llamados a honrar, obedecer y respetar a sus padres (Efesios 6:1).</li><li><strong>Amor fraternal:</strong> Amarse unos a otros respetándose y honrándose mutuamente (Romanos 12:10).</li>',
+        't-t4-verse': '"El amor es sufrido, es benigno; el amor no tiene envidia, el amor no es jactancioso, no se envanece; no hace nada indebido, no busca lo suyo."',
+        't-t4-verse-ref': '1 Corintios 13:4-5',
+        't-t1-name': 'Cómo acercarse a Dios en oración',
+        't-t1-sub': 'La comunicación sincera con el Padre',
+        't-t2-name': 'Plan de salvación',
+        't-t2-sub': 'El regalo de la gracia de Dios',
+        't-t3-name': 'La fe y las pruebas',
+        't-t3-sub': 'Fortaleza y propósito en los tiempos difíciles',
+        't-t4-name': 'El amor y la familia',
+        't-t4-sub': 'Instituciones divinas para reflejar el amor de Dios',
+        't-teach-label': 'La Palabra',
+        't-teach-h2': 'Fundamentos de la <em>fe cristiana</em>',
+        't-teach-p': 'Hacé click en cada tema para leer la enseñanza bíblica completa.',
+        't-links-label': 'Comunidad',
+        't-links-h2': 'Seguinos en todas las <em>plataformas</em>',
+        't-links-p': 'Encontrá el contenido de Oscar Uncal donde sea que estés.',
+        't-lc1-name': 'Devocionales (español)',
+        't-lc1-desc': 'Mensajes cortos diarios',
+        't-lc3-name': 'Devocionales (inglés)',
+        't-lc3-desc': 'Mensajes cortos diarios en inglés',
+        't-lc4-desc': 'Escuchá los mensajes',
+        't-ig-soon': 'Próximamente',
+        't-tt-soon': 'Próximamente',
+        't-cta-label': 'Comunidad',
+        't-cta-h2': 'Te avisamos cuando hay<br/>un nuevo <em>devocional</em>',
+        't-cta-p': 'Dejá tu email y te notificamos cada vez que Oscar sube un devocional nuevo.',
+        't-cta-input-label': 'Tu email',
+        't-fb-soon': 'Próximamente',
+        't-cta-btn': 'Avisarme',
+        't-footer-tagline': 'Enseñanzas bíblicas de Oscar Uncal para fortalecer tu fe y crecer en el conocimiento de la Palabra de Dios.',
+        't-footer-h-sections': 'Secciones',
+        't-footer-sermons': 'Predicaciones',
+        't-footer-teachings': 'Temas',
+        't-footer-word': 'La Palabra',
+        't-footer-h-sermons': 'Predicaciones',
+        't-footer-v1': 'El poder del silencio',
+        't-footer-v2': 'Elías, el silbo apacible',
+        't-footer-v3': 'Las dos simientes',
+        't-footer-v4': 'El cordón de grana',
+        't-footer-dev': '📖 Devocionales (español)',
+        't-footer-yt-en': '📖 Devocionales (inglés)',
+        't-footer-ig': 'Instagram — Próximamente',
+        't-footer-tt': 'TikTok — Próximamente',
+        't-footer-fb': 'Facebook — Próximamente',
+        't-footer-copy': '© 2026 Betel · Oscar Uncal. Hecho con fe.',
+        't-footer-quote': '"La fe es la certeza de lo que se espera." — Heb 11:1',
+      },
+      en: {
+        'title': 'Betel | Oscar Uncal',
+        't-skip-link': 'Skip to content',
+        't-mnav-word': 'The Word',
+        't-mnav-sermons': 'Sermons',
+        't-mnav-recientes': 'Recent',
+        't-mnav-vistos': 'Most watched',
+        't-mnav-teachings': 'Teachings',
+        't-mnav-links': 'Links',
+        't-nav-sermons': 'Sermons',
+        't-nav-recientes': 'Recent',
+        't-nav-vistos': 'Most watched',
+        't-nav-word': 'The Word',
+        't-nav-teachings': 'Teachings',
+        't-nav-links': 'Links',
+        't-drop-dev': 'Devotionals (Spanish)',
+        't-drop-dev-sub': 'Short daily messages in Spanish',
+        't-drop-yt-en': 'Devotionals (English)',
+        't-drop-yt-en-sub': 'Short daily messages in English',
+        't-drop-spotify': 'Spotify',
+        't-drop-spotify-sub': 'Listen to the messages',
+        't-drop-ig': 'Instagram',
+        't-drop-ig-soon': 'Coming soon',
+        't-drop-tt': 'TikTok',
+        't-drop-tt-soon': 'Coming soon',
+        't-drop-fb': 'Facebook',
+        't-drop-fb-soon': 'Coming soon',
+        't-hero-label': 'Welcome',
+        't-hero-h1': "God's Word<br/>for your <em>life today</em>",
+        't-hero-p': 'Sermons, praise and biblical reflections to strengthen your faith and draw closer to God every day.',
+        't-hero-verse': '"Your word is a lamp to my feet and a light to my path."',
+        't-hero-verse-ref': 'Psalm 119:105',
+        't-verse-label': 'Verse of the day',
+        't-verse-text': 'Knowing that the testing of your faith produces patience. But let patience have its perfect work, that you may be perfect and complete, lacking nothing.',
+        't-verse-ref': 'James 1:3-4',
+        't-vid-label': 'Sermons',
+        't-vid-h2': 'Most watched on<br/><em>the channel</em>',
+        't-vid-p': 'The 4 messages that touched the most hearts.',
+        't-rec-label': 'YouTube Channel',
+        't-rec-h2': 'Most<br/><em>recent</em>',
+        't-rec-p': 'The latest messages uploaded to Oscar Uncal\'s channel.',
+        't-vis-label': 'Most watched',
+        't-vis-h2': 'Most<br/><em>watched</em>',
+        't-vis-p': 'The messages that touched the most hearts.',
+        't-yt-rec-btn': 'View channel on YouTube',
+        't-yt-vis-btn': 'View channel on YouTube',
+        't-t1-intro': 'Approaching God in prayer is an act of sincere and personal communication. It means opening our heart honestly, praying with faith anywhere and at any time, and seeking God\'s will above our own. The key is to recognize who God is, thank Him, ask forgiveness, and seek His guidance — always in the Name of Jesus.',
+        't-t1-subtitle': 'Prayer Outline',
+        't-t1-list': '<li>1st. We glorify the Father</li><li>2nd. We ask for His will</li><li>3rd. We make our requests</li><li>4th. We ask forgiveness for our sins</li>',
+        't-t1-verse': '"Your word is a lamp to my feet and a light to my path."',
+        't-t1-verse-ref': 'Psalm 119:105',
+        't-t2-intro': 'The plan of salvation is God\'s gift to humanity, called grace. Jesus Christ became man and died on the cross to rescue us from sin and eternal death. Grace is received not by works, but through faith in Jesus as Savior, by repenting and confessing Him as Lord.',
+        't-t2-subtitle': 'Key points',
+        't-t2-list': '<li><strong>The Need (sin):</strong> All have sinned and fall short of the glory of God (Romans 3:23, 6:23).</li><li><strong>The Provision (Jesus Christ):</strong> God, in love, sent His Son Jesus to die on the cross (John 3:16).</li><li><strong>The Means (faith and grace):</strong> Salvation is an undeserved gift received only through faith.</li><li><strong>The Response (repentance):</strong> Acknowledge sin, repent, and accept Jesus as Savior (Acts 16:31).</li>',
+        't-t2-verse': '"For God so loved the world that He gave His only begotten Son, that whoever believes in Him should not perish but have everlasting life."',
+        't-t2-verse-ref': 'John 3:16',
+        't-t3-intro': 'Trials are not for destruction, but to refine and strengthen faith. God allows these difficulties with divine purposes, promising to be present and to ensure the trial does not exceed the believer\'s capacity. Biblical faith is tested to prove it is real and to build spiritual character.',
+        't-t3-subtitle': 'Key points',
+        't-t3-list': '<li><strong>Purpose of trials:</strong> To purify faith, more precious than gold, and develop a character like Christ\'s.</li><li><strong>Attitude in trials:</strong> To consider them "pure joy", since they produce patience and maturity (James 1:2-4).</li><li><strong>Perseverance and reward:</strong> The one who perseveres under trial will receive the "crown of life".</li><li><strong>Divine support:</strong> God never abandons the believer; He is closer in difficult moments.</li>',
+        't-t3-verse': '"We also glory in tribulations, knowing that tribulation produces perseverance; and perseverance, character; and character, hope."',
+        't-t3-verse-ref': 'Romans 5:3-4',
+        't-t4-intro': 'Love and family are divine institutions designed to reflect God\'s unconditional love. Biblical love — agape — is patient, kind and selfless. The family is the most significant refuge after the relationship with God, and its foundation is unity, respect and faithfulness.',
+        't-t4-subtitle': 'Biblical foundations',
+        't-t4-list': '<li><strong>Divine foundation:</strong> The family was created by God (Genesis 2:24), the most significant bond after the relationship with Him.</li><li><strong>Agape love:</strong> Patient, kind, not envious, not proud, not selfish or resentful (1 Corinthians 13:4-5).</li><li><strong>Marriage:</strong> Two become "one flesh", a union God has joined (Mark 10:6-9).</li><li><strong>Children:</strong> Called to honor, obey and respect their parents (Ephesians 6:1).</li><li><strong>Brotherly love:</strong> To love one another, respecting and honoring each other (Romans 12:10).</li>',
+        't-t4-verse': '"Love suffers long and is kind; love does not envy; love does not parade itself, is not puffed up; does not behave rudely, does not seek its own."',
+        't-t4-verse-ref': '1 Corinthians 13:4-5',
+        't-t1-name': 'How to approach God in prayer',
+        't-t1-sub': 'Sincere communication with the Father',
+        't-t2-name': 'Plan of salvation',
+        't-t2-sub': "God's gift of grace",
+        't-t3-name': 'Faith and trials',
+        't-t3-sub': 'Strength and purpose in difficult times',
+        't-t4-name': 'Love and family',
+        't-t4-sub': "Divine institutions to reflect God's love",
+        't-teach-label': 'The Word',
+        't-teach-h2': 'Foundations of the <em>Christian faith</em>',
+        't-teach-p': 'Click on each topic to read the complete biblical teaching.',
+        't-links-label': 'Community',
+        't-links-h2': 'Follow us on all <em>platforms</em>',
+        't-links-p': "Find Oscar Uncal's content wherever you are.",
+        't-lc1-name': 'Devotionals (Spanish)',
+        't-lc1-desc': 'Short daily messages in Spanish',
+        't-lc3-name': 'Devotionals (English)',
+        't-lc3-desc': 'Short daily messages in English',
+        't-lc4-desc': 'Listen to the messages',
+        't-ig-soon': 'Coming soon',
+        't-tt-soon': 'Coming soon',
+        't-cta-label': 'Community',
+        't-cta-h2': "We'll let you know when<br/>there's a new <em>devotional</em>",
+        't-cta-p': "Leave your email and we'll notify you every time Oscar uploads a new devotional.",
+        't-cta-input-label': 'Your email',
+        't-fb-soon': 'Coming soon',
+        't-cta-btn': 'Notify me',
+        't-footer-tagline': "Biblical teachings by Oscar Uncal to strengthen your faith and grow in the knowledge of God's Word.",
+        't-footer-h-sections': 'Sections',
+        't-footer-sermons': 'Sermons',
+        't-footer-teachings': 'Teachings',
+        't-footer-word': 'The Word',
+        't-footer-h-sermons': 'Sermons',
+        't-footer-v1': 'The Power of Silence',
+        't-footer-v2': 'Elijah and the Still Small Voice',
+        't-footer-v3': 'The Two Seeds',
+        't-footer-v4': 'The Scarlet Thread',
+        't-footer-dev': '📖 Devotionals (Spanish)',
+        't-footer-yt-en': '📖 Devotionals (English)',
+        't-footer-ig': 'Instagram — Coming soon',
+        't-footer-tt': 'TikTok — Coming soon',
+        't-footer-fb': 'Facebook — Coming soon',
+        't-footer-copy': '© 2026 Betel · Oscar Uncal. Made with faith.',
+        't-footer-quote': '"Faith is the substance of things hoped for." — Heb 11:1',
+      }
+    };
+
+    function setLang(lang) {
+      var t = translations[lang];
+      var els = [];
+      Object.keys(t).forEach(function(id) {
+        if (id === 'title') return;
+        var el = document.getElementById(id);
+        if (el) els.push(el);
+      });
+
+      // Fade out
+      els.forEach(function(el) {
+        el.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(4px)';
+      });
+
+      setTimeout(function() {
+        // Actualizar contenido
+        document.title = t['title'];
+        document.documentElement.lang = lang === 'es' ? 'es' : 'en';
+        Object.keys(t).forEach(function(id) {
+          if (id === 'title') return;
+          var el = document.getElementById(id);
+          if (el) el.innerHTML = t[id];
+        });
+
+        // Fade in
+        els.forEach(function(el) {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        });
+
+        document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        var esM = document.getElementById('btn-es-m');
+        var enM = document.getElementById('btn-en-m');
+        if (esM) esM.classList.toggle('active', lang === 'es');
+        if (enM) enM.classList.toggle('active', lang === 'en');
+        localStorage.setItem('betel-lang', lang);
+        var announce = document.getElementById('lang-announce');
+        if (announce) announce.textContent = lang === 'es' ? 'Idioma cambiado a español' : 'Language changed to English';
+        if (typeof ytLoadForLang === 'function') ytLoadForLang(lang);
+      }, 200);
+    }
+
+    // Inicializar idioma guardado
+    (function() {
+      var saved = localStorage.getItem('betel-lang') || 'es';
+      setLang(saved);
+    })();
+
+    /* Scroll fade-in */
+    (function() {
+      if (!('IntersectionObserver' in window)) {
+        document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
+        return;
+      }
+      window._fadeObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            window._fadeObs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.fade-in').forEach(el => window._fadeObs.observe(el));
+    })();
+
+    /* Dropdown Links */
+    function toggleLinks(e) {
+      e.preventDefault();
+      var dd = document.getElementById('linksDropdown');
+      dd.classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      var dd = document.getElementById('linksDropdown');
+      if (dd && !dd.contains(e.target)) dd.classList.remove('open');
+    });
+
+    /* Menú mobile */
+    function handleMobileOverlay(e) {
+      if (e.target === document.getElementById('mobileMenu')) closeMobileMenu();
+    }
+
+    function openMobileMenu() {
+      var menu = document.getElementById('mobileMenu');
+      var btn = document.getElementById('nav-hamburger');
+      menu.classList.add('open');
+      menu.setAttribute('aria-hidden', 'false');
+      btn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+      var menu = document.getElementById('mobileMenu');
+      var btn = document.getElementById('nav-hamburger');
+      menu.classList.remove('open');
+      menu.setAttribute('aria-hidden', 'true');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    /* Acordeón de temas */
+    function toggleTopic(btn) {
+      var item = btn.closest('.topic-item');
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.topic-item.open').forEach(function(el) {
+        el.classList.remove('open');
+        el.querySelector('.topic-trigger').setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    /* Suscripción simple */
+    function handleSub(e) {
+      e.preventDefault();
+      var btn = e.target.querySelector('button');
+      btn.textContent = '¡Gracias! 🙏';
+      btn.style.background = '#4a7c59';
+      setTimeout(() => {
+        btn.textContent = 'Suscribirme';
+        btn.style.background = '';
+        e.target.reset();
+      }, 3000);
+    }
+
+    /* ── YOUTUBE API ── */
+    var YT_API_KEY = 'AIzaSyB-P_fQvifJMEhm9FaGkvCsUSrMzKlcXuc';
+    var YT_CHANNELS = {
+      es: 'UCS6R64PyG8TCxmnwuMcnS5Q',
+      en: 'UCCiNz-PQt9006xU2ppVYASg'
+    };
+    var YT_PER_PAGE = 9;
+    var ytCurrentLang = null;
+
+    var ytState = {
+      rec: { videos: [], page: 0, perPage: 6 },
+      vis: { videos: [], page: 0, perPage: 6 }
+    };
+
+    function ytPlayIcon() {
+      return '<svg viewBox="0 0 68 48" xmlns="http://www.w3.org/2000/svg"><path d="M66.5 7.7c-.8-2.9-3-5.1-5.8-5.9C55.8.9 34 .9 34 .9S12.3.9 7.3 1.8C4.6 2.6 2.3 4.9 1.5 7.7.7 12.8.7 24 .7 24s0 11.2.8 16.3c.8 2.9 3 5.1 5.8 5.9C12.3 47.1 34 47.1 34 47.1s21.8 0 26.7-.9c2.8-.8 5-3 5.8-5.9.8-5.1.8-16.3.8-16.3s0-11.2-.8-16.3z" fill="#f00"/><path d="M27 33l18-9-18-9v18z" fill="#fff"/></svg>';
+    }
+
+    function ytLang() {
+      return (localStorage.getItem('betel-lang') || 'es') === 'en' ? 'en' : 'es';
+    }
+
+    function ytFormatViews(n) {
+      var label = ytLang() === 'en' ? ' views' : ' vistas';
+      if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M' + label;
+      if (n >= 1000) return Math.round(n / 1000) + 'K' + label;
+      return n + label;
+    }
+
+    function ytFormatDate(iso) {
+      if (!iso) return '';
+      var d = new Date(iso);
+      var diff = Math.floor((new Date() - d) / 1000);
+      var en = ytLang() === 'en';
+      if (diff < 60)           return en ? 'just now'                                    : 'hace un momento';
+      if (diff < 3600)         return en ? Math.floor(diff/60) + ' min ago'              : 'hace ' + Math.floor(diff/60) + ' min';
+      if (diff < 86400)        return en ? Math.floor(diff/3600) + 'h ago'               : 'hace ' + Math.floor(diff/3600) + ' h';
+      if (diff < 7*86400)      return en ? Math.floor(diff/86400) + ' days ago'          : 'hace ' + Math.floor(diff/86400) + ' días';
+      if (diff < 30*86400)     return en ? Math.floor(diff/7/86400) + ' weeks ago'       : 'hace ' + Math.floor(diff/7/86400) + ' sem';
+      if (diff < 365*86400)    return en ? Math.floor(diff/30/86400) + ' months ago'     : 'hace ' + Math.floor(diff/30/86400) + ' meses';
+      return en ? Math.floor(diff/365/86400) + ' years ago' : 'hace ' + Math.floor(diff/365/86400) + ' años';
+    }
+
+    function ytIsNew(iso) {
+      if (!iso) return false;
+      return (new Date() - new Date(iso)) < 7 * 24 * 60 * 60 * 1000;
+    }
+
+    function ytBuildMeta(v) {
+      var parts = [];
+      if (v.duration) parts.push('<span class="vm-duration">▶ ' + v.duration + '</span>');
+      if (v.publishedAt) parts.push('<span class="vm-date">' + ytFormatDate(v.publishedAt) + '</span>');
+      if (v.views) parts.push('<span class="vm-views">' + ytFormatViews(v.views) + '</span>');
+      return parts.length ? '<div class="video-meta">' + parts.join('<span class="vm-sep">·</span>') + '</div>' : '';
+    }
+
+    function ytBuildDesc(v) {
+      var descLines = v.description ? v.description.split('\n').map(function(l){ return l.trim(); }).filter(function(l){ return l.length > 0; }) : [];
+      var titleClean = v.title.replace(/[^a-záéíóúüñ0-9 ]/gi,'').trim().toLowerCase();
+      var rawDesc = '';
+      for (var di = 0; di < descLines.length; di++) {
+        var line = descLines[di];
+        var lineClean = line.replace(/[^a-záéíóúüñ0-9 ]/gi,'').trim().toLowerCase();
+        var lineNoColon = lineClean.replace(/:$/,'').trim();
+        var isTitleRepeat = lineClean === titleClean || titleClean.startsWith(lineClean) || lineClean.startsWith(titleClean) || lineNoColon === titleClean || titleClean.startsWith(lineNoColon) || lineNoColon.startsWith(titleClean);
+        if (!isTitleRepeat && line.length >= 20 && !/^https?:\/\//i.test(line) && !/^[@#]/.test(line)) { rawDesc = line; break; }
+      }
+      var shortDesc = rawDesc.length > 180 ? rawDesc.slice(0, 180).trim() + '…' : rawDesc;
+      return shortDesc ? '<div class="video-desc">' + shortDesc.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' : '';
+    }
+
+    function ytRender(key) {
+      var s = ytState[key];
+      var grid = document.getElementById('yt-' + key + '-grid');
+      var perPage = s.perPage || YT_PER_PAGE;
+      var start = s.page * perPage;
+      var slice = s.videos.slice(start, start + perPage);
+
+      grid.innerHTML = slice.map(function(v, i) {
+        var id = v.videoId;
+        var title = v.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        var titleAttr = v.title.replace(/"/g,'&quot;');
+        var thumb = v.thumb;
+        var isFirst = (s.page === 0 && i === 0);
+        var isNew = ytIsNew(v.publishedAt);
+        var badgeHtml = isNew ? '<span class="yt-badge-new">Nuevo</span>' : '';
+        return '<div class="video-card fade-in' + (isFirst ? ' video-card--featured' : '') + '">' +
+          '<a href="https://www.youtube.com/watch?v=' + id + '" target="_blank" rel="noopener" aria-label="' + titleAttr + '" class="video-thumb-wrap">' +
+            '<img src="' + thumb + '" alt="' + titleAttr + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+            '<div class="yt-play-btn">' + ytPlayIcon() + '</div>' +
+            badgeHtml +
+          '</a>' +
+          '<div class="video-body">' +
+            '<div class="video-tag">Oscar Uncal</div>' +
+            '<a href="https://www.youtube.com/watch?v=' + id + '" target="_blank" rel="noopener" class="video-title video-title-link">' + title + '</a>' +
+            ytBuildDesc(v) +
+            ytBuildMeta(v) +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      grid.querySelectorAll('.fade-in').forEach(function(el) {
+        el.classList.remove('visible');
+        if (window._fadeObs) window._fadeObs.observe(el);
+      });
+
+      var total = s.videos.length;
+      var totalPages = Math.ceil(total / perPage);
+      var pag = document.getElementById('yt-' + key + '-pag');
+      var info = document.getElementById('yt-' + key + '-info');
+      var prev = document.getElementById('yt-' + key + '-prev');
+      var next = document.getElementById('yt-' + key + '-next');
+      if (totalPages > 1) {
+        pag.style.display = 'flex';
+        info.textContent = (s.page + 1) + ' / ' + totalPages;
+        prev.disabled = s.page === 0;
+        next.disabled = s.page >= totalPages - 1;
+      } else {
+        pag.style.display = 'none';
+      }
+    }
+
+    function ytPage(key, dir) {
+      var s = ytState[key];
+      var totalPages = Math.ceil(s.videos.length / (s.perPage || YT_PER_PAGE));
+      var next = s.page + dir;
+      if (next < 0 || next >= totalPages) return;
+      s.page = next;
+      ytRender(key);
+      document.getElementById('yt-' + key + '-grid').closest('section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    var YT_CACHE_TTL = 60 * 60 * 1000; // 1 hora
+
+    function ytCacheGet(lang) {
+      try {
+        var raw = localStorage.getItem('betel-yt-' + lang);
+        if (!raw) return null;
+        var obj = JSON.parse(raw);
+        if (Date.now() - obj.ts > YT_CACHE_TTL) { localStorage.removeItem('betel-yt-' + lang); return null; }
+        return obj.videos;
+      } catch(e) { return null; }
+    }
+
+    function ytCacheSet(lang, videos) {
+      try { localStorage.setItem('betel-yt-' + lang, JSON.stringify({ ts: Date.now(), videos: videos })); } catch(e) {}
+    }
+
+    function ytParseDuration(iso) {
+      var m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+      if (!m) return '';
+      var h = parseInt(m[1] || 0), min = parseInt(m[2] || 0), sec = parseInt(m[3] || 0);
+      if (h > 0) return h + ':' + String(min).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+      return min + ':' + String(sec).padStart(2,'0');
+    }
+
+    async function ytFetchAllVideos(apiKey, channelId) {
+      var chRes = await fetch('https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=' + channelId + '&key=' + apiKey);
+      var chData = await chRes.json();
+      if (!chData.items || !chData.items.length) throw new Error('Canal no encontrado');
+      var uploadsId = chData.items[0].contentDetails.relatedPlaylists.uploads;
+
+      var items = [];
+      var pageToken = '';
+      do {
+        var url = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=' + uploadsId +
+          '&maxResults=50&key=' + apiKey + (pageToken ? '&pageToken=' + pageToken : '');
+        var res = await fetch(url);
+        var data = await res.json();
+        if (data.error) throw new Error(data.error.message);
+        data.items.forEach(function(item) {
+          var sn = item.snippet;
+          var vid = sn.resourceId && sn.resourceId.videoId;
+          if (vid) items.push({
+            videoId: vid,
+            title: sn.title,
+            description: sn.description || '',
+            thumb: (sn.thumbnails.maxres || sn.thumbnails.high || sn.thumbnails.medium).url,
+            publishedAt: sn.publishedAt,
+            views: 0,
+            duration: ''
+          });
+        });
+        pageToken = data.nextPageToken || '';
+      } while (pageToken);
+
+      return items;
+    }
+
+    async function ytFetchViewsAndDuration(apiKey, videos) {
+      for (var i = 0; i < videos.length; i += 50) {
+        var batch = videos.slice(i, i + 50);
+        var ids = batch.map(function(v) { return v.videoId; }).join(',');
+        var res = await fetch('https://www.googleapis.com/youtube/v3/videos?part=statistics,contentDetails&id=' + ids + '&key=' + apiKey);
+        var data = await res.json();
+        if (data.items) {
+          data.items.forEach(function(item) {
+            var found = videos.find(function(v) { return v.videoId === item.id; });
+            if (found) {
+              found.views = parseInt((item.statistics && item.statistics.viewCount) || '0', 10);
+              found.duration = ytParseDuration((item.contentDetails && item.contentDetails.duration) || '');
+            }
+          });
+        }
+      }
+      return videos;
+    }
+
+    function ytRenderTop4(videos) {
+      var loading = document.getElementById('yt-top-loading');
+      var grid = document.getElementById('yt-top-grid');
+      if (loading) loading.style.display = 'none';
+      if (!grid) return;
+
+      grid.innerHTML = videos.slice(0, 5).map(function(v, i) {
+        var id = v.videoId;
+        var title = v.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        var titleAttr = v.title.replace(/"/g,'&quot;');
+        var isFirst = i === 0;
+        return '<div class="video-card fade-in' + (isFirst ? ' video-card--featured' : '') + '">' +
+          '<div class="video-embed">' +
+            '<iframe src="https://www.youtube.com/embed/' + id + '" title="' + titleAttr + '"' +
+            ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"' +
+            ' allowfullscreen loading="lazy"></iframe>' +
+          '</div>' +
+          '<div class="video-body">' +
+            '<div class="video-tag">Oscar Uncal</div>' +
+            '<div class="video-title">' + title + '</div>' +
+            ytBuildDesc(v) +
+            ytBuildMeta(v) +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      grid.querySelectorAll('.fade-in').forEach(function(el) {
+        el.classList.remove('visible');
+        if (window._fadeObs) window._fadeObs.observe(el);
+      });
+    }
+
+    async function ytLoadForLang(lang) {
+      if (ytCurrentLang === lang) return;
+      ytCurrentLang = lang;
+
+      var channelId = YT_CHANNELS[lang] || YT_CHANNELS.es;
+
+      var recLoading = document.getElementById('yt-rec-loading');
+      var recError   = document.getElementById('yt-rec-error');
+      var recGrid    = document.getElementById('yt-rec-grid');
+      var visLoading = document.getElementById('yt-vis-loading');
+      var visError   = document.getElementById('yt-vis-error');
+      var visGrid    = document.getElementById('yt-vis-grid');
+
+      // Reset UI
+      var topGrid = document.getElementById('yt-top-grid');
+      var topLoading = document.getElementById('yt-top-loading');
+      if (topGrid) topGrid.innerHTML = '';
+      if (topLoading) topLoading.style.display = 'flex';
+      recGrid.innerHTML = '';
+      visGrid.innerHTML = '';
+      recError.style.display = 'none';
+      visError.style.display = 'none';
+      recLoading.style.display = 'flex';
+      visLoading.style.display = 'flex';
+      ytState.rec = { videos: [], page: 0 };
+      ytState.vis = { videos: [], page: 0 };
+      document.getElementById('yt-rec-pag').style.display = 'none';
+      document.getElementById('yt-vis-pag').style.display = 'none';
+
+      try {
+        var allVideos = ytCacheGet(lang);
+        if (!allVideos) {
+          allVideos = await ytFetchAllVideos(YT_API_KEY, channelId);
+          if (!allVideos.length) throw new Error('Sin videos');
+          allVideos = await ytFetchViewsAndDuration(YT_API_KEY, allVideos);
+          ytCacheSet(lang, allVideos);
+        }
+
+        // Actualizar links y contadores según el canal cargado
+        var channelUrl = lang === 'en'
+          ? 'https://www.youtube.com/@devocionaleseningles'
+          : 'https://www.youtube.com/@beteldeoscaruncal2876';
+        ['yt-rec-channel-btn','yt-vis-channel-btn'].forEach(function(id) {
+          var el = document.getElementById(id);
+          if (el) el.href = channelUrl;
+        });
+        var totalLabel = allVideos.length + ' videos';
+        ['yt-rec-total','yt-vis-total'].forEach(function(id) {
+          var el = document.getElementById(id);
+          if (el) { el.textContent = totalLabel; el.style.display = 'inline-block'; }
+        });
+
+        recLoading.style.display = 'none';
+        ytState.rec.videos = allVideos.slice();
+        ytRender('rec');
+
+        var withViews = allVideos.slice().sort(function(a, b) { return b.views - a.views; });
+        visLoading.style.display = 'none';
+        ytState.vis.videos = withViews;
+        ytRender('vis');
+        ytRenderTop4(withViews);
+
+      } catch(err) {
+        console.error('YouTube API error:', err);
+        recLoading.style.display = 'none';
+        visLoading.style.display = 'none';
+        recError.style.display = 'block';
+        visError.style.display = 'block';
+      }
+    }
+
+    // Cargar al iniciar con el idioma guardado
+    (function() {
+      var saved = localStorage.getItem('betel-lang') || 'es';
+      ytLoadForLang(saved);
+    })();
+  </script>
+</body>
+</html>
