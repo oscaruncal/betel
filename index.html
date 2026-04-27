@@ -1967,9 +1967,7 @@
         var announce = document.getElementById('lang-announce');
         if (announce) announce.textContent = lang === 'es' ? 'Idioma cambiado a español' : 'Language changed to English';
         if (typeof ytLoadForLang === 'function') ytLoadForLang(lang);
-        var verses = VERSES[lang] || VERSES.es;
-        var dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
-        var v = verses[dayOfYear % verses.length];
+        var v = (VERSES[lang] || VERSES.es)[verseIndex];
         var vt = document.getElementById('t-verse-text');
         var vr = document.getElementById('t-verse-ref');
         if (vt) vt.textContent = v.text;
@@ -2129,11 +2127,15 @@
       ]
     };
 
+    var verseIndex = parseInt(sessionStorage.getItem('betel-verse-idx'));
+    if (isNaN(verseIndex)) {
+      verseIndex = Math.floor(Math.random() * VERSES.es.length);
+      sessionStorage.setItem('betel-verse-idx', verseIndex);
+    }
+
     (function initVerse() {
       var lang = localStorage.getItem('betel-lang') || 'es';
-      var verses = VERSES[lang] || VERSES.es;
-      var dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
-      var v = verses[dayOfYear % verses.length];
+      var v = (VERSES[lang] || VERSES.es)[verseIndex];
       document.getElementById('t-verse-text').textContent = v.text;
       document.getElementById('t-verse-ref').textContent = v.ref;
     })();
