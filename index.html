@@ -147,6 +147,7 @@
       transition: opacity 0.2s;
     }
     .nav-paypal-btn:hover { opacity: 1; }
+    @media (max-width: 768px) { .nav-paypal-btn { display: none; } }
 
     .lang-switcher {
       display: flex;
@@ -1311,7 +1312,7 @@
         </li>
       </ul>
       <a href="https://www.paypal.com/donate/?hosted_button_id=4WYTQ5A4XTFUE" target="_blank" rel="noopener" class="nav-paypal-btn" title="Donar con PayPal" aria-label="Donar con PayPal">
-        <svg viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg"><path fill="#003087" d="M19.5 6.4c.1.6.1 1.3 0 2-.6 3.2-2.7 4.3-5.4 4.3h-.7c-.3 0-.6.2-.7.5l-.8 5h-2.5l.1-.5.6-3.8c.1-.3.3-.5.6-.5h1.3c3.5 0 5.6-1.4 6.2-4.4.3-1.4.1-2.5-.7-3.3l.1-.3z"/><path fill="#009cde" d="M18.1 5.1c-.2-.1-.5-.2-.7-.3-.3-.1-.5-.1-.8-.1H11c-.3 0-.6.2-.7.5L8.6 14.3l-.1.4c.1-.3.4-.5.7-.5h1.5c2.7 0 4.8-1.1 5.4-4.3.1-.7.1-1.4 0-2-.5-.3-1-.5-1.6-.6l3.6-2.2z"/><path fill="#012169" d="M10.3 5.2c.1-.3.4-.5.7-.5h5.6c.3 0 .5 0 .8.1.2.1.5.1.7.3l.3.2.3.2c.3.8.3 1.8 0 3.1-.6 3.2-2.7 4.3-5.4 4.3h-1.3c-.3 0-.6.2-.7.5l-.6 3.8-.1.5H8.1L10.3 5.2z"/></svg>
+        <svg viewBox="0 0 24 24" width="21" height="21" xmlns="http://www.w3.org/2000/svg"><path fill="#003087" d="M19.5 6.4c.1.6.1 1.3 0 2-.6 3.2-2.7 4.3-5.4 4.3h-.7c-.3 0-.6.2-.7.5l-.8 5h-2.5l.1-.5.6-3.8c.1-.3.3-.5.6-.5h1.3c3.5 0 5.6-1.4 6.2-4.4.3-1.4.1-2.5-.7-3.3l.1-.3z"/><path fill="#009cde" d="M18.1 5.1c-.2-.1-.5-.2-.7-.3-.3-.1-.5-.1-.8-.1H11c-.3 0-.6.2-.7.5L8.6 14.3l-.1.4c.1-.3.4-.5.7-.5h1.5c2.7 0 4.8-1.1 5.4-4.3.1-.7.1-1.4 0-2-.5-.3-1-.5-1.6-.6l3.6-2.2z"/><path fill="#012169" d="M10.3 5.2c.1-.3.4-.5.7-.5h5.6c.3 0 .5 0 .8.1.2.1.5.1.7.3l.3.2.3.2c.3.8.3 1.8 0 3.1-.6 3.2-2.7 4.3-5.4 4.3h-1.3c-.3 0-.6.2-.7.5l-.6 3.8-.1.5H8.1L10.3 5.2z"/></svg>
       </a>
       <div class="lang-switcher">
         <button class="lang-btn active" onclick="setLang('es')" id="btn-es" aria-label="Español" title="Español">🇦🇷</button>
@@ -1336,6 +1337,7 @@
         <a href="#vistos" onclick="closeMobileMenu()" id="t-mnav-vistos">Más vistos</a>
         <a href="#temas" onclick="closeMobileMenu()" id="t-mnav-teachings">Enseñanzas</a>
         <a href="#links" onclick="closeMobileMenu()" id="t-mnav-links">Links</a>
+        <a href="https://www.paypal.com/donate/?hosted_button_id=4WYTQ5A4XTFUE" target="_blank" rel="noopener" onclick="closeMobileMenu()" id="t-mnav-paypal">💙 Donar con PayPal</a>
       </nav>
       <div class="mobile-lang">
         <button class="lang-btn active" onclick="setLang('es')" id="btn-es-m" aria-label="Español">🇦🇷</button>
@@ -1719,6 +1721,7 @@
         't-mnav-vistos': 'Más vistos',
         't-mnav-teachings': 'Enseñanzas',
         't-mnav-links': 'Links',
+        't-mnav-paypal': '💙 Donar con PayPal',
         't-nav-sermons': 'Predicaciones',
         't-nav-recientes': 'Recientes',
         't-nav-vistos': 'Más vistos',
@@ -1831,6 +1834,7 @@
         't-mnav-vistos': 'Most watched',
         't-mnav-teachings': 'Teachings',
         't-mnav-links': 'Links',
+        't-mnav-paypal': '💙 Donate with PayPal',
         't-nav-sermons': 'Sermons',
         't-nav-recientes': 'Recent',
         't-nav-vistos': 'Most watched',
