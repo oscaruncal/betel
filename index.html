@@ -158,6 +158,11 @@
       border-radius: 4px;
       opacity: 0.35;
       transition: opacity var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
+      min-width: 44px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .lang-btn.active { opacity: 1; transform: scale(1.15); }
@@ -1258,6 +1263,12 @@
 
     @media (prefers-reduced-motion: reduce) {
       .fade-in { opacity: 1 !important; transform: none !important; transition: none !important; }
+      html { scroll-behavior: auto; }
+      .donate-modal,
+      .donate-card { animation: none !important; }
+      .donate-btn:hover,
+      .donate-mp-copy:hover,
+      .btn-gold:hover { transform: none !important; }
     }
 
     /* ── MODAL DONAR ── */
@@ -1389,6 +1400,20 @@
       text-transform: uppercase;
       color: var(--muted);
       margin-bottom: 0.35rem;
+    }
+    .donate-mp-holder {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.7rem;
+    }
+    .donate-mp-holder .donate-mp-label { margin-bottom: 0; }
+    .donate-mp-holder-name {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
     }
     .donate-mp-row {
       display: flex;
@@ -1886,6 +1911,10 @@
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#009EE3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
             <span id="t-donate-mp-title">Mercado Pago · Transferencia</span>
           </div>
+          <div class="donate-mp-holder">
+            <span class="donate-mp-label" id="t-donate-mp-holder-label">Titular</span>
+            <span class="donate-mp-holder-name" translate="no">Oscar Alfredo Uncal</span>
+          </div>
           <div class="donate-mp-label" id="t-donate-mp-label">CVU</div>
           <div class="donate-mp-row">
             <code class="donate-mp-cvu" id="donateMpCvu">0000003100073863178241</code>
@@ -1918,6 +1947,7 @@
         't-donate-msg': 'Si estos mensajes son de bendición para tu vida y sentís en tu corazón acompañar este ministerio, podés hacerlo a través de una donación voluntaria. Tu ayuda permite que podamos seguir compartiendo la Palabra a más personas.',
         't-donate-btn-paypal': 'Donar con PayPal',
         't-donate-mp-title': 'Mercado Pago · Transferencia',
+        't-donate-mp-holder-label': 'Titular',
         't-donate-mp-label': 'CVU',
         't-donate-mp-copy': 'Copiar',
         't-nav-sermons': 'Predicaciones',
@@ -2037,6 +2067,7 @@
         't-donate-msg': "If these messages are a blessing in your life and you feel in your heart to support this ministry, you can do so through a voluntary donation. Your help allows us to keep sharing the Word with more people.",
         't-donate-btn-paypal': 'Donate with PayPal',
         't-donate-mp-title': 'Mercado Pago · Bank transfer',
+        't-donate-mp-holder-label': 'Account holder',
         't-donate-mp-label': 'CVU',
         't-donate-mp-copy': 'Copy',
         't-nav-sermons': 'Sermons',
@@ -2252,8 +2283,12 @@
     }
 
     /* Modal de donación */
+    var donateLastFocus = null;
+    var DONATE_FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
     function openDonate(e) {
       if (e && e.preventDefault) e.preventDefault();
+      donateLastFocus = document.activeElement;
       var m = document.getElementById('donateModal');
       m.classList.add('open');
       m.setAttribute('aria-hidden', 'false');
@@ -2266,10 +2301,30 @@
       m.classList.remove('open');
       m.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
+      if (donateLastFocus && typeof donateLastFocus.focus === 'function') {
+        donateLastFocus.focus();
+        donateLastFocus = null;
+      }
     }
     function handleDonateOverlay(e) {
       if (e.target === document.getElementById('donateModal')) closeDonate();
     }
+    /* Focus trap dentro del modal */
+    document.addEventListener('keydown', function(e) {
+      if (e.key !== 'Tab') return;
+      var m = document.getElementById('donateModal');
+      if (!m || !m.classList.contains('open')) return;
+      var focusables = Array.prototype.slice.call(m.querySelectorAll(DONATE_FOCUSABLE))
+        .filter(function(el) { return el.offsetParent !== null; });
+      if (!focusables.length) return;
+      var first = focusables[0];
+      var last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); first.focus();
+      }
+    });
     function copyDonateCvu(btn) {
       var cvu = document.getElementById('donateMpCvu').textContent.trim();
       var label = btn.querySelector('span');
