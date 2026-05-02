@@ -1025,6 +1025,11 @@
     .cta-status.is-success { color: #4a7c59; }
     .cta-status.is-error   { color: #b94a4a; }
 
+    .cta-form.is-disabled { opacity: 0.55; }
+    .cta-form.is-disabled input,
+    .cta-form.is-disabled button { cursor: not-allowed; }
+    .cta-form.is-disabled button:hover { transform: none; background: var(--gold); }
+
     .cta-form input {
       flex: 1;
       background: var(--bg2);
@@ -1861,12 +1866,12 @@
       <div class="label" style="justify-content:center;margin-bottom:1rem" id="t-cta-label">Comunidad</div>
       <h2 id="t-cta-h2">Te avisamos cuando hay<br/>un nuevo <em>devocional</em></h2>
       <p id="t-cta-p">Dejá tu email y te notificamos cada vez que Oscar sube un devocional nuevo.</p>
-      <form class="cta-form" onsubmit="handleSub(event)" novalidate>
+      <form class="cta-form is-disabled" onsubmit="handleSub(event)" novalidate aria-disabled="true">
         <label for="sub-email" class="visually-hidden" id="t-cta-input-label">Tu email</label>
-        <input id="sub-email" type="email" placeholder="tu@email.com" autocomplete="email" required/>
-        <button type="submit" class="btn-gold" id="t-cta-btn">Avisarme</button>
+        <input id="sub-email" type="email" placeholder="tu@email.com" autocomplete="email" required disabled aria-disabled="true"/>
+        <button type="submit" class="btn-gold" id="t-cta-btn" disabled aria-disabled="true">Avisarme</button>
       </form>
-      <p class="cta-status" id="formStatus" role="status" aria-live="polite"></p>
+      <p class="cta-status" id="formStatus" role="status" aria-live="polite"><span id="t-cta-soon">🚧 Próximamente — estamos preparando los avisos por email</span></p>
     </div>
   </div>
 
@@ -2056,6 +2061,7 @@
         't-cta-input-label': 'Tu email',
         't-fb-soon': 'Próximamente',
         't-cta-btn': 'Avisarme',
+        't-cta-soon': '🚧 Próximamente — estamos preparando los avisos por email',
         't-footer-tagline': 'Enseñanzas bíblicas de Oscar Uncal para fortalecer tu fe y crecer en el conocimiento de la Palabra de Dios.',
         't-footer-h-sections': 'Secciones',
         't-footer-sermons': 'Predicaciones',
@@ -2178,6 +2184,7 @@
         't-cta-input-label': 'Your email',
         't-fb-soon': 'Coming soon',
         't-cta-btn': 'Notify me',
+        't-cta-soon': '🚧 Coming soon — we are setting up email notifications',
         't-footer-tagline': "Biblical teachings by Oscar Uncal to strengthen your faith and grow in the knowledge of God's Word.",
         't-footer-h-sections': 'Sections',
         't-footer-sermons': 'Sermons',
