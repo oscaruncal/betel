@@ -11,6 +11,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
+  <!-- MailerLite Universal -->
+  <script>
+    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+    ml('account', '2309647');
+  </script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1003,6 +1012,19 @@
       margin: 0 auto;
     }
 
+    .cta-status {
+      max-width: 440px;
+      margin: 1rem auto 0;
+      text-align: center;
+      font-size: 0.9rem;
+      font-family: var(--font-body);
+      color: var(--muted);
+      min-height: 1.4em;
+      transition: color var(--duration-fast) var(--ease-standard);
+    }
+    .cta-status.is-success { color: #4a7c59; }
+    .cta-status.is-error   { color: #b94a4a; }
+
     .cta-form input {
       flex: 1;
       background: var(--bg2);
@@ -1839,11 +1861,12 @@
       <div class="label" style="justify-content:center;margin-bottom:1rem" id="t-cta-label">Comunidad</div>
       <h2 id="t-cta-h2">Te avisamos cuando hay<br/>un nuevo <em>devocional</em></h2>
       <p id="t-cta-p">Dejá tu email y te notificamos cada vez que Oscar sube un devocional nuevo.</p>
-      <form class="cta-form" onsubmit="handleSub(event)">
+      <form class="cta-form" onsubmit="handleSub(event)" novalidate>
         <label for="sub-email" class="visually-hidden" id="t-cta-input-label">Tu email</label>
         <input id="sub-email" type="email" placeholder="tu@email.com" autocomplete="email" required/>
         <button type="submit" class="btn-gold" id="t-cta-btn">Avisarme</button>
       </form>
+      <p class="cta-status" id="formStatus" role="status" aria-live="polite"></p>
     </div>
   </div>
 
@@ -2375,17 +2398,77 @@
       }
     }
 
-    /* Suscripción simple */
+    /* Suscripción a MailerLite */
+    var ML_ACCOUNT = '2309647';
+    var ML_FORM = 'hG0Vg8';
+
     function handleSub(e) {
       e.preventDefault();
-      var btn = e.target.querySelector('button');
-      btn.textContent = '¡Gracias! 🙏';
-      btn.style.background = '#4a7c59';
-      setTimeout(() => {
-        btn.textContent = 'Suscribirme';
-        btn.style.background = '';
-        e.target.reset();
-      }, 3000);
+      var form = e.target;
+      var input = form.querySelector('input[type="email"]');
+      var btn = form.querySelector('button');
+      var status = document.getElementById('formStatus');
+      var lang = (document.documentElement.lang === 'en') ? 'en' : 'es';
+
+      var msgs = {
+        es: {
+          invalid: 'Ingresá un email válido.',
+          sending: 'Enviando…',
+          ok: '¡Listo! Revisá tu correo para confirmar la suscripción.',
+          err: 'No pudimos suscribirte. Intentá de nuevo en unos minutos.'
+        },
+        en: {
+          invalid: 'Please enter a valid email.',
+          sending: 'Sending…',
+          ok: 'Done! Check your inbox to confirm your subscription.',
+          err: "We couldn't subscribe you. Please try again in a few minutes."
+        }
+      };
+      var t = msgs[lang];
+      var email = (input.value || '').trim();
+
+      status.className = 'cta-status';
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        status.textContent = t.invalid;
+        status.classList.add('is-error');
+        input.focus();
+        return;
+      }
+
+      var originalLabel = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = t.sending;
+      status.textContent = '';
+
+      var body = new FormData();
+      body.append('fields[email]', email);
+      body.append('ml-submit', '1');
+      body.append('anticsrf', 'true');
+
+      fetch('https://assets.mailerlite.com/jsonp/' + ML_ACCOUNT + '/forms/' + ML_FORM + '/subscribe', {
+        method: 'POST',
+        body: body
+      })
+      .then(function(r) { return r.json().catch(function(){ return {}; }); })
+      .then(function(data) {
+        if (data && (data.success || data.status === 'success')) {
+          status.textContent = t.ok;
+          status.classList.add('is-success');
+          form.reset();
+        } else {
+          var apiMsg = data && (data.message || (data.errors && (data.errors.fields && data.errors.fields.email && data.errors.fields.email[0])));
+          status.textContent = apiMsg || t.err;
+          status.classList.add('is-error');
+        }
+      })
+      .catch(function() {
+        status.textContent = t.err;
+        status.classList.add('is-error');
+      })
+      .then(function() {
+        btn.disabled = false;
+        btn.textContent = originalLabel;
+      });
     }
 
     /* ── VERSÍCULO DEL DÍA ── */
