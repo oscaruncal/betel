@@ -1259,6 +1259,178 @@
     @media (prefers-reduced-motion: reduce) {
       .fade-in { opacity: 1 !important; transform: none !important; transition: none !important; }
     }
+
+    /* ── MODAL DONAR ── */
+    .donate-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(15, 14, 13, 0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      animation: donateFade 0.2s ease;
+    }
+
+    .donate-modal.open { display: flex; }
+
+    @keyframes donateFade {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes donateRise {
+      from { opacity: 0; transform: translateY(16px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .donate-card {
+      position: relative;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 480px;
+      padding: 2.5rem 2rem 2rem;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+      animation: donateRise 0.28s var(--ease-spring);
+    }
+
+    .donate-close {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 8px;
+      line-height: 1;
+      border-radius: 4px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .donate-close:hover { color: var(--text); background: var(--bg2); }
+    .donate-close svg { width: 22px; height: 22px; display: block; }
+
+    .donate-card .label {
+      justify-content: center;
+      margin-bottom: 0.9rem;
+    }
+
+    .donate-card h3 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.6rem);
+      font-weight: 700;
+      color: var(--text);
+      text-align: center;
+      margin-bottom: 0.9rem;
+      line-height: 1.25;
+    }
+
+    .donate-card p {
+      font-family: var(--font-body);
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+      font-size: 0.97rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .donate-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .donate-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      padding: 0.95rem 1.2rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: transform 0.15s, box-shadow 0.2s, filter 0.2s;
+      color: #fff;
+    }
+    .donate-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.18); filter: brightness(1.05); }
+    .donate-btn svg { flex-shrink: 0; }
+
+    .donate-btn-paypal { background: #003087; }
+    .donate-btn-mp     { background: #009EE3; }
+
+    .donate-mp {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.95rem 1rem;
+      background: var(--bg2);
+    }
+    .donate-mp-head {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+    }
+    .donate-mp-label {
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    .donate-mp-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.55rem 0.7rem;
+    }
+    .donate-mp-cvu {
+      flex: 1;
+      font-family: 'Courier New', ui-monospace, monospace;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      color: var(--text);
+      word-break: break-all;
+      user-select: all;
+    }
+    .donate-mp-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 3px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      flex-shrink: 0;
+    }
+    .donate-mp-copy:hover { background: var(--gold2); transform: translateY(-1px); }
+    .donate-mp-copy.copied { background: #4a7c59; }
+
+    @media (max-width: 480px) {
+      .donate-card { padding: 2.2rem 1.4rem 1.6rem; }
+      .donate-mp-cvu { font-size: 0.85rem; }
+    }
   </style>
 </head>
 <body>
@@ -1300,7 +1472,7 @@
             </a>
           </div>
         </li>
-        <li><a href="https://www.paypal.com/donate/?hosted_button_id=4WYTQ5A4XTFUE" target="_blank" rel="noopener" id="t-nav-paypal">Donar</a></li>
+        <li><a href="#" onclick="openDonate(event)" id="t-nav-paypal">Donar</a></li>
       </ul>
       <div class="lang-switcher">
         <button class="lang-btn active" onclick="setLang('es')" id="btn-es" aria-label="Español" title="Español">🇦🇷</button>
@@ -1325,7 +1497,7 @@
         <a href="#vistos" onclick="closeMobileMenu()" id="t-mnav-vistos">🔥 Más vistos</a>
         <a href="#temas" onclick="closeMobileMenu()" id="t-mnav-teachings">✝️ Enseñanzas</a>
         <a href="#links" onclick="closeMobileMenu()" id="t-mnav-links">🔗 Links</a>
-        <a href="https://www.paypal.com/donate/?hosted_button_id=4WYTQ5A4XTFUE" target="_blank" rel="noopener" onclick="closeMobileMenu()" id="t-mnav-paypal">💙 Donar con PayPal</a>
+        <a href="#" onclick="closeMobileMenu(); openDonate(event)" id="t-mnav-paypal">💙 Donar</a>
       </nav>
       <div class="mobile-lang">
         <button class="lang-btn active" onclick="setLang('es')" id="btn-es-m" aria-label="Español">🇦🇷</button>
@@ -1603,12 +1775,12 @@
           </div>
         </a>
 
-        <a href="https://www.paypal.com/donate/?hosted_button_id=4WYTQ5A4XTFUE" target="_blank" rel="noopener" class="link-card">
-          <div class="link-card-icon" style="background:#003087 15">
-            <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path fill="#003087" d="M19.5 6.4c.1.6.1 1.3 0 2-.6 3.2-2.7 4.3-5.4 4.3h-.7c-.3 0-.6.2-.7.5l-.8 5h-2.5l.1-.5.6-3.8c.1-.3.3-.5.6-.5h1.3c3.5 0 5.6-1.4 6.2-4.4.3-1.4.1-2.5-.7-3.3l.1-.3z"/><path fill="#009cde" d="M18.1 5.1c-.2-.1-.5-.2-.7-.3-.3-.1-.5-.1-.8-.1H11c-.3 0-.6.2-.7.5L8.6 14.3l-.1.4c.1-.3.4-.5.7-.5h1.5c2.7 0 4.8-1.1 5.4-4.3.1-.7.1-1.4 0-2-.5-.3-1-.5-1.6-.6l3.6-2.2z"/><path fill="#012169" d="M10.3 5.2c.1-.3.4-.5.7-.5h5.6c.3 0 .5 0 .8.1.2.1.5.1.7.3l.3.2.3.2c.3.8.3 1.8 0 3.1-.6 3.2-2.7 4.3-5.4 4.3h-1.3c-.3 0-.6.2-.7.5l-.6 3.8-.1.5H8.1L10.3 5.2z"/></svg>
+        <a href="#" onclick="openDonate(event)" class="link-card">
+          <div class="link-card-icon" style="background:rgba(123,94,167,0.12)">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#7B5EA7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </div>
           <div class="link-card-info">
-            <div class="link-card-name" id="t-lc-paypal">Donar con PayPal</div>
+            <div class="link-card-name" id="t-lc-paypal">Donar</div>
             <div class="link-card-desc" id="t-lc-paypal-desc">Apoyá el ministerio</div>
           </div>
         </a>
@@ -1695,6 +1867,38 @@
     </div>
   </footer>
 
+  <!-- DONATE MODAL -->
+  <div class="donate-modal" id="donateModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="donateTitle" onclick="handleDonateOverlay(event)">
+    <div class="donate-card">
+      <button class="donate-close" type="button" onclick="closeDonate()" aria-label="Cerrar" id="t-donate-close-aria">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="label" id="t-donate-label">Donación</div>
+      <h3 id="donateTitle"><span id="t-donate-title">Sumate al ministerio</span></h3>
+      <p id="t-donate-msg">Si estos mensajes son de bendición para tu vida y sentís en tu corazón acompañar este ministerio, podés hacerlo a través de una donación voluntaria. Tu ayuda permite que podamos seguir compartiendo la Palabra a más personas.</p>
+      <div class="donate-buttons">
+        <a href="https://www.paypal.com/donate/?hosted_button_id=4WYTQ5A4XTFUE" target="_blank" rel="noopener" class="donate-btn donate-btn-paypal">
+          <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 6 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 4.973-5.965 4.973H11.85a.806.806 0 0 0-.795.679l-1.337 8.466-.06.367a.79.79 0 0 0 .779.91h4.005c.456 0 .844-.331.917-.781l.038-.196.717-4.55.046-.252a.81.81 0 0 1 .79-.683h.499c3.226 0 5.748-1.31 6.487-5.099.301-1.535.144-2.825-.643-3.749z"/></svg>
+          <span id="t-donate-btn-paypal">Donar con PayPal</span>
+        </a>
+        <div class="donate-mp">
+          <div class="donate-mp-head">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#009EE3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            <span id="t-donate-mp-title">Mercado Pago · Transferencia</span>
+          </div>
+          <div class="donate-mp-label" id="t-donate-mp-label">CVU</div>
+          <div class="donate-mp-row">
+            <code class="donate-mp-cvu" id="donateMpCvu">0000003100073863178241</code>
+            <button type="button" class="donate-mp-copy" onclick="copyDonateCvu(this)" aria-label="Copiar CVU" id="donateMpCopyBtn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span id="t-donate-mp-copy">Copiar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     /* ── LANGUAGE SWITCHER ── */
     var translations = {
@@ -1707,8 +1911,15 @@
         't-mnav-vistos': '🔥 Más vistos',
         't-mnav-teachings': '✝️ Enseñanzas',
         't-mnav-links': '🔗 Links',
-        't-mnav-paypal': '💙 Donar con PayPal',
+        't-mnav-paypal': '💙 Donar',
         't-nav-paypal': 'Donar',
+        't-donate-label': 'Donación',
+        't-donate-title': 'Sumate al ministerio',
+        't-donate-msg': 'Si estos mensajes son de bendición para tu vida y sentís en tu corazón acompañar este ministerio, podés hacerlo a través de una donación voluntaria. Tu ayuda permite que podamos seguir compartiendo la Palabra a más personas.',
+        't-donate-btn-paypal': 'Donar con PayPal',
+        't-donate-mp-title': 'Mercado Pago · Transferencia',
+        't-donate-mp-label': 'CVU',
+        't-donate-mp-copy': 'Copiar',
         't-nav-sermons': 'Predicaciones',
         't-nav-recientes': 'Recientes',
         't-nav-vistos': 'Más vistos',
@@ -1783,7 +1994,7 @@
         't-lc3-name': 'Devocionales (inglés)',
         't-lc3-desc': 'Mensajes cortos diarios en inglés',
         't-lc4-desc': 'Escuchá los mensajes',
-        't-lc-paypal': 'Donar con PayPal',
+        't-lc-paypal': 'Donar',
         't-lc-paypal-desc': 'Apoyá el ministerio',
         't-ig-soon': 'Próximamente',
         't-cta-label': 'Comunidad',
@@ -1819,8 +2030,15 @@
         't-mnav-vistos': '🔥 Most watched',
         't-mnav-teachings': '✝️ Teachings',
         't-mnav-links': '🔗 Links',
-        't-mnav-paypal': '💙 Donate with PayPal',
+        't-mnav-paypal': '💙 Donate',
         't-nav-paypal': 'Donate',
+        't-donate-label': 'Donation',
+        't-donate-title': 'Join the ministry',
+        't-donate-msg': "If these messages are a blessing in your life and you feel in your heart to support this ministry, you can do so through a voluntary donation. Your help allows us to keep sharing the Word with more people.",
+        't-donate-btn-paypal': 'Donate with PayPal',
+        't-donate-mp-title': 'Mercado Pago · Bank transfer',
+        't-donate-mp-label': 'CVU',
+        't-donate-mp-copy': 'Copy',
         't-nav-sermons': 'Sermons',
         't-nav-recientes': 'Recent',
         't-nav-vistos': 'Most watched',
@@ -1896,7 +2114,7 @@
         't-lc3-name': 'Devotionals (English)',
         't-lc3-desc': 'Short daily messages in English',
         't-lc4-desc': 'Listen to the messages',
-        't-lc-paypal': 'Donate with PayPal',
+        't-lc-paypal': 'Donate',
         't-lc-paypal-desc': 'Support the ministry',
         't-ig-soon': 'Coming soon',
         't-tt-soon': 'Coming soon',
@@ -2032,6 +2250,61 @@
       btn.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
     }
+
+    /* Modal de donación */
+    function openDonate(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      var m = document.getElementById('donateModal');
+      m.classList.add('open');
+      m.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      var closeBtn = m.querySelector('.donate-close');
+      if (closeBtn) closeBtn.focus();
+    }
+    function closeDonate() {
+      var m = document.getElementById('donateModal');
+      m.classList.remove('open');
+      m.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    function handleDonateOverlay(e) {
+      if (e.target === document.getElementById('donateModal')) closeDonate();
+    }
+    function copyDonateCvu(btn) {
+      var cvu = document.getElementById('donateMpCvu').textContent.trim();
+      var label = btn.querySelector('span');
+      var lang = (document.documentElement.lang === 'en') ? 'en' : 'es';
+      var ok = (lang === 'en') ? 'Copied' : 'Copiado';
+      var fail = (lang === 'en') ? 'Press Ctrl+C' : 'Copiá con Ctrl+C';
+      var done = function(success) {
+        var prev = label.textContent;
+        label.textContent = success ? ok : fail;
+        btn.classList.toggle('copied', success);
+        setTimeout(function() {
+          label.textContent = (lang === 'en') ? 'Copy' : 'Copiar';
+          btn.classList.remove('copied');
+        }, 1800);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(cvu).then(function() { done(true); }, function() { done(false); });
+      } else {
+        try {
+          var r = document.createRange();
+          r.selectNodeContents(document.getElementById('donateMpCvu'));
+          var s = window.getSelection();
+          s.removeAllRanges(); s.addRange(r);
+          document.execCommand('copy');
+          s.removeAllRanges();
+          done(true);
+        } catch (_) { done(false); }
+      }
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        var m = document.getElementById('donateModal');
+        if (m && m.classList.contains('open')) closeDonate();
+      }
+    });
 
     /* Acordeón de temas */
     function toggleTopic(btn) {
