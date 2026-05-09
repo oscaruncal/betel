@@ -51,6 +51,8 @@
 
     html { scroll-behavior: smooth; }
 
+    section[id], #versiculo { scroll-margin-top: 80px; }
+
     a, button { touch-action: manipulation; }
 
     .skip-link {
@@ -911,7 +913,7 @@
 
     .links-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
       gap: 1px;
       background: var(--border);
       border: 1px solid var(--border);
@@ -1004,6 +1006,7 @@
       margin: 0 auto;
     }
     .cta-form #sub-email,
+    .cta-form #sub-city,
     .cta-form textarea,
     .cta-form .cta-check { grid-column: span 2; }
     .cta-form button[type="submit"] { grid-column: span 2; justify-self: stretch; }
@@ -1106,6 +1109,14 @@
     .cta-form input:focus-visible { outline-color: var(--gold); }
     .cta-form input::placeholder { color: var(--muted2); }
 
+    .cta-form input.is-invalid,
+    .cta-form textarea.is-invalid {
+      border-color: #b94a4a;
+      background: rgba(185, 74, 74, 0.06);
+    }
+    .cta-form input.is-invalid:focus,
+    .cta-form textarea.is-invalid:focus { outline-color: #b94a4a; }
+
     .btn-gold {
       background: var(--gold);
       color: #0F0E0D;
@@ -1123,6 +1134,9 @@
     }
 
     .btn-gold:hover { background: var(--gold2); transform: translateY(-2px); }
+    .btn-gold:active { transform: translateY(0) scale(0.97); transition-duration: 80ms; }
+    .btn-gold:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-gold:disabled:hover { background: var(--gold); transform: none; }
 
     /* ── FOOTER ── */
     footer {
@@ -1202,10 +1216,8 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      .links-grid { grid-template-columns: repeat(2, 1fr); }
       .videos-grid { grid-template-columns: 1fr; }
       .video-card:first-child { grid-column: span 1; }
-      .topics-grid { grid-template-columns: repeat(2, 1fr); }
       .footer-inner { grid-template-columns: 1fr 1fr; }
     }
 
@@ -1226,10 +1238,8 @@
     }
 
     @media (max-width: 640px) {
-      .links-grid { grid-template-columns: 1fr; }
       .videos-grid { grid-template-columns: 1fr; }
       .video-card:first-child { grid-column: span 1; }
-      .topics-grid { grid-template-columns: 1fr 1fr; }
       .cta-form { grid-template-columns: 1fr; }
       .cta-form > * { grid-column: 1 !important; }
       .footer-inner { grid-template-columns: 1fr; }
@@ -1247,8 +1257,6 @@
 
     @media (max-width: 400px) {
       /* Pantallas muy pequeñas */
-      .topics-grid { grid-template-columns: 1fr; }
-      .links-grid { grid-template-columns: 1fr; }
       .footer-inner { grid-template-columns: 1fr; }
     }
 
@@ -1355,7 +1363,8 @@
       .donate-card { animation: none !important; }
       .donate-btn:hover,
       .donate-mp-copy:hover,
-      .btn-gold:hover { transform: none !important; }
+      .btn-gold:hover,
+      .btn-gold:active { transform: none !important; }
     }
 
     /* ── MODAL DONAR ── */
@@ -1935,14 +1944,8 @@
         <input id="sub-email" name="email" type="email" placeholder="tu@email.com" autocomplete="email" required/>
         <label for="sub-city" class="visually-hidden" id="t-cta-city-label">Ciudad y país</label>
         <input id="sub-city" name="ciudad" type="text" placeholder="Ciudad, país" autocomplete="address-level2" required/>
-        <label for="sub-phone" class="visually-hidden" id="t-cta-phone-label">Teléfono o WhatsApp (opcional)</label>
-        <input id="sub-phone" name="telefono" type="tel" placeholder="WhatsApp (opcional)" autocomplete="tel" inputmode="tel"/>
         <label for="sub-msg" class="visually-hidden" id="t-cta-msg-label">Tu pedido</label>
         <textarea id="sub-msg" name="pedido" rows="4" placeholder="Compartí tu pedido de oración…" required></textarea>
-        <label class="cta-check" for="sub-private">
-          <input id="sub-private" name="privado" type="checkbox"/>
-          <span id="t-cta-private">Quiero que mi pedido sea privado (solo Oscar lo ve)</span>
-        </label>
         <button type="submit" class="btn-gold" id="t-cta-btn">Enviar pedido</button>
       </form>
       <p class="cta-status" id="formStatus" role="status" aria-live="polite"></p>
@@ -2140,9 +2143,7 @@
         't-cta-name-label': 'Nombre',
         't-cta-surname-label': 'Apellido',
         't-cta-city-label': 'Ciudad y país',
-        't-cta-phone-label': 'Teléfono o WhatsApp (opcional)',
         't-cta-msg-label': 'Tu pedido',
-        't-cta-private': 'Quiero que mi pedido sea privado (solo Oscar lo ve)',
         't-cta-verse': '"Confesaos vuestras ofensas unos a otros, y orad unos por otros, para que seáis sanados."',
         't-cta-verse-ref': 'Santiago 5:16',
         't-fb-soon': 'Próximamente',
@@ -2270,9 +2271,7 @@
         't-cta-name-label': 'Name',
         't-cta-surname-label': 'Surname',
         't-cta-city-label': 'City and country',
-        't-cta-phone-label': 'Phone or WhatsApp (optional)',
         't-cta-msg-label': 'Your request',
-        't-cta-private': 'I want my request to be private (only Oscar will see it)',
         't-cta-verse': '"Therefore confess your sins to each other and pray for each other so that you may be healed."',
         't-cta-verse-ref': 'James 5:16',
         't-fb-soon': 'Coming soon',
@@ -2333,13 +2332,11 @@
         var phSurname = document.getElementById('sub-surname');
         var phEmail = document.getElementById('sub-email');
         var phCity = document.getElementById('sub-city');
-        var phPhone = document.getElementById('sub-phone');
         var phMsg = document.getElementById('sub-msg');
         if (phName) phName.placeholder = (lang === 'en') ? 'Name' : 'Nombre';
         if (phSurname) phSurname.placeholder = (lang === 'en') ? 'Surname' : 'Apellido';
         if (phEmail) phEmail.placeholder = (lang === 'en') ? 'you@email.com' : 'tu@email.com';
         if (phCity) phCity.placeholder = (lang === 'en') ? 'City, country' : 'Ciudad, país';
-        if (phPhone) phPhone.placeholder = (lang === 'en') ? 'WhatsApp (optional)' : 'WhatsApp (opcional)';
         if (phMsg) phMsg.placeholder = (lang === 'en') ? 'Share your prayer request…' : 'Compartí tu pedido de oración…';
 
         document.getElementById('btn-es').classList.toggle('active', lang === 'es');
@@ -2520,9 +2517,7 @@
       var surnameI = document.getElementById('sub-surname');
       var emailI = document.getElementById('sub-email');
       var cityI = document.getElementById('sub-city');
-      var phoneI = document.getElementById('sub-phone');
       var msgI = document.getElementById('sub-msg');
-      var privateI = document.getElementById('sub-private');
       var btn = form.querySelector('button');
       var status = document.getElementById('formStatus');
       var lang = (document.documentElement.lang === 'en') ? 'en' : 'es';
@@ -2548,19 +2543,35 @@
       var apellido = (surnameI.value || '').trim();
       var email = (emailI.value || '').trim();
       var ciudad = (cityI.value || '').trim();
-      var telefono = (phoneI.value || '').trim();
       var pedido = (msgI.value || '').trim();
-      var privado = !!privateI.checked;
 
+      var fields = [nameI, surnameI, emailI, cityI, msgI];
+      fields.forEach(function(el) {
+        el.classList.remove('is-invalid');
+        el.removeAttribute('aria-invalid');
+      });
       status.className = 'cta-status';
 
-      if (!nombre || !apellido || !email || !ciudad || !pedido) {
+      var invalid = [];
+      if (!nombre) invalid.push(nameI);
+      if (!apellido) invalid.push(surnameI);
+      if (!email) invalid.push(emailI);
+      if (!ciudad) invalid.push(cityI);
+      if (!pedido) invalid.push(msgI);
+
+      if (invalid.length) {
+        invalid.forEach(function(el) {
+          el.classList.add('is-invalid');
+          el.setAttribute('aria-invalid', 'true');
+        });
         status.textContent = t.required;
         status.classList.add('is-error');
-        (!nombre ? nameI : !apellido ? surnameI : !email ? emailI : !ciudad ? cityI : msgI).focus();
+        invalid[0].focus();
         return;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailI.classList.add('is-invalid');
+        emailI.setAttribute('aria-invalid', 'true');
         status.textContent = t.invalidEmail;
         status.classList.add('is-error');
         emailI.focus();
@@ -2572,16 +2583,13 @@
       btn.textContent = t.sending;
       status.textContent = '';
 
-      var subjectPrefix = privado ? '[PRIVADO] Pedido de oración: ' : 'Pedido de oración: ';
       var payload = {
         Nombre: nombre,
         Apellido: apellido,
         Email: email,
         Ciudad: ciudad,
-        Telefono: telefono || '—',
         Pedido: pedido,
-        Privado: privado ? 'Sí' : 'No',
-        _subject: subjectPrefix + nombre + ' ' + apellido,
+        _subject: 'Pedido de oración: ' + nombre + ' ' + apellido,
         _template: 'table',
         _captcha: 'false'
       };
@@ -2611,6 +2619,16 @@
         btn.textContent = originalLabel;
       });
     }
+
+    /* Limpia el estado is-invalid al volver a editar el campo */
+    document.querySelectorAll('.cta-form input, .cta-form textarea').forEach(function(el) {
+      el.addEventListener('input', function() {
+        if (el.classList.contains('is-invalid')) {
+          el.classList.remove('is-invalid');
+          el.removeAttribute('aria-invalid');
+        }
+      });
+    });
 
     /* ── VERSÍCULO DEL DÍA ── */
     var VERSES = {
