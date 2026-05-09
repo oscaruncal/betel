@@ -11,15 +11,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
-  <!-- MailerLite Universal -->
-  <script>
-    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
-    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
-    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
-    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
-    ml('account', '2309647');
-  </script>
-
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1006,11 +997,14 @@
     }
 
     .cta-form {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 0.75rem;
-      max-width: 440px;
+      max-width: 480px;
       margin: 0 auto;
     }
+    .cta-form #sub-email { grid-column: span 2; }
+    .cta-form button[type="submit"] { grid-column: span 2; justify-self: stretch; }
 
     .cta-status {
       max-width: 440px;
@@ -1171,7 +1165,8 @@
       .videos-grid { grid-template-columns: 1fr; }
       .video-card:first-child { grid-column: span 1; }
       .topics-grid { grid-template-columns: 1fr 1fr; }
-      .cta-form { flex-direction: column; }
+      .cta-form { grid-template-columns: 1fr; }
+      .cta-form > * { grid-column: 1 !important; }
       .footer-inner { grid-template-columns: 1fr; }
 
       /* Paddings mínimos en mobile */
@@ -1866,12 +1861,16 @@
       <div class="label" style="justify-content:center;margin-bottom:1rem" id="t-cta-label">Comunidad</div>
       <h2 id="t-cta-h2">Te avisamos cuando hay<br/>un nuevo <em>devocional</em></h2>
       <p id="t-cta-p">Dejá tu email y te notificamos cada vez que Oscar sube un devocional nuevo.</p>
-      <form class="cta-form is-disabled" onsubmit="handleSub(event)" novalidate aria-disabled="true">
+      <form class="cta-form" onsubmit="handleSub(event)" novalidate>
+        <label for="sub-name" class="visually-hidden" id="t-cta-name-label">Nombre</label>
+        <input id="sub-name" name="nombre" type="text" placeholder="Nombre" autocomplete="given-name" required/>
+        <label for="sub-surname" class="visually-hidden" id="t-cta-surname-label">Apellido</label>
+        <input id="sub-surname" name="apellido" type="text" placeholder="Apellido" autocomplete="family-name" required/>
         <label for="sub-email" class="visually-hidden" id="t-cta-input-label">Tu email</label>
-        <input id="sub-email" type="email" placeholder="tu@email.com" autocomplete="email" required disabled aria-disabled="true"/>
-        <button type="submit" class="btn-gold" id="t-cta-btn" disabled aria-disabled="true">Avisarme</button>
+        <input id="sub-email" name="email" type="email" placeholder="tu@email.com" autocomplete="email" required/>
+        <button type="submit" class="btn-gold" id="t-cta-btn">Avisarme</button>
       </form>
-      <p class="cta-status" id="formStatus" role="status" aria-live="polite"><span id="t-cta-soon">🚧 Próximamente — estamos preparando los avisos por email</span></p>
+      <p class="cta-status" id="formStatus" role="status" aria-live="polite"></p>
     </div>
   </div>
 
@@ -2059,9 +2058,10 @@
         't-cta-h2': 'Te avisamos cuando hay<br/>un nuevo <em>devocional</em>',
         't-cta-p': 'Dejá tu email y te notificamos cada vez que Oscar sube un devocional nuevo.',
         't-cta-input-label': 'Tu email',
+        't-cta-name-label': 'Nombre',
+        't-cta-surname-label': 'Apellido',
         't-fb-soon': 'Próximamente',
         't-cta-btn': 'Avisarme',
-        't-cta-soon': '🚧 Próximamente — estamos preparando los avisos por email',
         't-footer-tagline': 'Enseñanzas bíblicas de Oscar Uncal para fortalecer tu fe y crecer en el conocimiento de la Palabra de Dios.',
         't-footer-h-sections': 'Secciones',
         't-footer-sermons': 'Predicaciones',
@@ -2182,9 +2182,10 @@
         't-cta-h2': "We'll let you know when<br/>there's a new <em>devotional</em>",
         't-cta-p': "Leave your email and we'll notify you every time Oscar uploads a new devotional.",
         't-cta-input-label': 'Your email',
+        't-cta-name-label': 'Name',
+        't-cta-surname-label': 'Surname',
         't-fb-soon': 'Coming soon',
         't-cta-btn': 'Notify me',
-        't-cta-soon': '🚧 Coming soon — we are setting up email notifications',
         't-footer-tagline': "Biblical teachings by Oscar Uncal to strengthen your faith and grow in the knowledge of God's Word.",
         't-footer-h-sections': 'Sections',
         't-footer-sermons': 'Sermons',
@@ -2236,6 +2237,13 @@
           el.style.opacity = '1';
           el.style.transform = 'translateY(0)';
         });
+
+        var phName = document.getElementById('sub-name');
+        var phSurname = document.getElementById('sub-surname');
+        var phEmail = document.getElementById('sub-email');
+        if (phName) phName.placeholder = (lang === 'en') ? 'Name' : 'Nombre';
+        if (phSurname) phSurname.placeholder = (lang === 'en') ? 'Surname' : 'Apellido';
+        if (phEmail) phEmail.placeholder = (lang === 'en') ? 'you@email.com' : 'tu@email.com';
 
         document.getElementById('btn-es').classList.toggle('active', lang === 'es');
         document.getElementById('btn-en').classList.toggle('active', lang === 'en');
@@ -2405,40 +2413,52 @@
       }
     }
 
-    /* Suscripción a MailerLite */
-    var ML_ACCOUNT = '2309647';
-    var ML_FORM = '186315412392117826';
+    /* Suscripción → notificación por email vía FormSubmit */
+    var FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/mcv.mavi@gmail.com';
 
     function handleSub(e) {
       e.preventDefault();
       var form = e.target;
-      var input = form.querySelector('input[type="email"]');
+      var nameI = document.getElementById('sub-name');
+      var surnameI = document.getElementById('sub-surname');
+      var emailI = document.getElementById('sub-email');
       var btn = form.querySelector('button');
       var status = document.getElementById('formStatus');
       var lang = (document.documentElement.lang === 'en') ? 'en' : 'es';
 
       var msgs = {
         es: {
-          invalid: 'Ingresá un email válido.',
+          required: 'Completá nombre, apellido y email.',
+          invalidEmail: 'Ingresá un email válido.',
           sending: 'Enviando…',
-          ok: '¡Listo! Revisá tu correo para confirmar la suscripción.',
-          err: 'No pudimos suscribirte. Intentá de nuevo en unos minutos.'
+          ok: '¡Gracias! Te avisaremos cuando haya un nuevo devocional.',
+          err: 'No pudimos enviar tu suscripción. Intentá de nuevo en unos minutos.'
         },
         en: {
-          invalid: 'Please enter a valid email.',
+          required: 'Please complete name, surname and email.',
+          invalidEmail: 'Please enter a valid email.',
           sending: 'Sending…',
-          ok: 'Done! Check your inbox to confirm your subscription.',
-          err: "We couldn't subscribe you. Please try again in a few minutes."
+          ok: "Thank you! We'll let you know when there is a new devotional.",
+          err: "We couldn't send your subscription. Please try again in a few minutes."
         }
       };
       var t = msgs[lang];
-      var email = (input.value || '').trim();
+      var nombre = (nameI.value || '').trim();
+      var apellido = (surnameI.value || '').trim();
+      var email = (emailI.value || '').trim();
 
       status.className = 'cta-status';
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        status.textContent = t.invalid;
+
+      if (!nombre || !apellido || !email) {
+        status.textContent = t.required;
         status.classList.add('is-error');
-        input.focus();
+        (!nombre ? nameI : !apellido ? surnameI : emailI).focus();
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        status.textContent = t.invalidEmail;
+        status.classList.add('is-error');
+        emailI.focus();
         return;
       }
 
@@ -2447,24 +2467,28 @@
       btn.textContent = t.sending;
       status.textContent = '';
 
-      var body = new FormData();
-      body.append('fields[email]', email);
-      body.append('ml-submit', '1');
-      body.append('anticsrf', 'true');
+      var payload = {
+        Nombre: nombre,
+        Apellido: apellido,
+        Email: email,
+        _subject: 'Nueva suscripción Betel: ' + nombre + ' ' + apellido,
+        _template: 'table',
+        _captcha: 'false'
+      };
 
-      fetch('https://assets.mailerlite.com/jsonp/' + ML_ACCOUNT + '/forms/' + ML_FORM + '/subscribe', {
+      fetch(FORMSUBMIT_ENDPOINT, {
         method: 'POST',
-        body: body
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
       })
       .then(function(r) { return r.json().catch(function(){ return {}; }); })
       .then(function(data) {
-        if (data && (data.success || data.status === 'success')) {
+        if (data && (data.success === 'true' || data.success === true)) {
           status.textContent = t.ok;
           status.classList.add('is-success');
           form.reset();
         } else {
-          var apiMsg = data && (data.message || (data.errors && (data.errors.fields && data.errors.fields.email && data.errors.fields.email[0])));
-          status.textContent = apiMsg || t.err;
+          status.textContent = (data && data.message) || t.err;
           status.classList.add('is-error');
         }
       })
