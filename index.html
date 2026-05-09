@@ -1003,8 +1003,73 @@
       max-width: 480px;
       margin: 0 auto;
     }
-    .cta-form #sub-email { grid-column: span 2; }
+    .cta-form #sub-email,
+    .cta-form textarea,
+    .cta-form .cta-check { grid-column: span 2; }
     .cta-form button[type="submit"] { grid-column: span 2; justify-self: stretch; }
+
+    .cta-form textarea {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.85rem 1.2rem;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      border-radius: 2px;
+      outline: 2px solid transparent;
+      resize: vertical;
+      min-height: 110px;
+      line-height: 1.5;
+      transition: border-color var(--duration-fast) var(--ease-standard), outline-color var(--duration-fast) var(--ease-standard);
+    }
+    .cta-form textarea:focus { border-color: var(--gold); }
+    .cta-form textarea:focus-visible { outline-color: var(--gold); }
+    .cta-form textarea::placeholder { color: var(--muted2); }
+
+    .cta-form .cta-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--muted);
+      cursor: pointer;
+      line-height: 1.45;
+      user-select: none;
+    }
+    .cta-form .cta-check input[type="checkbox"] {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      accent-color: var(--gold);
+      cursor: pointer;
+    }
+
+    .cta-verse {
+      max-width: 480px;
+      margin: 2rem auto 0;
+      padding: 1.2rem 1.5rem;
+      border-left: 3px solid var(--gold);
+      background: var(--accent-subtle);
+      font-family: var(--font-heading);
+      font-style: italic;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--text);
+      text-align: left;
+      border-radius: 0 4px 4px 0;
+    }
+    .cta-verse .verse-ref {
+      display: block;
+      margin-top: 0.6rem;
+      font-style: normal;
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-family: var(--font-body);
+    }
 
     .cta-status {
       max-width: 440px;
@@ -1858,9 +1923,9 @@
   <!-- CTA NEWSLETTER -->
   <div class="cta-band">
     <div class="cta-inner fade-in">
-      <div class="label" style="justify-content:center;margin-bottom:1rem" id="t-cta-label">Comunidad</div>
-      <h2 id="t-cta-h2">Te avisamos cuando hay<br/>un nuevo <em>devocional</em></h2>
-      <p id="t-cta-p">Dejá tu email y te notificamos cada vez que Oscar sube un devocional nuevo.</p>
+      <div class="label" style="justify-content:center;margin-bottom:1rem" id="t-cta-label">Oración</div>
+      <h2 id="t-cta-h2">Pedinos por <em>tu vida</em></h2>
+      <p id="t-cta-p">Si estás atravesando una situación difícil o querés que oremos por algo en particular, escribinos.</p>
       <form class="cta-form" onsubmit="handleSub(event)" novalidate>
         <label for="sub-name" class="visually-hidden" id="t-cta-name-label">Nombre</label>
         <input id="sub-name" name="nombre" type="text" placeholder="Nombre" autocomplete="given-name" required/>
@@ -1868,9 +1933,23 @@
         <input id="sub-surname" name="apellido" type="text" placeholder="Apellido" autocomplete="family-name" required/>
         <label for="sub-email" class="visually-hidden" id="t-cta-input-label">Tu email</label>
         <input id="sub-email" name="email" type="email" placeholder="tu@email.com" autocomplete="email" required/>
-        <button type="submit" class="btn-gold" id="t-cta-btn">Avisarme</button>
+        <label for="sub-city" class="visually-hidden" id="t-cta-city-label">Ciudad y país</label>
+        <input id="sub-city" name="ciudad" type="text" placeholder="Ciudad, país" autocomplete="address-level2" required/>
+        <label for="sub-phone" class="visually-hidden" id="t-cta-phone-label">Teléfono o WhatsApp (opcional)</label>
+        <input id="sub-phone" name="telefono" type="tel" placeholder="WhatsApp (opcional)" autocomplete="tel" inputmode="tel"/>
+        <label for="sub-msg" class="visually-hidden" id="t-cta-msg-label">Tu pedido</label>
+        <textarea id="sub-msg" name="pedido" rows="4" placeholder="Compartí tu pedido de oración…" required></textarea>
+        <label class="cta-check" for="sub-private">
+          <input id="sub-private" name="privado" type="checkbox"/>
+          <span id="t-cta-private">Quiero que mi pedido sea privado (solo Oscar lo ve)</span>
+        </label>
+        <button type="submit" class="btn-gold" id="t-cta-btn">Enviar pedido</button>
       </form>
       <p class="cta-status" id="formStatus" role="status" aria-live="polite"></p>
+      <blockquote class="cta-verse">
+        <span id="t-cta-verse">"Confesaos vuestras ofensas unos a otros, y orad unos por otros, para que seáis sanados."</span>
+        <cite class="verse-ref" id="t-cta-verse-ref">Santiago 5:16</cite>
+      </blockquote>
     </div>
   </div>
 
@@ -2054,14 +2133,20 @@
         't-lc-paypal': 'Donar',
         't-lc-paypal-desc': 'Apoyá el ministerio',
         't-ig-soon': 'Próximamente',
-        't-cta-label': 'Comunidad',
-        't-cta-h2': 'Te avisamos cuando hay<br/>un nuevo <em>devocional</em>',
-        't-cta-p': 'Dejá tu email y te notificamos cada vez que Oscar sube un devocional nuevo.',
+        't-cta-label': 'Oración',
+        't-cta-h2': 'Pedinos por <em>tu vida</em>',
+        't-cta-p': 'Si estás atravesando una situación difícil o querés que oremos por algo en particular, escribinos.',
         't-cta-input-label': 'Tu email',
         't-cta-name-label': 'Nombre',
         't-cta-surname-label': 'Apellido',
+        't-cta-city-label': 'Ciudad y país',
+        't-cta-phone-label': 'Teléfono o WhatsApp (opcional)',
+        't-cta-msg-label': 'Tu pedido',
+        't-cta-private': 'Quiero que mi pedido sea privado (solo Oscar lo ve)',
+        't-cta-verse': '"Confesaos vuestras ofensas unos a otros, y orad unos por otros, para que seáis sanados."',
+        't-cta-verse-ref': 'Santiago 5:16',
         't-fb-soon': 'Próximamente',
-        't-cta-btn': 'Avisarme',
+        't-cta-btn': 'Enviar pedido',
         't-footer-tagline': 'Enseñanzas bíblicas de Oscar Uncal para fortalecer tu fe y crecer en el conocimiento de la Palabra de Dios.',
         't-footer-h-sections': 'Secciones',
         't-footer-sermons': 'Predicaciones',
@@ -2178,14 +2263,20 @@
         't-lc-paypal-desc': 'Support the ministry',
         't-ig-soon': 'Coming soon',
         't-tt-soon': 'Coming soon',
-        't-cta-label': 'Community',
-        't-cta-h2': "We'll let you know when<br/>there's a new <em>devotional</em>",
-        't-cta-p': "Leave your email and we'll notify you every time Oscar uploads a new devotional.",
+        't-cta-label': 'Prayer',
+        't-cta-h2': 'Ask us to pray for <em>your life</em>',
+        't-cta-p': "If you are going through a difficult time or want us to pray for something specific, write to us.",
         't-cta-input-label': 'Your email',
         't-cta-name-label': 'Name',
         't-cta-surname-label': 'Surname',
+        't-cta-city-label': 'City and country',
+        't-cta-phone-label': 'Phone or WhatsApp (optional)',
+        't-cta-msg-label': 'Your request',
+        't-cta-private': 'I want my request to be private (only Oscar will see it)',
+        't-cta-verse': '"Therefore confess your sins to each other and pray for each other so that you may be healed."',
+        't-cta-verse-ref': 'James 5:16',
         't-fb-soon': 'Coming soon',
-        't-cta-btn': 'Notify me',
+        't-cta-btn': 'Send request',
         't-footer-tagline': "Biblical teachings by Oscar Uncal to strengthen your faith and grow in the knowledge of God's Word.",
         't-footer-h-sections': 'Sections',
         't-footer-sermons': 'Sermons',
@@ -2241,9 +2332,15 @@
         var phName = document.getElementById('sub-name');
         var phSurname = document.getElementById('sub-surname');
         var phEmail = document.getElementById('sub-email');
+        var phCity = document.getElementById('sub-city');
+        var phPhone = document.getElementById('sub-phone');
+        var phMsg = document.getElementById('sub-msg');
         if (phName) phName.placeholder = (lang === 'en') ? 'Name' : 'Nombre';
         if (phSurname) phSurname.placeholder = (lang === 'en') ? 'Surname' : 'Apellido';
         if (phEmail) phEmail.placeholder = (lang === 'en') ? 'you@email.com' : 'tu@email.com';
+        if (phCity) phCity.placeholder = (lang === 'en') ? 'City, country' : 'Ciudad, país';
+        if (phPhone) phPhone.placeholder = (lang === 'en') ? 'WhatsApp (optional)' : 'WhatsApp (opcional)';
+        if (phMsg) phMsg.placeholder = (lang === 'en') ? 'Share your prayer request…' : 'Compartí tu pedido de oración…';
 
         document.getElementById('btn-es').classList.toggle('active', lang === 'es');
         document.getElementById('btn-en').classList.toggle('active', lang === 'en');
@@ -2413,7 +2510,7 @@
       }
     }
 
-    /* Suscripción → notificación por email vía FormSubmit */
+    /* Pedido de oración → notificación por email vía FormSubmit */
     var FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/mcv.mavi@gmail.com';
 
     function handleSub(e) {
@@ -2422,37 +2519,45 @@
       var nameI = document.getElementById('sub-name');
       var surnameI = document.getElementById('sub-surname');
       var emailI = document.getElementById('sub-email');
+      var cityI = document.getElementById('sub-city');
+      var phoneI = document.getElementById('sub-phone');
+      var msgI = document.getElementById('sub-msg');
+      var privateI = document.getElementById('sub-private');
       var btn = form.querySelector('button');
       var status = document.getElementById('formStatus');
       var lang = (document.documentElement.lang === 'en') ? 'en' : 'es';
 
       var msgs = {
         es: {
-          required: 'Completá nombre, apellido y email.',
+          required: 'Completá nombre, apellido, email, ciudad y tu pedido.',
           invalidEmail: 'Ingresá un email válido.',
           sending: 'Enviando…',
-          ok: '¡Gracias! Te avisaremos cuando haya un nuevo devocional.',
-          err: 'No pudimos enviar tu suscripción. Intentá de nuevo en unos minutos.'
+          ok: 'Gracias por escribirnos. Oscar va a orar por tu pedido.',
+          err: 'No pudimos enviar tu pedido. Intentá de nuevo en unos minutos.'
         },
         en: {
-          required: 'Please complete name, surname and email.',
+          required: 'Please complete name, surname, email, city and your request.',
           invalidEmail: 'Please enter a valid email.',
           sending: 'Sending…',
-          ok: "Thank you! We'll let you know when there is a new devotional.",
-          err: "We couldn't send your subscription. Please try again in a few minutes."
+          ok: "Thank you for writing. Oscar will pray for your request.",
+          err: "We couldn't send your request. Please try again in a few minutes."
         }
       };
       var t = msgs[lang];
       var nombre = (nameI.value || '').trim();
       var apellido = (surnameI.value || '').trim();
       var email = (emailI.value || '').trim();
+      var ciudad = (cityI.value || '').trim();
+      var telefono = (phoneI.value || '').trim();
+      var pedido = (msgI.value || '').trim();
+      var privado = !!privateI.checked;
 
       status.className = 'cta-status';
 
-      if (!nombre || !apellido || !email) {
+      if (!nombre || !apellido || !email || !ciudad || !pedido) {
         status.textContent = t.required;
         status.classList.add('is-error');
-        (!nombre ? nameI : !apellido ? surnameI : emailI).focus();
+        (!nombre ? nameI : !apellido ? surnameI : !email ? emailI : !ciudad ? cityI : msgI).focus();
         return;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -2467,11 +2572,16 @@
       btn.textContent = t.sending;
       status.textContent = '';
 
+      var subjectPrefix = privado ? '[PRIVADO] Pedido de oración: ' : 'Pedido de oración: ';
       var payload = {
         Nombre: nombre,
         Apellido: apellido,
         Email: email,
-        _subject: 'Nueva suscripción Betel: ' + nombre + ' ' + apellido,
+        Ciudad: ciudad,
+        Telefono: telefono || '—',
+        Pedido: pedido,
+        Privado: privado ? 'Sí' : 'No',
+        _subject: subjectPrefix + nombre + ' ' + apellido,
         _template: 'table',
         _captcha: 'false'
       };
