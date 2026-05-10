@@ -3030,6 +3030,30 @@
       return shortDesc ? '<div class="video-desc">' + shortDesc.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' : '';
     }
 
+    function ytBindInlinePlayers(root) {
+      root.querySelectorAll('.yt-inline-play').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var id = btn.getAttribute('data-video-id');
+          var title = btn.getAttribute('data-title') || 'Video';
+          var iframe = document.createElement('iframe');
+          iframe.src = 'https://www.youtube.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0';
+          iframe.title = title;
+          iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+          iframe.allowFullscreen = true;
+
+          if (btn.parentElement && btn.parentElement.classList.contains('video-embed')) {
+            btn.parentElement.replaceChildren(iframe);
+            return;
+          }
+
+          var embed = document.createElement('div');
+          embed.className = 'video-embed';
+          embed.appendChild(iframe);
+          btn.replaceWith(embed);
+        }, { once: true });
+      });
+    }
+
     function ytRender(key) {
       var s = ytState[key];
       var grid = document.getElementById('yt-' + key + '-grid');
@@ -3040,17 +3064,17 @@
       grid.innerHTML = slice.map(function(v, i) {
         var id = v.videoId;
         var title = v.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-        var titleAttr = v.title.replace(/"/g,'&quot;');
+        var titleAttr = v.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
         var thumb = v.thumb;
         var isFirst = (s.page === 0 && i === 0);
         var isNew = ytIsNew(v.publishedAt);
         var badgeHtml = isNew ? '<span class="yt-badge-new">Nuevo</span>' : '';
         return '<div class="video-card fade-in' + (isFirst ? ' video-card--featured' : '') + '">' +
-          '<a href="https://www.youtube.com/watch?v=' + id + '" target="_blank" rel="noopener" aria-label="' + titleAttr + '" class="video-thumb-wrap">' +
+          '<button type="button" class="video-thumb-wrap yt-inline-play" data-video-id="' + id + '" data-title="' + titleAttr + '" aria-label="Reproducir: ' + titleAttr + '">' +
             '<img src="' + thumb + '" alt="' + titleAttr + '" loading="lazy" onerror="this.style.display=\'none\'">' +
             '<div class="yt-play-btn">' + ytPlayIcon() + '</div>' +
             badgeHtml +
-          '</a>' +
+          '</button>' +
           '<div class="video-body">' +
             '<div class="video-tag">Oscar Uncal</div>' +
             '<a href="https://www.youtube.com/watch?v=' + id + '" target="_blank" rel="noopener" class="video-title video-title-link">' + title + '</a>' +
@@ -3059,6 +3083,8 @@
           '</div>' +
         '</div>';
       }).join('');
+
+      ytBindInlinePlayers(grid);
 
       grid.querySelectorAll('.fade-in').forEach(function(el) {
         el.classList.remove('visible');
@@ -3177,7 +3203,7 @@
         var id = v.videoId;
         var title = v.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         var titleAttr = v.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-        var thumb = v.thumbnail || ('https://i.ytimg.com/vi/' + id + '/hqdefault.jpg');
+        var thumb = v.thumb || ('https://i.ytimg.com/vi/' + id + '/hqdefault.jpg');
         var isFirst = i === 0;
         return '<div class="video-card fade-in' + (isFirst ? ' video-card--featured' : '') + '">' +
           '<div class="video-embed">' +
@@ -3195,18 +3221,7 @@
         '</div>';
       }).join('');
 
-      grid.querySelectorAll('.yt-inline-play').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          var id = btn.getAttribute('data-video-id');
-          var title = btn.getAttribute('data-title') || 'Video';
-          var iframe = document.createElement('iframe');
-          iframe.src = 'https://www.youtube.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0';
-          iframe.title = title;
-          iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-          iframe.allowFullscreen = true;
-          btn.parentElement.replaceChildren(iframe);
-        }, { once: true });
-      });
+      ytBindInlinePlayers(grid);
 
       grid.querySelectorAll('.fade-in').forEach(function(el) {
         el.classList.remove('visible');
