@@ -515,7 +515,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       </div>
       <h2>Acceso restringido</h2>
-      <p>Ingresá tus credenciales para administrar el sitio.</p>
+      <p>Ingresá para actualizar el contenido de Betel.</p>
       <form class="login-form" id="login-form" novalidate>
         <div class="admin-field">
           <label for="login-user">Email</label>
@@ -535,29 +535,29 @@
     <div class="admin-header">
       <div class="admin-label">Administración</div>
       <h1>Panel de <em>administración</em></h1>
-      <p>Desde acá vas a poder editar el contenido del sitio sin tocar el código.</p>
+      <p>Desde acá podés actualizar el devocional que se muestra en el sitio.</p>
     </div>
 
     <!-- BANNER DE TOKEN -->
     <div id="token-banner" class="token-banner is-warning" hidden>
-      <div class="token-banner-title">⚠ Configurá tu token de GitHub</div>
+      <div class="token-banner-title">⚠ Conectá el acceso de publicación</div>
       <p class="token-banner-help">
-        El login de esta página evita accesos casuales, pero la autorización real para publicar cambios la da este token.
-        Usá un token personal de GitHub con permiso de escritura sobre este repositorio.
+        Para guardar cambios en el sitio necesitás pegar una clave personal de GitHub.
+        Esta clave queda guardada solo en este navegador.
         <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Crear token</a>
         (permisos: Contents · Read and write).
       </p>
       <div class="token-input-row">
         <input id="token-input" type="password" placeholder="github_pat_…" autocomplete="off" spellcheck="false"/>
-        <button type="button" class="admin-btn" id="token-save">Guardar token</button>
+        <button type="button" class="admin-btn" id="token-save">Conectar</button>
       </div>
     </div>
 
     <div id="token-banner-ok" class="token-banner is-ok" hidden>
-      <span>✓ Token configurado. Ya podés editar el contenido del sitio.</span>
+      <span>✓ Acceso listo. Ya podés publicar cambios.</span>
       <div class="token-banner-actions">
         <button type="button" class="token-link-btn" id="token-change">Cambiar</button>
-        <button type="button" class="token-link-btn" id="token-clear" aria-label="Borrar token de GitHub">Borrar token</button>
+        <button type="button" class="token-link-btn" id="token-clear" aria-label="Quitar acceso de publicación">Quitar acceso</button>
       </div>
     </div>
 
@@ -567,7 +567,7 @@
         <div class="admin-card-icon" aria-hidden="true">📺</div>
         <div class="admin-card-info">
           <h3>Devocional de hoy</h3>
-          <p>Cambiar el video destacado que aparece al inicio del sitio.</p>
+          <p>Elegí el video que se verá como devocional principal.</p>
         </div>
         <button type="button" class="admin-btn" id="btn-edit-featured">Editar</button>
 
@@ -579,7 +579,7 @@
           <div class="admin-field">
             <label for="f-link">Link de YouTube</label>
             <input id="f-link" type="text" placeholder="https://youtu.be/K3dhGuscYe8" autocomplete="off" spellcheck="false" required/>
-            <span class="hint">Pegá el link completo del video (acepta youtu.be, youtube.com/watch o solo el ID).</span>
+            <span class="hint">Pegá el enlace del video de YouTube que querés destacar.</span>
           </div>
           <div class="admin-field">
             <label for="f-title">Título</label>
@@ -588,10 +588,10 @@
           <div class="admin-field">
             <label for="f-desc">Descripción (opcional)</label>
             <textarea id="f-desc" placeholder="Una palabra para los días en los que el miedo nos paraliza." maxlength="240"></textarea>
-            <span class="hint">Máximo ~240 caracteres. Si la dejás vacía, no se muestra.</span>
+            <span class="hint">Si la dejás vacía, solo se muestra el título.</span>
           </div>
           <div class="admin-editor-actions">
-            <button type="submit" class="admin-btn" id="btn-save-featured">Guardar y publicar</button>
+            <button type="submit" class="admin-btn" id="btn-save-featured">Publicar devocional</button>
             <button type="button" class="admin-btn-secondary" id="btn-cancel-featured">Cancelar</button>
           </div>
           <p class="admin-status" id="featured-msg" role="status" aria-live="polite"></p>
@@ -601,7 +601,7 @@
     </div>
 
     <p class="admin-note">
-      <strong>Nota:</strong> el token se guarda solo en este navegador y no se sube al sitio. Sin un token válido, el panel puede abrir pero no puede publicar cambios en GitHub.
+      <strong>Nota:</strong> el acceso de publicación queda guardado solo en este navegador. Si usás otro dispositivo, vas a tener que conectarlo de nuevo.
     </p>
   </main>
 
@@ -758,7 +758,7 @@
       var editBtn = $('btn-edit-featured');
       editBtn.disabled = !has;
       editBtn.setAttribute('aria-disabled', has ? 'false' : 'true');
-      editBtn.title = has ? '' : 'Configurá tu token primero';
+      editBtn.title = has ? '' : 'Conectá el acceso de publicación primero';
     }
 
     $('token-save').addEventListener('click', function() {
@@ -779,7 +779,7 @@
     });
 
     $('token-clear').addEventListener('click', function() {
-      if (!confirm('¿Borrar el token de este navegador?')) return;
+      if (!confirm('¿Borrar el acceso de publicación de este navegador?')) return;
       clearToken();
       refreshTokenUI();
     });
@@ -818,7 +818,7 @@
           renderCurrent();
         })
         .catch(function() {
-          $('featured-current').textContent = '(no se pudo cargar)';
+          $('featured-current').textContent = '(no se pudo cargar el devocional)';
         });
     }
 
@@ -827,7 +827,7 @@
       if (d.id) {
         $('featured-current').textContent = (d.title || 'Sin título') + ' (' + d.id + ')';
       } else {
-        $('featured-current').textContent = 'sin video destacado';
+        $('featured-current').textContent = 'todavía no hay devocional publicado';
       }
     }
 
@@ -865,7 +865,7 @@
       msg.className = 'admin-status';
 
       if (!token) {
-        msg.textContent = 'Configurá tu token primero.';
+        msg.textContent = 'Primero conectá el acceso de publicación.';
         msg.classList.add('is-error');
         return;
       }
@@ -875,7 +875,7 @@
       var description = $('f-desc').value.trim();
 
       if (!id) {
-        msg.textContent = 'No pude reconocer el ID del video. Pegá el link completo de YouTube.';
+        msg.textContent = 'No pudimos reconocer el video. Revisá el enlace de YouTube.';
         msg.classList.add('is-error');
         $('f-link').focus();
         return;
@@ -937,18 +937,18 @@
         currentSha = putRes && putRes.content && putRes.content.sha;
         currentData = newJson;
         renderCurrent();
-        msg.textContent = '✓ Publicado. Va a estar visible en el sitio en aproximadamente 1 minuto.';
+        msg.textContent = '✓ Devocional publicado. Puede tardar alrededor de 1 minuto en verse en el sitio.';
         msg.classList.add('is-success');
       }).catch(function(err) {
         var code = (err && err.message) || '';
         if (code === 'TOKEN_INVALID') {
-          msg.textContent = 'El token no es válido o expiró. Generá uno nuevo y pegalo arriba.';
+          msg.textContent = 'El acceso de publicación no es válido o venció. Pegá una clave nueva.';
         } else if (code === 'FORBIDDEN') {
-          msg.textContent = 'El token no tiene permiso de escritura sobre este repositorio.';
+          msg.textContent = 'Esta clave no tiene permiso para publicar cambios en el sitio.';
         } else if (code === 'CONFLICT') {
-          msg.textContent = 'Conflicto de versiones. Recargá la página y volvé a intentar.';
+          msg.textContent = 'El contenido cambió mientras editabas. Recargá la página y volvé a intentar.';
         } else {
-          msg.textContent = 'No se pudo guardar (' + code + '). Probá de nuevo en un momento.';
+          msg.textContent = 'No se pudo publicar. Probá de nuevo en un momento.';
         }
         msg.classList.add('is-error');
       }).then(function() {
