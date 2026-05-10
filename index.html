@@ -1932,9 +1932,9 @@
   <!-- CTA NEWSLETTER -->
   <div class="cta-band">
     <div class="cta-inner fade-in">
-      <div class="label" style="justify-content:center;margin-bottom:1rem" id="t-cta-label">Oración</div>
-      <h2 id="t-cta-h2">Pedinos por <em>tu vida</em></h2>
-      <p id="t-cta-p">Si estás atravesando una situación difícil o querés que oremos por algo en particular, escribinos.</p>
+      <div class="label" style="justify-content:center;margin-bottom:1rem" id="t-cta-label">Comunidad</div>
+      <h2 id="t-cta-h2">Sumate a <em>Betel</em></h2>
+      <p id="t-cta-p">Dejanos tus datos y te avisaremos cada vez que haya un nuevo devocional. Si querés, también podés compartir un pedido de oración.</p>
       <form class="cta-form" onsubmit="handleSub(event)" novalidate>
         <label for="sub-name" class="visually-hidden" id="t-cta-name-label">Nombre</label>
         <input id="sub-name" name="nombre" type="text" placeholder="Nombre" autocomplete="given-name" required/>
@@ -1944,9 +1944,9 @@
         <input id="sub-email" name="email" type="email" placeholder="tu@email.com" autocomplete="email" required/>
         <label for="sub-city" class="visually-hidden" id="t-cta-city-label">Ciudad y país</label>
         <input id="sub-city" name="ciudad" type="text" placeholder="Ciudad, país" autocomplete="address-level2" required/>
-        <label for="sub-msg" class="visually-hidden" id="t-cta-msg-label">Tu pedido</label>
-        <textarea id="sub-msg" name="pedido" rows="4" placeholder="Compartí tu pedido de oración…" required></textarea>
-        <button type="submit" class="btn-gold" id="t-cta-btn">Enviar pedido</button>
+        <label for="sub-msg" class="visually-hidden" id="t-cta-msg-label">Tu pedido (opcional)</label>
+        <textarea id="sub-msg" name="pedido" rows="4" placeholder="Pedido de oración (opcional)"></textarea>
+        <button type="submit" class="btn-gold" id="t-cta-btn">Enviar</button>
       </form>
       <p class="cta-status" id="formStatus" role="status" aria-live="polite"></p>
       <blockquote class="cta-verse">
@@ -2136,18 +2136,18 @@
         't-lc-paypal': 'Donar',
         't-lc-paypal-desc': 'Apoyá el ministerio',
         't-ig-soon': 'Próximamente',
-        't-cta-label': 'Oración',
-        't-cta-h2': 'Pedinos por <em>tu vida</em>',
-        't-cta-p': 'Si estás atravesando una situación difícil o querés que oremos por algo en particular, escribinos.',
+        't-cta-label': 'Comunidad',
+        't-cta-h2': 'Sumate a <em>Betel</em>',
+        't-cta-p': 'Dejanos tus datos y te avisaremos cada vez que haya un nuevo devocional. Si querés, también podés compartir un pedido de oración.',
         't-cta-input-label': 'Tu email',
         't-cta-name-label': 'Nombre',
         't-cta-surname-label': 'Apellido',
         't-cta-city-label': 'Ciudad y país',
-        't-cta-msg-label': 'Tu pedido',
+        't-cta-msg-label': 'Tu pedido (opcional)',
         't-cta-verse': '"Confesaos vuestras ofensas unos a otros, y orad unos por otros, para que seáis sanados."',
         't-cta-verse-ref': 'Santiago 5:16',
         't-fb-soon': 'Próximamente',
-        't-cta-btn': 'Enviar pedido',
+        't-cta-btn': 'Enviar',
         't-footer-tagline': 'Enseñanzas bíblicas de Oscar Uncal para fortalecer tu fe y crecer en el conocimiento de la Palabra de Dios.',
         't-footer-h-sections': 'Secciones',
         't-footer-sermons': 'Predicaciones',
@@ -2264,18 +2264,18 @@
         't-lc-paypal-desc': 'Support the ministry',
         't-ig-soon': 'Coming soon',
         't-tt-soon': 'Coming soon',
-        't-cta-label': 'Prayer',
-        't-cta-h2': 'Ask us to pray for <em>your life</em>',
-        't-cta-p': "If you are going through a difficult time or want us to pray for something specific, write to us.",
+        't-cta-label': 'Community',
+        't-cta-h2': 'Join <em>Betel</em>',
+        't-cta-p': "Leave your details and we'll let you know every time there is a new devotional. If you want, you can also share a prayer request.",
         't-cta-input-label': 'Your email',
         't-cta-name-label': 'Name',
         't-cta-surname-label': 'Surname',
         't-cta-city-label': 'City and country',
-        't-cta-msg-label': 'Your request',
+        't-cta-msg-label': 'Your request (optional)',
         't-cta-verse': '"Therefore confess your sins to each other and pray for each other so that you may be healed."',
         't-cta-verse-ref': 'James 5:16',
         't-fb-soon': 'Coming soon',
-        't-cta-btn': 'Send request',
+        't-cta-btn': 'Send',
         't-footer-tagline': "Biblical teachings by Oscar Uncal to strengthen your faith and grow in the knowledge of God's Word.",
         't-footer-h-sections': 'Sections',
         't-footer-sermons': 'Sermons',
@@ -2337,7 +2337,7 @@
         if (phSurname) phSurname.placeholder = (lang === 'en') ? 'Surname' : 'Apellido';
         if (phEmail) phEmail.placeholder = (lang === 'en') ? 'you@email.com' : 'tu@email.com';
         if (phCity) phCity.placeholder = (lang === 'en') ? 'City, country' : 'Ciudad, país';
-        if (phMsg) phMsg.placeholder = (lang === 'en') ? 'Share your prayer request…' : 'Compartí tu pedido de oración…';
+        if (phMsg) phMsg.placeholder = (lang === 'en') ? 'Prayer request (optional)' : 'Pedido de oración (opcional)';
 
         document.getElementById('btn-es').classList.toggle('active', lang === 'es');
         document.getElementById('btn-en').classList.toggle('active', lang === 'en');
@@ -2524,18 +2524,20 @@
 
       var msgs = {
         es: {
-          required: 'Completá nombre, apellido, email, ciudad y tu pedido.',
+          required: 'Completá nombre, apellido, email y ciudad.',
           invalidEmail: 'Ingresá un email válido.',
           sending: 'Enviando…',
-          ok: 'Gracias por escribirnos. Vamos a estar orando por tu pedido.',
-          err: 'No pudimos enviar tu pedido. Intentá de nuevo en unos minutos.'
+          okWithPrayer: '¡Gracias! Quedaste suscripto y vamos a estar orando por tu pedido.',
+          okSubscribe: '¡Gracias! Te avisaremos cuando haya un nuevo devocional.',
+          err: 'No pudimos enviar el formulario. Intentá de nuevo en unos minutos.'
         },
         en: {
-          required: 'Please complete name, surname, email, city and your request.',
+          required: 'Please complete name, surname, email and city.',
           invalidEmail: 'Please enter a valid email.',
           sending: 'Sending…',
-          ok: "Thank you for writing. We will be praying for your request.",
-          err: "We couldn't send your request. Please try again in a few minutes."
+          okWithPrayer: "Thank you! You're subscribed and we'll be praying for your request.",
+          okSubscribe: "Thank you! We'll let you know when there is a new devotional.",
+          err: "We couldn't send the form. Please try again in a few minutes."
         }
       };
       var t = msgs[lang];
@@ -2557,7 +2559,6 @@
       if (!apellido) invalid.push(surnameI);
       if (!email) invalid.push(emailI);
       if (!ciudad) invalid.push(cityI);
-      if (!pedido) invalid.push(msgI);
 
       if (invalid.length) {
         invalid.forEach(function(el) {
@@ -2583,16 +2584,22 @@
       btn.textContent = t.sending;
       status.textContent = '';
 
+      var subject = pedido
+        ? 'Suscripción + pedido de oración: ' + nombre + ' ' + apellido
+        : 'Nuevo suscriptor: ' + nombre + ' ' + apellido;
+
       var payload = {
         Nombre: nombre,
         Apellido: apellido,
         Email: email,
         Ciudad: ciudad,
-        Pedido: pedido,
-        _subject: 'Pedido de oración: ' + nombre + ' ' + apellido,
+        'Pedido de oración': pedido || '—',
+        _subject: subject,
         _template: 'table',
         _captcha: 'false'
       };
+
+      var okMsg = pedido ? t.okWithPrayer : t.okSubscribe;
 
       fetch(FORMSUBMIT_ENDPOINT, {
         method: 'POST',
@@ -2602,7 +2609,7 @@
       .then(function(r) { return r.json().catch(function(){ return {}; }); })
       .then(function(data) {
         if (data && (data.success === 'true' || data.success === true)) {
-          status.textContent = t.ok;
+          status.textContent = okMsg;
           status.classList.add('is-success');
           form.reset();
         } else {
