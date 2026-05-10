@@ -519,7 +519,8 @@
     <div id="token-banner" class="token-banner is-warning" hidden>
       <div class="token-banner-title">⚠ Configurá tu token de GitHub</div>
       <p class="token-banner-help">
-        Para guardar cambios desde acá necesitás un token personal de GitHub con permiso de escritura sobre el repositorio.
+        El login de esta página evita accesos casuales, pero la autorización real para publicar cambios la da este token.
+        Usá un token personal de GitHub con permiso de escritura sobre este repositorio.
         <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Crear token</a>
         (permisos: Contents · Read and write).
       </p>
@@ -533,7 +534,7 @@
       <span>✓ Token configurado. Ya podés editar el contenido del sitio.</span>
       <div class="token-banner-actions">
         <button type="button" class="token-link-btn" id="token-change">Cambiar</button>
-        <button type="button" class="token-link-btn" id="token-clear" aria-label="Borrar token">Cerrar sesión</button>
+        <button type="button" class="token-link-btn" id="token-clear" aria-label="Borrar token de GitHub">Borrar token</button>
       </div>
     </div>
 
@@ -595,7 +596,7 @@
     </div>
 
     <p class="admin-note">
-      <strong>Nota:</strong> el token se guarda solo en este navegador. Si entrás desde otro dispositivo, vas a tener que pegarlo de nuevo.
+      <strong>Nota:</strong> el token se guarda solo en este navegador y no se sube al sitio. Sin un token válido, el panel puede abrir pero no puede publicar cambios en GitHub.
     </p>
   </main>
 

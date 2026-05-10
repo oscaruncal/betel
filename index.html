@@ -2620,6 +2620,9 @@
     });
 
     /* Menú mobile */
+    var mobileLastFocus = null;
+    var MOBILE_FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
     function handleMobileOverlay(e) {
       if (e.target === document.getElementById('mobileMenu')) closeMobileMenu();
     }
@@ -2627,10 +2630,13 @@
     function openMobileMenu() {
       var menu = document.getElementById('mobileMenu');
       var btn = document.getElementById('nav-hamburger');
+      mobileLastFocus = document.activeElement;
       menu.classList.add('open');
       menu.setAttribute('aria-hidden', 'false');
       btn.setAttribute('aria-expanded', 'true');
       document.body.style.overflow = 'hidden';
+      var first = menu.querySelector(MOBILE_FOCUSABLE);
+      if (first) first.focus();
     }
 
     function closeMobileMenu() {
@@ -2640,7 +2646,31 @@
       menu.setAttribute('aria-hidden', 'true');
       btn.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
+      if (mobileLastFocus && typeof mobileLastFocus.focus === 'function') {
+        mobileLastFocus.focus();
+        mobileLastFocus = null;
+      }
     }
+
+    document.addEventListener('keydown', function(e) {
+      var menu = document.getElementById('mobileMenu');
+      if (!menu || !menu.classList.contains('open')) return;
+      if (e.key === 'Escape') {
+        closeMobileMenu();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      var focusables = Array.prototype.slice.call(menu.querySelectorAll(MOBILE_FOCUSABLE))
+        .filter(function(el) { return el.offsetParent !== null; });
+      if (!focusables.length) return;
+      var first = focusables[0];
+      var last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); first.focus();
+      }
+    });
 
     /* Modal de donación */
     var donateLastFocus = null;
@@ -2722,6 +2752,15 @@
     });
 
     /* Acordeón de temas */
+    document.querySelectorAll('.topic-item').forEach(function(item, index) {
+      var btn = item.querySelector('.topic-trigger');
+      var panel = item.querySelector('.topic-body-outer');
+      if (!btn || !panel) return;
+      var id = panel.id || 'topic-panel-' + (index + 1);
+      panel.id = id;
+      btn.setAttribute('aria-controls', id);
+    });
+
     function toggleTopic(btn) {
       var item = btn.closest('.topic-item');
       var isOpen = item.classList.contains('open');
