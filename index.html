@@ -3268,7 +3268,9 @@
         });
 
         recLoading.style.display = 'none';
-        ytState.rec.videos = allVideos.slice();
+        ytState.rec.videos = allVideos.slice().sort(function(a, b) {
+          return new Date(b.publishedAt) - new Date(a.publishedAt);
+        });
         ytRender('rec');
 
         var withViews = allVideos.slice().sort(function(a, b) { return b.views - a.views; });
