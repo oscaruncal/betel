@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="color-scheme" content="light"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <title>Admin · Betel</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%237B5EA7'/><text x='50' y='56' font-family='Georgia,serif' font-size='34' font-weight='700' fill='white' text-anchor='middle' dominant-baseline='middle'>BOU</text></svg>"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #FAF8F4;
+      --bg2:       #F2EDE3;
+      --bg3:       #E8E0D0;
+      --border:    rgba(0,0,0,0.09);
+      --gold:      #7B5EA7;
+      --gold2:     #634A8A;
+      --text:      #1E1A2E;
+      --muted:     rgba(30,26,46,0.55);
+      --muted2:    rgba(30,26,46,0.3);
+      --accent-subtle: rgba(123,94,167,0.1);
+      --font-heading: 'Libre Baskerville', serif;
+      --font-body:    'Karla', sans-serif;
+      --duration-fast:   150ms;
+      --duration-normal: 250ms;
+      --ease-standard:   cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+    a, button { touch-action: manipulation; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100svh;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+    :focus:not(:focus-visible) { outline: none; }
+
+    .admin-topbar {
+      border-bottom: 1px solid var(--border);
+      background: rgba(250,248,244,0.95);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .admin-topbar-inner {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0.85rem 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .admin-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color var(--duration-fast) var(--ease-standard);
+    }
+    .admin-back:hover { color: var(--gold); }
+    .admin-back svg { width: 16px; height: 16px; }
+
+    .admin-brand {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .admin-brand span { color: var(--gold); }
+
+    .admin-wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 3.5rem 5% 4rem;
+    }
+
+    .admin-header { margin-bottom: 2.5rem; }
+    .admin-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--gold);
+      font-size: 0.78rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .admin-label::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+    }
+    .admin-header h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 1.4rem + 1.5vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 0.6rem;
+    }
+    .admin-header h1 em {
+      color: var(--gold);
+      font-style: italic;
+    }
+    .admin-header p {
+      color: var(--muted);
+      max-width: 540px;
+      font-size: 1rem;
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .admin-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.5rem 1.7rem;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 1.2rem;
+      transition: border-color var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
+    }
+    .admin-card.is-active:hover {
+      border-color: var(--gold);
+      transform: translateY(-1px);
+    }
+    .admin-card.is-disabled { opacity: 0.7; }
+
+    .admin-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: var(--accent-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .admin-card-info h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .admin-card-info p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .admin-btn {
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      padding: 0.7rem 1.3rem;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 3px;
+      text-decoration: none;
+      display: inline-block;
+      white-space: nowrap;
+      transition: background var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
+    }
+    .admin-btn:hover { background: var(--gold2); transform: translateY(-1px); }
+    .admin-btn:active { transform: translateY(0) scale(0.97); transition-duration: 80ms; }
+    .admin-btn:disabled,
+    .admin-btn[aria-disabled="true"] {
+      background: var(--bg3);
+      color: var(--muted);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .admin-soon {
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted2);
+      font-weight: 600;
+      padding: 0.5rem 0.9rem;
+      border: 1px dashed var(--border);
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    .admin-note {
+      margin-top: 2.5rem;
+      padding: 1.2rem 1.4rem;
+      background: var(--accent-subtle);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 4px 4px 0;
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .admin-note strong { color: var(--gold); }
+
+    @media (max-width: 640px) {
+      .admin-card {
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto;
+      }
+      .admin-card .admin-btn,
+      .admin-card .admin-soon {
+        grid-column: 1 / -1;
+        justify-self: stretch;
+        text-align: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .admin-card:hover,
+      .admin-btn:hover,
+      .admin-btn:active { transform: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="admin-topbar">
+    <div class="admin-topbar-inner">
+      <a href="../" class="admin-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        <span>Volver al sitio</span>
+      </a>
+      <div class="admin-brand">Betel<span> · Admin</span></div>
+    </div>
+  </header>
+
+  <main class="admin-wrap">
+    <div class="admin-header">
+      <div class="admin-label">Administración</div>
+      <h1>Panel de <em>administración</em></h1>
+      <p>Desde acá vas a poder editar el contenido del sitio sin tocar el código.</p>
+    </div>
+
+    <div class="admin-grid">
+
+      <article class="admin-card is-disabled">
+        <div class="admin-card-icon" aria-hidden="true">📺</div>
+        <div class="admin-card-info">
+          <h3>Devocional de hoy</h3>
+          <p>Cambiar el video destacado que aparece al inicio del sitio.</p>
+        </div>
+        <button type="button" class="admin-btn" aria-disabled="true" disabled>Editar</button>
+      </article>
+
+      <article class="admin-card is-disabled">
+        <div class="admin-card-icon" aria-hidden="true">🙏</div>
+        <div class="admin-card-info">
+          <h3>Pedidos de oración</h3>
+          <p>Ver y gestionar los pedidos de oración recibidos desde el formulario.</p>
+        </div>
+        <span class="admin-soon">Próximamente</span>
+      </article>
+
+      <article class="admin-card is-disabled">
+        <div class="admin-card-icon" aria-hidden="true">📊</div>
+        <div class="admin-card-info">
+          <h3>Estadísticas</h3>
+          <p>Visitantes, vistas y métricas generales del sitio.</p>
+        </div>
+        <span class="admin-soon">Próximamente</span>
+      </article>
+
+    </div>
+
+    <p class="admin-note">
+      <strong>Nota:</strong> esta es una versión preliminar del panel. Las funcionalidades se van a habilitar próximamente.
+    </p>
+  </main>
+
+</body>
+</html>
