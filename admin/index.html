@@ -248,6 +248,172 @@
       .admin-btn:hover,
       .admin-btn:active { transform: none !important; }
     }
+
+    /* ── BANNER DE TOKEN ── */
+    .token-banner {
+      margin-bottom: 1.8rem;
+      padding: 1.1rem 1.3rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+    .token-banner.is-warning {
+      border-color: rgba(185, 144, 60, 0.4);
+      background: rgba(185, 144, 60, 0.08);
+    }
+    .token-banner.is-ok {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .token-banner-title {
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: var(--text);
+    }
+    .token-banner-help {
+      color: var(--muted);
+      margin-bottom: 0.85rem;
+      font-size: 0.88rem;
+    }
+    .token-banner-help a { color: var(--gold); text-decoration: underline; }
+    .token-input-row {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .token-input-row input {
+      flex: 1;
+      min-width: 220px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.7rem 1rem;
+      font-family: ui-monospace, 'Courier New', monospace;
+      font-size: 0.85rem;
+      border-radius: 3px;
+      outline: 2px solid transparent;
+      transition: border-color var(--duration-fast) var(--ease-standard), outline-color var(--duration-fast) var(--ease-standard);
+    }
+    .token-input-row input:focus { border-color: var(--gold); }
+    .token-input-row input:focus-visible { outline-color: var(--gold); }
+
+    .token-banner-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .token-link-btn {
+      background: none;
+      border: none;
+      color: var(--gold);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 0.4rem 0.7rem;
+      border-radius: 3px;
+      transition: background var(--duration-fast) var(--ease-standard);
+    }
+    .token-link-btn:hover { background: var(--accent-subtle); }
+
+    /* ── EDITOR INLINE DE DEVOCIONAL ── */
+    .admin-card.is-active { opacity: 1; }
+    .admin-card.is-active .admin-card-info p { color: var(--muted); }
+
+    .admin-card-status {
+      grid-column: 1 / -1;
+      margin-top: 0.4rem;
+      padding-top: 0.8rem;
+      border-top: 1px dashed var(--border);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .admin-card-status strong { color: var(--text); font-weight: 600; }
+
+    .admin-editor {
+      grid-column: 1 / -1;
+      margin-top: 1rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--border);
+      display: grid;
+      gap: 0.9rem;
+    }
+    .admin-editor[hidden] { display: none; }
+
+    .admin-field { display: grid; gap: 0.35rem; }
+    .admin-field label {
+      font-size: 0.78rem;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .admin-field input,
+    .admin-field textarea {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.7rem 0.95rem;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      border-radius: 3px;
+      outline: 2px solid transparent;
+      transition: border-color var(--duration-fast) var(--ease-standard), outline-color var(--duration-fast) var(--ease-standard);
+      width: 100%;
+    }
+    .admin-field textarea {
+      resize: vertical;
+      min-height: 80px;
+      font-family: var(--font-body);
+    }
+    .admin-field input:focus,
+    .admin-field textarea:focus { border-color: var(--gold); }
+    .admin-field input:focus-visible,
+    .admin-field textarea:focus-visible { outline-color: var(--gold); }
+    .admin-field .hint {
+      font-size: 0.78rem;
+      color: var(--muted2);
+      margin-top: 0.15rem;
+    }
+
+    .admin-editor-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-top: 0.4rem;
+    }
+    .admin-btn-secondary {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.7rem 1.3rem;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: background var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard);
+    }
+    .admin-btn-secondary:hover {
+      background: var(--bg3);
+      color: var(--text);
+      border-color: var(--gold);
+    }
+
+    .admin-status {
+      font-size: 0.88rem;
+      min-height: 1.3em;
+      margin-top: 0.5rem;
+    }
+    .admin-status.is-success { color: #4a7c59; }
+    .admin-status.is-error   { color: #b94a4a; }
   </style>
 </head>
 <body>
@@ -269,15 +435,63 @@
       <p>Desde acá vas a poder editar el contenido del sitio sin tocar el código.</p>
     </div>
 
+    <!-- BANNER DE TOKEN -->
+    <div id="token-banner" class="token-banner is-warning" hidden>
+      <div class="token-banner-title">⚠ Configurá tu token de GitHub</div>
+      <p class="token-banner-help">
+        Para guardar cambios desde acá necesitás un token personal de GitHub con permiso de escritura sobre el repositorio.
+        <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Crear token</a>
+        (permisos: Contents · Read and write).
+      </p>
+      <div class="token-input-row">
+        <input id="token-input" type="password" placeholder="github_pat_…" autocomplete="off" spellcheck="false"/>
+        <button type="button" class="admin-btn" id="token-save">Guardar token</button>
+      </div>
+    </div>
+
+    <div id="token-banner-ok" class="token-banner is-ok" hidden>
+      <span>✓ Token configurado. Ya podés editar el contenido del sitio.</span>
+      <div class="token-banner-actions">
+        <button type="button" class="token-link-btn" id="token-change">Cambiar</button>
+        <button type="button" class="token-link-btn" id="token-clear" aria-label="Borrar token">Cerrar sesión</button>
+      </div>
+    </div>
+
     <div class="admin-grid">
 
-      <article class="admin-card is-disabled">
+      <article class="admin-card is-active" id="card-featured">
         <div class="admin-card-icon" aria-hidden="true">📺</div>
         <div class="admin-card-info">
           <h3>Devocional de hoy</h3>
           <p>Cambiar el video destacado que aparece al inicio del sitio.</p>
         </div>
-        <button type="button" class="admin-btn" aria-disabled="true" disabled>Editar</button>
+        <button type="button" class="admin-btn" id="btn-edit-featured">Editar</button>
+
+        <div class="admin-card-status" id="featured-status">
+          <strong>Actual:</strong> <span id="featured-current">cargando…</span>
+        </div>
+
+        <form class="admin-editor" id="editor-featured" hidden novalidate>
+          <div class="admin-field">
+            <label for="f-link">Link de YouTube</label>
+            <input id="f-link" type="text" placeholder="https://youtu.be/K3dhGuscYe8" autocomplete="off" spellcheck="false" required/>
+            <span class="hint">Pegá el link completo del video (acepta youtu.be, youtube.com/watch o solo el ID).</span>
+          </div>
+          <div class="admin-field">
+            <label for="f-title">Título</label>
+            <input id="f-title" type="text" placeholder="El temor en nuestras vidas" required maxlength="120"/>
+          </div>
+          <div class="admin-field">
+            <label for="f-desc">Descripción (opcional)</label>
+            <textarea id="f-desc" placeholder="Una palabra para los días en los que el miedo nos paraliza." maxlength="240"></textarea>
+            <span class="hint">Máximo ~240 caracteres. Si la dejás vacía, no se muestra.</span>
+          </div>
+          <div class="admin-editor-actions">
+            <button type="submit" class="admin-btn" id="btn-save-featured">Guardar y publicar</button>
+            <button type="button" class="admin-btn-secondary" id="btn-cancel-featured">Cancelar</button>
+          </div>
+          <p class="admin-status" id="featured-msg" role="status" aria-live="polite"></p>
+        </form>
       </article>
 
       <article class="admin-card is-disabled">
@@ -301,9 +515,261 @@
     </div>
 
     <p class="admin-note">
-      <strong>Nota:</strong> esta es una versión preliminar del panel. Las funcionalidades se van a habilitar próximamente.
+      <strong>Nota:</strong> el token se guarda solo en este navegador. Si entrás desde otro dispositivo, vas a tener que pegarlo de nuevo.
     </p>
   </main>
+
+  <script>
+    /* ── CONFIG ── */
+    var REPO_OWNER = 'oscaruncal';
+    var REPO_NAME  = 'betel';
+    var BRANCH     = 'main';
+    var FILE_PATH  = 'featured-videos.json';
+    var TOKEN_KEY  = 'betel-admin-token';
+
+    /* ── HELPERS ── */
+    function $(id) { return document.getElementById(id); }
+    function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
+    function setToken(v) { localStorage.setItem(TOKEN_KEY, v); }
+    function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+
+    function extractYouTubeId(input) {
+      var s = (input || '').trim();
+      if (!s) return '';
+      // Patrones: youtu.be/ID | youtube.com/watch?v=ID | youtube.com/shorts/ID | youtube.com/embed/ID | solo ID
+      var rx = [
+        /(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+        /[?&]v=([a-zA-Z0-9_-]{11})/,
+        /(?:youtube\.com\/(?:embed|shorts|live)\/)([a-zA-Z0-9_-]{11})/,
+        /^([a-zA-Z0-9_-]{11})$/
+      ];
+      for (var i = 0; i < rx.length; i++) {
+        var m = s.match(rx[i]);
+        if (m) return m[1];
+      }
+      return '';
+    }
+
+    /* ── BASE64 utf-8 ── */
+    function utf8ToB64(str) {
+      return btoa(unescape(encodeURIComponent(str)));
+    }
+    function b64ToUtf8(str) {
+      try { return decodeURIComponent(escape(atob(str.replace(/\s/g, '')))); }
+      catch (_) { return ''; }
+    }
+
+    /* ── TOKEN UI ── */
+    function refreshTokenUI() {
+      var has = !!getToken();
+      $('token-banner').hidden = has;
+      $('token-banner-ok').hidden = !has;
+      var editBtn = $('btn-edit-featured');
+      editBtn.disabled = !has;
+      editBtn.setAttribute('aria-disabled', has ? 'false' : 'true');
+      editBtn.title = has ? '' : 'Configurá tu token primero';
+    }
+
+    $('token-save').addEventListener('click', function() {
+      var v = $('token-input').value.trim();
+      if (!v) {
+        $('token-input').focus();
+        return;
+      }
+      setToken(v);
+      $('token-input').value = '';
+      refreshTokenUI();
+    });
+
+    $('token-change').addEventListener('click', function() {
+      $('token-banner').hidden = false;
+      $('token-banner-ok').hidden = true;
+      $('token-input').focus();
+    });
+
+    $('token-clear').addEventListener('click', function() {
+      if (!confirm('¿Borrar el token de este navegador?')) return;
+      clearToken();
+      refreshTokenUI();
+    });
+
+    /* ── ESTADO ACTUAL DEL DEVOCIONAL ── */
+    var currentSha = null;
+    var currentData = null;
+
+    function loadCurrentFeatured() {
+      // Intento por API si tengo token (trae el SHA, necesario para guardar después)
+      // y como fallback: fetch del JSON crudo
+      var token = getToken();
+      if (token) {
+        return fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + FILE_PATH + '?ref=' + BRANCH, {
+          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+        }).then(function(r) {
+          if (!r.ok) throw new Error('http ' + r.status);
+          return r.json();
+        }).then(function(data) {
+          currentSha = data.sha;
+          var json = b64ToUtf8(data.content || '');
+          try { currentData = JSON.parse(json); } catch (_) { currentData = {}; }
+          renderCurrent();
+        }).catch(function() {
+          fallbackLoadRaw();
+        });
+      }
+      return fallbackLoadRaw();
+    }
+
+    function fallbackLoadRaw() {
+      return fetch('../featured-videos.json?v=' + Date.now(), { cache: 'no-store' })
+        .then(function(r) { return r.ok ? r.json() : {}; })
+        .then(function(data) {
+          currentData = data || {};
+          renderCurrent();
+        })
+        .catch(function() {
+          $('featured-current').textContent = '(no se pudo cargar)';
+        });
+    }
+
+    function renderCurrent() {
+      var d = currentData || {};
+      if (d.id) {
+        $('featured-current').textContent = (d.title || 'Sin título') + ' (' + d.id + ')';
+      } else {
+        $('featured-current').textContent = 'sin video destacado';
+      }
+    }
+
+    /* ── EDITOR DE DEVOCIONAL ── */
+    function openEditor() {
+      var d = currentData || {};
+      $('f-link').value = d.id ? ('https://youtu.be/' + d.id) : '';
+      $('f-title').value = d.title || '';
+      $('f-desc').value = d.description || '';
+      $('featured-msg').textContent = '';
+      $('featured-msg').className = 'admin-status';
+      $('editor-featured').hidden = false;
+      $('btn-edit-featured').textContent = 'Cerrar';
+      setTimeout(function() { $('f-link').focus(); }, 50);
+    }
+
+    function closeEditor() {
+      $('editor-featured').hidden = true;
+      $('btn-edit-featured').textContent = 'Editar';
+    }
+
+    $('btn-edit-featured').addEventListener('click', function() {
+      if (!getToken()) return;
+      if ($('editor-featured').hidden) openEditor();
+      else closeEditor();
+    });
+
+    $('btn-cancel-featured').addEventListener('click', closeEditor);
+
+    /* ── GUARDAR ── */
+    $('editor-featured').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var token = getToken();
+      var msg = $('featured-msg');
+      msg.className = 'admin-status';
+
+      if (!token) {
+        msg.textContent = 'Configurá tu token primero.';
+        msg.classList.add('is-error');
+        return;
+      }
+
+      var id = extractYouTubeId($('f-link').value);
+      var title = $('f-title').value.trim();
+      var description = $('f-desc').value.trim();
+
+      if (!id) {
+        msg.textContent = 'No pude reconocer el ID del video. Pegá el link completo de YouTube.';
+        msg.classList.add('is-error');
+        $('f-link').focus();
+        return;
+      }
+      if (!title) {
+        msg.textContent = 'El título es obligatorio.';
+        msg.classList.add('is-error');
+        $('f-title').focus();
+        return;
+      }
+
+      var btn = $('btn-save-featured');
+      var origLabel = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Guardando…';
+      msg.textContent = '';
+
+      var newJson = {
+        id: id,
+        title: title,
+        description: description
+      };
+      var jsonStr = JSON.stringify(newJson, null, 2) + '\n';
+
+      // Necesitamos el SHA actual del archivo. Lo refrescamos siempre antes de guardar.
+      fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + FILE_PATH + '?ref=' + BRANCH, {
+        headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+      }).then(function(r) {
+        if (r.status === 401) throw new Error('TOKEN_INVALID');
+        if (r.status === 404) return null; // archivo no existe → se crea
+        if (!r.ok) throw new Error('GET_FAILED:' + r.status);
+        return r.json();
+      }).then(function(getRes) {
+        var sha = getRes ? getRes.sha : null;
+        var body = {
+          message: 'Update devocional de hoy: ' + title,
+          content: utf8ToB64(jsonStr),
+          branch: BRANCH
+        };
+        if (sha) body.sha = sha;
+
+        return fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + FILE_PATH, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+      }).then(function(r) {
+        if (!r) throw new Error('NO_RESPONSE');
+        if (r.status === 401) throw new Error('TOKEN_INVALID');
+        if (r.status === 403) throw new Error('FORBIDDEN');
+        if (r.status === 422) throw new Error('CONFLICT');
+        if (!r.ok) throw new Error('PUT_FAILED:' + r.status);
+        return r.json();
+      }).then(function(putRes) {
+        currentSha = putRes && putRes.content && putRes.content.sha;
+        currentData = newJson;
+        renderCurrent();
+        msg.textContent = '✓ Publicado. Va a estar visible en el sitio en aproximadamente 1 minuto.';
+        msg.classList.add('is-success');
+      }).catch(function(err) {
+        var code = (err && err.message) || '';
+        if (code === 'TOKEN_INVALID') {
+          msg.textContent = 'El token no es válido o expiró. Generá uno nuevo y pegalo arriba.';
+        } else if (code === 'FORBIDDEN') {
+          msg.textContent = 'El token no tiene permiso de escritura sobre este repositorio.';
+        } else if (code === 'CONFLICT') {
+          msg.textContent = 'Conflicto de versiones. Recargá la página y volvé a intentar.';
+        } else {
+          msg.textContent = 'No se pudo guardar (' + code + '). Probá de nuevo en un momento.';
+        }
+        msg.classList.add('is-error');
+      }).then(function() {
+        btn.disabled = false;
+        btn.textContent = origLabel;
+      });
+    });
+
+    /* ── INIT ── */
+    refreshTokenUI();
+    loadCurrentFeatured();
+  </script>
 
 </body>
 </html>
