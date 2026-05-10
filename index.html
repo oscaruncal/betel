@@ -1348,6 +1348,19 @@
       color: var(--footer-muted);
     }
 
+    .footer-credit {
+      color: var(--footer-muted);
+      text-decoration: none;
+    }
+
+    .footer-credit a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-credit a:hover { color: var(--gold); }
+
     /* ── SCROLL FADE ── */
     .fade-in {
       opacity: 0;
@@ -1385,6 +1398,11 @@
       .cta-form { grid-template-columns: 1fr; }
       .cta-form > * { grid-column: 1 !important; }
       .footer-inner { grid-template-columns: 1fr; }
+      .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.65rem;
+      }
 
       /* Paddings mínimos en mobile */
       .section { padding: 3rem 5%; }
@@ -2138,6 +2156,7 @@
     </div>
     <div class="footer-bottom">
       <p id="t-footer-copy">© 2026 Betel · Oscar Uncal. Hecho con fe.</p>
+      <p class="footer-credit" id="t-footer-credit">Sitio realizado por Marcelo Vieira · <a href="mailto:sistemas.marcelovieira@gmail.com">sistemas.marcelovieira@gmail.com</a></p>
       <p id="t-footer-quote">"La fe es la certeza de lo que se espera." — Heb 11:1</p>
     </div>
   </footer>
@@ -2302,6 +2321,7 @@
         't-footer-tt': 'TikTok — Próximamente',
         't-footer-fb': '📘 Facebook',
         't-footer-copy': '© 2026 Betel · Oscar Uncal. Hecho con fe.',
+        't-footer-credit': 'Sitio realizado por Marcelo Vieira · <a href="mailto:sistemas.marcelovieira@gmail.com">sistemas.marcelovieira@gmail.com</a>',
         't-footer-quote': '"La fe es la certeza de lo que se espera." — Heb 11:1',
       },
       en: {
@@ -2427,6 +2447,7 @@
         't-footer-tt': 'TikTok — Coming soon',
         't-footer-fb': '📘 Facebook',
         't-footer-copy': '© 2026 Betel · Oscar Uncal. Made with faith.',
+        't-footer-credit': 'Website by Marcelo Vieira · <a href="mailto:sistemas.marcelovieira@gmail.com">sistemas.marcelovieira@gmail.com</a>',
         't-footer-quote': '"Faith is the substance of things hoped for." — Heb 11:1',
       }
     };
