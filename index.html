@@ -466,9 +466,7 @@
       font: inherit;
       text-align: left;
       overflow: hidden;
-      background:
-        radial-gradient(circle at 18% 24%, rgba(123,94,167,0.34), transparent 28%),
-        linear-gradient(135deg, #1E1A2E 0%, #4B3B69 52%, #7B5EA7 100%);
+      background-color: var(--text);
       background-position: center;
       background-size: cover;
     }
@@ -781,9 +779,7 @@
       position: relative;
       width: 100%;
       padding: 0 0 56.25%;
-      background:
-        radial-gradient(circle at 72% 18%, rgba(250,248,244,0.2), transparent 24%),
-        linear-gradient(135deg, #1E1A2E 0%, #4B3B69 48%, #7B5EA7 100%);
+      background: #000;
       border: 0;
       cursor: pointer;
       overflow: hidden;
@@ -800,32 +796,17 @@
       padding: 0;
     }
 
-    .video-cover-content {
+    .video-thumb-wrap img {
       position: absolute;
-      left: clamp(1rem, 3.2vw, 2.4rem);
-      right: clamp(1rem, 3.2vw, 2.4rem);
-      bottom: clamp(1rem, 3.2vw, 2.2rem);
-      z-index: 1;
-      display: grid;
-      gap: 0.45rem;
-      max-width: 620px;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
     }
 
-    .video-cover-kicker {
-      color: rgba(255,255,255,0.7);
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
-    }
-
-    .video-cover-title {
-      color: #fff;
-      font-family: var(--font-heading);
-      font-size: clamp(1.05rem, 0.85rem + 0.9vw, 1.65rem);
-      font-weight: 700;
-      line-height: 1.16;
-      text-shadow: 0 2px 16px rgba(0,0,0,0.3);
+    .video-card:hover .video-thumb-wrap img {
+      transform: scale(1.04);
     }
 
     .yt-play-btn {
@@ -834,25 +815,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(0deg, rgba(30,26,46,0.28), rgba(30,26,46,0.14));
+      background: rgba(0,0,0,0.25);
       transition: background 0.2s;
       z-index: 2;
     }
 
     .video-card:hover .yt-play-btn {
-      background: linear-gradient(0deg, rgba(30,26,46,0.44), rgba(30,26,46,0.22));
+      background: rgba(0,0,0,0.45);
     }
 
     .yt-play-btn svg {
-      width: 64px;
-      height: 64px;
-      color: #fff;
-      filter: drop-shadow(0 12px 24px rgba(0,0,0,0.35));
-      transition: transform var(--duration-fast) var(--ease-standard);
-    }
-
-    .video-card:hover .yt-play-btn svg {
-      transform: scale(1.04);
+      width: 56px;
+      height: 56px;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
     }
 
     /* Paginación */
@@ -1478,12 +1453,6 @@
       .topic-body-outer { padding: 0; }
       .topic-trigger { padding: 1.2rem 1rem; }
       .topic-item.open .topic-body { padding: 1.2rem 1rem 1.5rem 1rem; }
-      .video-cover-content {
-        left: 1rem;
-        right: 1rem;
-        bottom: 1rem;
-      }
-      .video-cover-title { font-size: clamp(1rem, 6vw, 1.35rem); }
       .yt-play-btn svg {
         width: 54px;
         height: 54px;
@@ -3016,7 +2985,7 @@
     };
 
     function ytPlayIcon() {
-      return '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="var(--gold)"/><path d="M26 20v24l20-12z" fill="currentColor"/></svg>';
+      return '<svg viewBox="0 0 68 48" xmlns="http://www.w3.org/2000/svg"><path d="M66.5 7.7c-.8-2.9-3-5.1-5.8-5.9C55.8.9 34 .9 34 .9S12.3.9 7.3 1.8C4.6 2.6 2.3 4.9 1.5 7.7.7 12.8.7 24 .7 24s0 11.2.8 16.3c.8 2.9 3 5.1 5.8 5.9C12.3 47.1 34 47.1 34 47.1s21.8 0 26.7-.9c2.8-.8 5-3 5.8-5.9.8-5.1.8-16.3.8-16.3s0-11.2-.8-16.3z" fill="#f00"/><path d="M27 33l18-9-18-9v18z" fill="#fff"/></svg>';
     }
 
     function ytLang() {
@@ -3107,15 +3076,13 @@
         var id = v.videoId;
         var title = v.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         var titleAttr = v.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        var thumb = v.thumb || ('https://i.ytimg.com/vi/' + id + '/hqdefault.jpg');
         var isFirst = (s.page === 0 && i === 0);
         var isNew = ytIsNew(v.publishedAt);
         var badgeHtml = isNew ? '<span class="yt-badge-new">Nuevo</span>' : '';
         return '<div class="video-card fade-in' + (isFirst ? ' video-card--featured' : '') + '">' +
           '<button type="button" class="video-thumb-wrap yt-inline-play" data-video-id="' + id + '" data-title="' + titleAttr + '" aria-label="Reproducir: ' + titleAttr + '">' +
-            '<span class="video-cover-content">' +
-              '<span class="video-cover-kicker">Reproducir mensaje</span>' +
-              '<span class="video-cover-title">' + title + '</span>' +
-            '</span>' +
+            '<img src="' + thumb + '" alt="' + titleAttr + '" loading="lazy" onerror="this.style.display=\'none\'">' +
             '<div class="yt-play-btn">' + ytPlayIcon() + '</div>' +
             badgeHtml +
           '</button>' +
@@ -3206,6 +3173,7 @@
             videoId: vid,
             title: sn.title,
             description: sn.description || '',
+            thumb: (sn.thumbnails.maxres || sn.thumbnails.high || sn.thumbnails.medium).url,
             publishedAt: sn.publishedAt,
             views: 0,
             duration: ''
@@ -3246,14 +3214,12 @@
         var id = v.videoId;
         var title = v.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         var titleAttr = v.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        var thumb = v.thumb || ('https://i.ytimg.com/vi/' + id + '/hqdefault.jpg');
         var isFirst = i === 0;
         return '<div class="video-card fade-in' + (isFirst ? ' video-card--featured' : '') + '">' +
           '<div class="video-embed">' +
             '<button type="button" class="video-thumb-wrap yt-inline-play" data-video-id="' + id + '" data-title="' + titleAttr + '" aria-label="Reproducir: ' + titleAttr + '">' +
-              '<span class="video-cover-content">' +
-                '<span class="video-cover-kicker">Reproducir mensaje</span>' +
-                '<span class="video-cover-title">' + title + '</span>' +
-              '</span>' +
+              '<img src="' + thumb + '" alt="' + titleAttr + '" loading="lazy" onerror="this.style.display=\'none\'">' +
               '<div class="yt-play-btn">' + ytPlayIcon() + '</div>' +
             '</button>' +
           '</div>' +
@@ -3360,6 +3326,7 @@
           var desc = (data.description || '').toString().trim();
           var videoId = encodeURIComponent(data.id);
 
+          cover.style.backgroundImage = 'url("https://img.youtube.com/vi/' + videoId + '/maxresdefault.jpg")';
           cover.setAttribute('aria-label', 'Reproducir devocional: ' + title);
           coverTitle.textContent = title;
           titleEl.textContent = title;
