@@ -471,81 +471,31 @@
       background-size: cover;
     }
 
-    .featured-cover::before,
-    .video-thumb-wrap::before {
+    .featured-cover::before {
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(90deg, rgba(30,26,46,0.78) 0%, rgba(30,26,46,0.34) 46%, rgba(30,26,46,0.08) 100%),
-        linear-gradient(0deg, rgba(30,26,46,0.42), rgba(30,26,46,0.04));
+      background: rgba(0,0,0,0.25);
       transition: background var(--duration-normal) var(--ease-standard);
     }
 
     .featured-cover:hover::before {
-      background:
-        linear-gradient(90deg, rgba(30,26,46,0.84) 0%, rgba(30,26,46,0.42) 48%, rgba(30,26,46,0.12) 100%),
-        linear-gradient(0deg, rgba(30,26,46,0.48), rgba(30,26,46,0.06));
-    }
-
-    .featured-cover-content {
-      position: absolute;
-      left: clamp(1.2rem, 5vw, 4rem);
-      right: clamp(1.2rem, 5vw, 4rem);
-      bottom: clamp(1.2rem, 5vw, 3.5rem);
-      display: grid;
-      gap: 0.9rem;
-      max-width: 560px;
-      z-index: 1;
-    }
-
-    .featured-cover-label {
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.78);
-    }
-
-    .featured-cover-title {
-      font-family: var(--font-heading);
-      font-size: clamp(1.7rem, 1.15rem + 2vw, 3rem);
-      font-weight: 700;
-      line-height: 1.08;
-      text-shadow: 0 2px 18px rgba(0,0,0,0.35);
-    }
-
-    .featured-cover-desc {
-      max-width: 520px;
-      font-size: clamp(0.95rem, 0.86rem + 0.35vw, 1.08rem);
-      line-height: 1.55;
-      color: rgba(255,255,255,0.84);
-      text-shadow: 0 2px 14px rgba(0,0,0,0.28);
+      background: rgba(0,0,0,0.45);
     }
 
     .featured-play {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: var(--gold);
-      color: #fff;
-      box-shadow: 0 14px 34px rgba(0,0,0,0.28);
-      transition: transform var(--duration-fast) var(--ease-standard), background var(--duration-fast) var(--ease-standard);
-    }
-
-    .featured-cover:hover .featured-play {
-      background: var(--gold2);
-      transform: scale(1.04);
     }
 
     .featured-play svg {
-      width: 28px;
-      height: 28px;
-      margin-left: 3px;
-      fill: currentColor;
+      width: 56px;
+      height: 56px;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
     }
 
     .featured-body {
@@ -574,17 +524,9 @@
     @media (max-width: 768px) {
       .featured-wrap { padding: 4.5rem 5%; }
       .featured-body { padding: 1.4rem 1.2rem 1.6rem; }
-      .featured-cover-content {
-        top: auto;
-        bottom: 1.2rem;
-      }
-      .featured-play {
+      .featured-play svg {
         width: 54px;
         height: 54px;
-      }
-      .featured-play svg {
-        width: 23px;
-        height: 23px;
       }
     }
 
@@ -1457,8 +1399,6 @@
         width: 54px;
         height: 54px;
       }
-      .featured-cover-title { font-size: clamp(1.45rem, 8vw, 2.25rem); }
-      .featured-cover-desc { font-size: 0.92rem; }
     }
 
     @media (max-width: 400px) {
@@ -1867,13 +1807,8 @@
       <article class="featured-card">
         <div class="featured-embed" id="featured-embed">
           <button type="button" class="featured-cover" id="featured-cover" aria-label="Reproducir devocional">
-            <span class="featured-cover-content">
-              <span class="featured-play" aria-hidden="true">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-              </span>
-              <span class="featured-cover-label">Reproducir devocional</span>
-              <span class="featured-cover-title" id="featured-cover-title"></span>
-              <span class="featured-cover-desc" id="featured-cover-desc" hidden></span>
+            <span class="featured-play" aria-hidden="true">
+              <svg viewBox="0 0 68 48" aria-hidden="true"><path d="M66.5 7.7c-.8-2.9-3-5.1-5.8-5.9C55.8.9 34 .9 34 .9S12.3.9 7.3 1.8C4.6 2.6 2.3 4.9 1.5 7.7.7 12.8.7 24 .7 24s0 11.2.8 16.3c.8 2.9 3 5.1 5.8 5.9C12.3 47.1 34 47.1 34 47.1s21.8 0 26.7-.9c2.8-.8 5-3 5.8-5.9.8-5.1.8-16.3.8-16.3s0-11.2-.8-16.3z" fill="#f00"/><path d="M27 33l18-9-18-9v18z" fill="#fff"/></svg>
             </span>
           </button>
         </div>
@@ -3318,8 +3253,6 @@
           if (!data || !data.id) return;
           var embed = document.getElementById('featured-embed');
           var cover = document.getElementById('featured-cover');
-          var coverTitle = document.getElementById('featured-cover-title');
-          var coverDesc = document.getElementById('featured-cover-desc');
           var titleEl = document.getElementById('featured-title');
           var descEl = document.getElementById('featured-desc');
           var title = (data.title || 'Devocional').toString();
@@ -3328,15 +3261,11 @@
 
           cover.style.backgroundImage = 'url("https://img.youtube.com/vi/' + videoId + '/maxresdefault.jpg")';
           cover.setAttribute('aria-label', 'Reproducir devocional: ' + title);
-          coverTitle.textContent = title;
           titleEl.textContent = title;
           if (desc) {
-            coverDesc.textContent = desc;
-            coverDesc.hidden = false;
             descEl.textContent = desc;
             descEl.hidden = false;
           } else {
-            coverDesc.hidden = true;
             descEl.hidden = true;
           }
 
