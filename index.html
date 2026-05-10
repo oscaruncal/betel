@@ -660,9 +660,7 @@
 
     /* ── SECCIONES CANAL / RECIENTES / VISTOS ── */
     #recientes { background: var(--bg); }
-    #vistos { background: var(--bg2); }
-    .videos-wrap--canal,
-    .videos-wrap--vistos { border-top: 1px solid var(--border); }
+    .videos-wrap--canal { border-top: 1px solid var(--border); }
 
     /* Título como link */
     .video-title-link {
@@ -1805,7 +1803,6 @@
         <a href="#versiculo" onclick="closeMobileMenu()" id="t-mnav-word">📖 La Palabra</a>
         <a href="#videos" onclick="closeMobileMenu()" id="t-mnav-sermons">🎙️ Predicaciones</a>
         <a href="#recientes" onclick="closeMobileMenu()" id="t-mnav-recientes">🕐 Recientes</a>
-        <a href="#vistos" onclick="closeMobileMenu()" id="t-mnav-vistos">🔥 Más vistos</a>
         <a href="#temas" onclick="closeMobileMenu()" id="t-mnav-teachings">✝️ Enseñanzas</a>
         <a href="#links" onclick="closeMobileMenu()" id="t-mnav-links">🔗 Links</a>
         <a href="#" onclick="closeMobileMenu(); openDonate(event)" id="t-mnav-paypal">💙 Donar</a>
@@ -1910,37 +1907,6 @@
         <a id="yt-rec-channel-btn" href="https://www.youtube.com/@beteldeoscaruncal2876" target="_blank" rel="noopener" class="yt-channel-btn">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="#FF0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"/></svg>
           <span id="t-yt-rec-btn">Ver canal en YouTube</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- MÁS VISTOS -->
-  <section id="vistos">
-    <div class="videos-wrap videos-wrap--vistos">
-      <div class="section-header fade-in">
-        <div class="label" id="t-vis-label">Lo más visto</div>
-        <h2 id="t-vis-h2">Los más<br/><em>vistos</em></h2>
-        <p id="t-vis-p">Los mensajes que más llegaron al corazón de la gente.</p>
-        <span class="yt-total" id="yt-vis-total" style="display:none"></span>
-      </div>
-      <div id="yt-vis-loading" class="yt-loading">
-        <div class="yt-spinner"></div>
-        <p>Cargando videos...</p>
-      </div>
-      <div id="yt-vis-error" class="yt-error" style="display:none">
-        <p>No se pudieron cargar los videos. <a href="https://www.youtube.com/@beteldeoscaruncal2876" target="_blank" rel="noopener">Ver canal →</a></p>
-      </div>
-      <div class="videos-grid" id="yt-vis-grid"></div>
-      <div class="yt-pagination" id="yt-vis-pag" style="display:none">
-        <button class="yt-prev" id="yt-vis-prev" onclick="ytPage('vis',-1)" disabled>← <span>Anterior</span></button>
-        <span class="yt-page-info" id="yt-vis-info"></span>
-        <button class="yt-next" id="yt-vis-next" onclick="ytPage('vis',1)"><span>Siguiente</span> →</button>
-      </div>
-      <div style="text-align:center">
-        <a id="yt-vis-channel-btn" href="https://www.youtube.com/@beteldeoscaruncal2876" target="_blank" rel="noopener" class="yt-channel-btn">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="#FF0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"/></svg>
-          <span id="t-yt-vis-btn">Ver canal en YouTube</span>
         </a>
       </div>
     </div>
@@ -2267,7 +2233,6 @@
         't-mnav-word': '📖 La Palabra',
         't-mnav-sermons': '🎙️ Predicaciones',
         't-mnav-recientes': '🕐 Recientes',
-        't-mnav-vistos': '🔥 Más vistos',
         't-mnav-teachings': '✝️ Enseñanzas',
         't-mnav-links': '🔗 Links',
         't-mnav-paypal': '💙 Donar',
@@ -2282,7 +2247,6 @@
         't-donate-mp-copy': 'Copiar',
         't-nav-sermons': 'Predicaciones',
         't-nav-recientes': 'Recientes',
-        't-nav-vistos': 'Más vistos',
         't-nav-word': 'La Palabra',
         't-nav-teachings': 'Enseñanzas',
         't-nav-links': 'Links',
@@ -2312,11 +2276,7 @@
         't-rec-label': 'Canal de YouTube',
         't-rec-h2': 'Los más<br/><em>recientes</em>',
         't-rec-p': 'Los últimos mensajes subidos al canal de Oscar Uncal.',
-        't-vis-label': 'Lo más visto',
-        't-vis-h2': 'Los más<br/><em>vistos</em>',
-        't-vis-p': 'Los mensajes que más llegaron al corazón de la gente.',
         't-yt-rec-btn': 'Ver canal en YouTube',
-        't-yt-vis-btn': 'Ver canal en YouTube',
         't-t1-intro': 'Acercarse a Dios en oración es un acto de comunicación sincera y personal. Implica abrir el corazón con honestidad, orar con fe en cualquier lugar y momento, y buscar la voluntad divina sobre la nuestra propia. La clave es reconocer quién es Dios, agradecerle, pedirle perdón y su guía — siempre en el Nombre de Jesús.',
         't-t1-subtitle': 'Esquema de la Oración',
         't-t1-list': '<li>1ro. Glorificamos al Padre</li><li>2do. Pedimos por su voluntad</li><li>3ro. Hacemos nuestras peticiones</li><li>4to. Pedimos perdón por nuestros pecados</li>',
@@ -2396,7 +2356,6 @@
         't-mnav-word': '📖 The Word',
         't-mnav-sermons': '🎙️ Sermons',
         't-mnav-recientes': '🕐 Recent',
-        't-mnav-vistos': '🔥 Most watched',
         't-mnav-teachings': '✝️ Teachings',
         't-mnav-links': '🔗 Links',
         't-mnav-paypal': '💙 Donate',
@@ -2411,7 +2370,6 @@
         't-donate-mp-copy': 'Copy',
         't-nav-sermons': 'Sermons',
         't-nav-recientes': 'Recent',
-        't-nav-vistos': 'Most watched',
         't-nav-word': 'The Word',
         't-nav-teachings': 'Teachings',
         't-nav-paypal': 'Donate',
@@ -2442,11 +2400,7 @@
         't-rec-label': 'YouTube Channel',
         't-rec-h2': 'Most<br/><em>recent</em>',
         't-rec-p': 'The latest messages uploaded to Oscar Uncal\'s channel.',
-        't-vis-label': 'Most watched',
-        't-vis-h2': 'Most<br/><em>watched</em>',
-        't-vis-p': 'The messages that touched the most hearts.',
         't-yt-rec-btn': 'View channel on YouTube',
-        't-yt-vis-btn': 'View channel on YouTube',
         't-t1-intro': 'Approaching God in prayer is an act of sincere and personal communication. It means opening our heart honestly, praying with faith anywhere and at any time, and seeking God\'s will above our own. The key is to recognize who God is, thank Him, ask forgiveness, and seek His guidance — always in the Name of Jesus.',
         't-t1-subtitle': 'Prayer Outline',
         't-t1-list': '<li>1st. We glorify the Father</li><li>2nd. We ask for His will</li><li>3rd. We make our requests</li><li>4th. We ask forgiveness for our sins</li>',
@@ -2969,8 +2923,7 @@
     var ytCurrentLang = null;
 
     var ytState = {
-      rec: { videos: [], page: 0, perPage: 6 },
-      vis: { videos: [], page: 0, perPage: 6 }
+      rec: { videos: [], page: 0, perPage: 6 }
     };
 
     function ytPlayIcon() {
@@ -3238,9 +3191,6 @@
       var recLoading = document.getElementById('yt-rec-loading');
       var recError   = document.getElementById('yt-rec-error');
       var recGrid    = document.getElementById('yt-rec-grid');
-      var visLoading = document.getElementById('yt-vis-loading');
-      var visError   = document.getElementById('yt-vis-error');
-      var visGrid    = document.getElementById('yt-vis-grid');
 
       // Reset UI
       var topGrid = document.getElementById('yt-top-grid');
@@ -3248,15 +3198,10 @@
       if (topGrid) topGrid.innerHTML = '';
       if (topLoading) topLoading.style.display = 'flex';
       recGrid.innerHTML = '';
-      visGrid.innerHTML = '';
       recError.style.display = 'none';
-      visError.style.display = 'none';
       recLoading.style.display = 'flex';
-      visLoading.style.display = 'flex';
       ytState.rec = { videos: [], page: 0 };
-      ytState.vis = { videos: [], page: 0 };
       document.getElementById('yt-rec-pag').style.display = 'none';
-      document.getElementById('yt-vis-pag').style.display = 'none';
 
       try {
         var allVideos = ytCacheGet(lang);
@@ -3271,12 +3216,12 @@
         var channelUrl = lang === 'en'
           ? 'https://www.youtube.com/@devocionaleseningles'
           : 'https://www.youtube.com/@beteldeoscaruncal2876';
-        ['yt-rec-channel-btn','yt-vis-channel-btn'].forEach(function(id) {
+        ['yt-rec-channel-btn'].forEach(function(id) {
           var el = document.getElementById(id);
           if (el) el.href = channelUrl;
         });
         var totalLabel = allVideos.length + ' videos';
-        ['yt-rec-total','yt-vis-total'].forEach(function(id) {
+        ['yt-rec-total'].forEach(function(id) {
           var el = document.getElementById(id);
           if (el) { el.textContent = totalLabel; el.style.display = 'inline-block'; }
         });
@@ -3286,17 +3231,12 @@
         ytRender('rec');
 
         var withViews = allVideos.slice().sort(function(a, b) { return b.views - a.views; });
-        visLoading.style.display = 'none';
-        ytState.vis.videos = withViews;
-        ytRender('vis');
         ytRenderTop4(withViews);
 
       } catch(err) {
         console.error('YouTube API error:', err);
         recLoading.style.display = 'none';
-        visLoading.style.display = 'none';
         recError.style.display = 'block';
-        visError.style.display = 'block';
       }
     }
 
