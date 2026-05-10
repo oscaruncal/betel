@@ -425,6 +425,67 @@
       margin-top: 1rem;
     }
 
+    /* ── DEVOCIONAL DE HOY ── */
+    #devocional-hoy { background: var(--bg); }
+
+    .featured-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 6rem 5%;
+    }
+
+    .featured-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 2rem;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+    }
+
+    .featured-embed {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+    }
+    .featured-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    .featured-body {
+      padding: 1.8rem 2rem 2rem;
+      text-align: center;
+    }
+
+    .featured-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.4rem, 1.1rem + 1vw, 2rem);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.25;
+      margin-bottom: 0.6rem;
+    }
+
+    .featured-desc {
+      font-family: var(--font-body);
+      font-size: 0.97rem;
+      line-height: 1.6;
+      color: var(--muted);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .featured-wrap { padding: 4.5rem 5%; }
+      .featured-body { padding: 1.4rem 1.2rem 1.6rem; }
+    }
+
     /* ── VIDEOS GRID ── */
     #videos { background: var(--bg2); }
 
@@ -1678,6 +1739,25 @@
     </div>
   </div>
 
+  <!-- DEVOCIONAL DE HOY (lee featured-videos.json) -->
+  <section id="devocional-hoy" class="featured-section" hidden>
+    <div class="featured-wrap fade-in">
+      <div class="section-header">
+        <div class="label" id="t-featured-label">Devocional de hoy</div>
+        <h2 id="t-featured-h2">Devocional de <em>hoy</em></h2>
+      </div>
+      <article class="featured-card">
+        <div class="featured-embed">
+          <iframe id="featured-iframe" src="" title="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div class="featured-body">
+          <h3 class="featured-title" id="featured-title"></h3>
+          <p class="featured-desc" id="featured-desc" hidden></p>
+        </div>
+      </article>
+    </div>
+  </section>
+
   <!-- VIDEOS DESTACADOS (top 4 más vistos, dinámico) -->
   <section id="videos">
     <div class="videos-wrap">
@@ -2113,6 +2193,8 @@
         't-hero-verse': '"Tu palabra es una lámpara que guía mis pies y una luz para mi camino."',
         't-hero-verse-ref': 'Salmos 119:105',
         't-verse-label': 'Versículo del día',
+        't-featured-label': 'Devocional de hoy',
+        't-featured-h2': 'Devocional de <em>hoy</em>',
         't-vid-label': 'Predicaciones',
         't-vid-h2': 'Los más vistos del<br/><em>canal</em>',
         't-vid-p': 'Los 4 mensajes que más llegaron al corazón de la gente.',
@@ -2241,6 +2323,8 @@
         't-hero-verse': '"Your word is a lamp to my feet and a light to my path."',
         't-hero-verse-ref': 'Psalm 119:105',
         't-verse-label': 'Verse of the day',
+        't-featured-label': "Today's devotional",
+        't-featured-h2': "Today's <em>devotional</em>",
         't-vid-label': 'Sermons',
         't-vid-h2': 'Most watched on<br/><em>the channel</em>',
         't-vid-p': 'The 4 messages that touched the most hearts.',
@@ -3079,6 +3163,35 @@
     (function() {
       var saved = localStorage.getItem('betel-lang') || 'es';
       ytLoadForLang(saved);
+    })();
+
+    /* ── DEVOCIONAL DE HOY (lee featured-videos.json) ── */
+    (function() {
+      var section = document.getElementById('devocional-hoy');
+      if (!section) return;
+
+      // Cache-buster suave para que GH Pages sirva la versión nueva pronto
+      fetch('featured-videos.json?v=' + Date.now(), { cache: 'no-store' })
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .then(function(data) {
+          if (!data || !data.id) return;
+          var iframe = document.getElementById('featured-iframe');
+          var titleEl = document.getElementById('featured-title');
+          var descEl = document.getElementById('featured-desc');
+          var title = (data.title || 'Devocional').toString();
+          var desc = (data.description || '').toString().trim();
+          iframe.src = 'https://www.youtube.com/embed/' + encodeURIComponent(data.id);
+          iframe.title = title;
+          titleEl.textContent = title;
+          if (desc) {
+            descEl.textContent = desc;
+            descEl.hidden = false;
+          } else {
+            descEl.hidden = true;
+          }
+          section.hidden = false;
+        })
+        .catch(function() { /* sección oculta por defecto */ });
     })();
   </script>
 </body>
