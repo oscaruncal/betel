@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="color-scheme" content="light"/>
+  <title>Betel | Oscar Uncal</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── TEMA CLARO / FE ── */
+    :root {
+      --bg:        #FAF8F4;
+      --bg2:       #F2EDE3;
+      --bg3:       #E8E0D0;
+      --border:    rgba(0,0,0,0.09);
+      --gold:      #7B5EA7;
+      --gold2:     #634A8A;
+      --text:      #1E1A2E;
+      --muted:     rgba(30,26,46,0.55);
+      --muted2:    rgba(30,26,46,0.3);
+      --accent-subtle: rgba(123,94,167,0.1);
+      --nav-bg:    rgba(250,248,244,0.97);
+      --footer-bg: #1E1A2E;
+      --footer-text: #F2EDE3;
+      --footer-muted: rgba(242,237,227,0.6);
+      --footer-border: rgba(255,255,255,0.08);
+      --font-heading: 'Libre Baskerville', serif;
+      --font-body:    'Karla', sans-serif;
+
+      --duration-fast:   150ms;
+      --duration-normal: 250ms;
+      --duration-slow:   400ms;
+      --ease-standard:   cubic-bezier(0.4, 0, 0.2, 1);
+      --ease-spring:     cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 5%;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    .nav-logo span { color: var(--text); font-weight: 400; font-style: italic; }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 2.5rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+      transition: color var(--duration-normal) var(--ease-standard);
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    .nav-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+      padding: 8px;
+      line-height: 1;
+    }
+
+    .nav-hamburger svg {
+      width: 26px;
+      height: 26px;
+      display: block;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: var(--nav-bg);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .mobile-menu.open { display: flex; }
+
+    .mobile-menu-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .mobile-menu-close {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      padding: 10px;
+      line-height: 1;
+      transition: color var(--duration-fast) var(--ease-standard);
+    }
+
+    .mobile-menu-close:hover { color: var(--text); }
+    .mobile-menu-close svg { width: 24px; height: 24px; display: block; }
+
+    .mobile-nav {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .mobile-nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      transition: color var(--duration-fast) var(--ease-standard), background var(--duration-fast) var(--ease-standard);
+      padding: 1.3rem 2rem;
+      width: 100%;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-nav a:first-child { border-top: 1px solid var(--border); }
+    .mobile-nav a:hover { color: var(--gold); background: var(--bg2); }
+
+    :focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+
+    :focus:not(:focus-visible) { outline: none; }
+
+    /* ── HERO ── */
+    #inicio {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-img {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(10,8,20,0.82) 0%, rgba(10,8,20,0.75) 50%, rgba(10,8,20,0.95) 100%),
+        url('https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=1600&q=80') center/cover no-repeat;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 8rem 5% 5rem;
+    }
+
+    .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .label::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .hero-content { color: #F5F0E8; }
+    .hero-content .label { color: #E8C97A; }
+    .hero-content .label::before { background: #E8C97A; }
+    .hero-content p { color: rgba(245,240,232,0.8); }
+
+    .hero-content h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2.4rem, 6vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+      color: #FFFFFF;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.6);
+    }
+
+    .hero-content h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-content p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+    }
+
+    .verse-highlight {
+      display: inline-block;
+      border-left: 3px solid #E8C97A;
+      padding: 1rem 1.5rem;
+      background: rgba(0,0,0,0.35);
+      font-family: var(--font-heading);
+      font-style: italic;
+      font-size: 1rem;
+      color: #FFFFFF;
+      max-width: 500px;
+      line-height: 1.6;
+    }
+
+    .verse-ref {
+      display: block;
+      font-family: var(--font-body);
+      font-style: normal;
+      font-size: 0.75rem;
+      color: var(--gold);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 0.6rem;
+    }
+
+    /* ── SECCIÓN GENÉRICA ── */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 7rem 5%;
+    }
+
+    .section-header {
+      margin-bottom: 4rem;
+    }
+
+    .section-header h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-top: 0.5rem;
+      text-wrap: balance;
+    }
+
+    .section-header h2 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .section-header p {
+      color: var(--muted);
+      max-width: 540px;
+      margin-top: 1rem;
+    }
+
+    /* ── VIDEOS GRID ── */
+    #videos { background: var(--bg2); }
+
+    .videos-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 7rem 5%;
+    }
+
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    /* Primer video: ocupa las 2 columnas completas */
+    .video-card:first-child {
+      grid-column: span 2;
+    }
+
+    .video-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: border-color var(--duration-normal) var(--ease-standard), transform var(--duration-normal) var(--ease-standard);
+    }
+
+    .video-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+    }
+
+    .video-embed {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      background:
+        radial-gradient(circle at 72% 18%, rgba(250,248,244,0.2), transparent 24%),
+        linear-gradient(135deg, #1E1A2E 0%, #4B3B69 48%, #7B5EA7 100%);
+    }
+
+    .video-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .video-cover {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      cursor: pointer;
+      color: #fff;
+      font: inherit;
+      text-align: left;
+      overflow: hidden;
+      background: transparent;
+    }
+
+    .video-cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(30,26,46,0.78) 0%, rgba(30,26,46,0.34) 54%, rgba(30,26,46,0.12) 100%),
+        linear-gradient(0deg, rgba(30,26,46,0.42), rgba(30,26,46,0.04));
+      transition: background var(--duration-normal) var(--ease-standard);
+    }
+
+    .video-cover:hover::before {
+      background:
+        linear-gradient(90deg, rgba(30,26,46,0.86) 0%, rgba(30,26,46,0.46) 54%, rgba(30,26,46,0.18) 100%),
+        linear-gradient(0deg, rgba(30,26,46,0.5), rgba(30,26,46,0.08));
+    }
+
+    .video-cover-content {
+      position: absolute;
+      left: clamp(1rem, 3vw, 2.5rem);
+      right: clamp(1rem, 3vw, 2.5rem);
+      bottom: clamp(1rem, 3vw, 2.4rem);
+      z-index: 1;
+      display: grid;
+      gap: 0.5rem;
+      max-width: 620px;
+    }
+
+    .video-cover-kicker {
+      color: rgba(255,255,255,0.72);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+    }
+
+    .video-cover-title {
+      color: #fff;
+      font-family: var(--font-heading);
+      font-size: clamp(1.1rem, 0.9rem + 0.95vw, 1.75rem);
+      font-weight: 700;
+      line-height: 1.16;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.3);
+    }
+
+    .video-play {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(0deg, rgba(30,26,46,0.28), rgba(30,26,46,0.14));
+    }
+
+    .video-play svg {
+      width: 64px;
+      height: 64px;
+      color: #fff;
+      filter: drop-shadow(0 12px 24px rgba(0,0,0,0.35));
+      transition: transform var(--duration-fast) var(--ease-standard);
+    }
+
+    .video-cover:hover .video-play svg { transform: scale(1.04); }
+
+    .video-body {
+      padding: 1.2rem 1.4rem 1.5rem;
+    }
+
+    .video-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .video-title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 0.4rem;
+    }
+
+    .video-card:first-child .video-title {
+      font-size: 1.2rem;
+    }
+
+    .video-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── VERSÍCULO DEL DÍA ── */
+    #versiculo {
+      background: var(--bg3);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .verse-banner {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 6rem 5%;
+      text-align: center;
+    }
+
+    .verse-banner blockquote {
+      font-family: var(--font-heading);
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-style: italic;
+      line-height: 1.5;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+
+    .verse-banner blockquote::before { content: '\201C'; color: var(--gold); }
+    .verse-banner blockquote::after  { content: '\201D'; color: var(--gold); }
+
+    .verse-banner cite {
+      font-size: 0.8rem;
+      font-style: normal;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    /* ── TEMAS / CATEGORÍAS ── */
+    /* ── ACORDEÓN DE TEMAS ── */
+    .topics-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .topic-item {
+      background: var(--bg2);
+    }
+
+    .topic-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.6rem 2rem;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text);
+      font-family: var(--font-body);
+      text-align: left;
+      transition: background var(--duration-fast) var(--ease-standard);
+      gap: 1rem;
+    }
+
+    .topic-trigger:hover { background: var(--bg3); }
+
+    .topic-trigger-left {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .topic-icon { font-size: 1.5rem; line-height: 1; }
+
+    .topic-name {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .topic-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .topic-arrow {
+      color: var(--gold);
+      font-size: 1.2rem;
+      transition: transform var(--duration-normal) var(--ease-standard);
+      flex-shrink: 0;
+    }
+
+    .topic-item.open .topic-arrow { transform: rotate(180deg); }
+
+    .topic-body {
+      display: none;
+      padding: 0 2rem 2rem 4.7rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .topic-item.open .topic-body { display: block; }
+
+    .topic-body {
+      display: none;
+      padding: 2rem 2rem 2.5rem 4.7rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Intro text */
+    .topic-body .topic-intro {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.85;
+      margin-bottom: 1.8rem;
+      max-width: 680px;
+    }
+
+    /* Subtítulo de sección interna */
+    .topic-body .topic-subtitle {
+      font-family: var(--font-heading);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .topic-body .topic-subtitle::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Lista de puntos clave */
+    .topic-body ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .topic-body li {
+      display: flex;
+      gap: 0.9rem;
+      align-items: flex-start;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .topic-body li::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      margin-top: 0.55rem;
+      flex-shrink: 0;
+    }
+
+    .topic-body li strong {
+      color: var(--text);
+    }
+
+    /* Versículo destacado */
+    .topic-verse {
+      display: block;
+      border-left: 3px solid var(--gold);
+      padding: 1rem 1.4rem;
+      background: var(--accent-subtle);
+      font-family: var(--font-heading);
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.7;
+      margin-top: 0.5rem;
+      max-width: 600px;
+    }
+
+    .topic-verse cite {
+      display: block;
+      font-style: normal;
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      margin-top: 0.6rem;
+    }
+
+    /* ── NEWSLETTER / CTA ── */
+    .cta-band {
+      background: linear-gradient(135deg, var(--bg3) 0%, rgba(181,152,106,0.08) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cta-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 6rem 5%;
+      text-align: center;
+    }
+
+    .cta-inner h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      margin-bottom: 1rem;
+      line-height: 1.25;
+    }
+
+    .cta-inner h2 em { color: var(--gold); font-style: italic; }
+
+    .cta-inner p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .cta-form {
+      display: flex;
+      gap: 0.75rem;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .cta-form input {
+      flex: 1;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.85rem 1.2rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      border-radius: 2px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .cta-form input:focus { border-color: var(--gold); }
+    .cta-form input::placeholder { color: var(--muted2); }
+
+    .btn-gold {
+      background: var(--gold);
+      color: #0F0E0D;
+      border: none;
+      padding: 0.85rem 1.8rem;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-gold:hover { background: var(--gold2); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--footer-bg);
+      border-top: 1px solid var(--footer-border);
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 5% 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .footer-brand {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-brand span { color: var(--footer-text); font-style: italic; font-weight: 400; }
+
+    .footer-tagline {
+      color: var(--footer-muted);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      max-width: 300px;
+    }
+
+    .footer-col h5 {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .footer-col a {
+      color: var(--footer-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover { color: var(--gold); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--footer-border);
+      padding: 1.5rem 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--footer-muted);
+    }
+
+    /* ── SCROLL FADE ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .videos-grid { grid-template-columns: 1fr; }
+      .video-card:first-child { grid-column: span 1; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .videos-grid { grid-template-columns: 1fr; }
+      .video-card:first-child { grid-column: span 1; }
+      .cta-form { flex-direction: column; }
+      .footer-inner { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+      .hero-content { padding: 6rem 5% 3.5rem; }
+      .video-cover-content {
+        left: 1rem;
+        right: 1rem;
+        bottom: 1rem;
+      }
+      .video-cover-title { font-size: clamp(1rem, 6vw, 1.35rem); }
+      .video-play svg {
+        width: 54px;
+        height: 54px;
+      }
+      .topic-trigger { padding: 1.2rem 1rem; }
+      .topic-body,
+      .topic-item.open .topic-body {
+        padding: 1.2rem 1rem 1.5rem;
+      }
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in { opacity: 1 !important; transform: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#inicio" class="nav-logo">Betel<span> · Oscar Uncal</span></a>
+      <ul class="nav-links">
+        <li><a href="#videos">Predicaciones</a></li>
+        <li><a href="#versiculo">La Palabra</a></li>
+        <li><a href="#temas">Enseñanzas</a></li>
+      </ul>
+      <button class="nav-hamburger" onclick="openMobileMenu()" aria-label="Abrir menú" aria-expanded="false" id="nav-hamburger">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true" onclick="handleMobileOverlay(event)">
+    <div class="mobile-menu-inner">
+      <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Cerrar menú">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <nav class="mobile-nav">
+        <a href="#videos" onclick="closeMobileMenu()">Predicaciones</a>
+        <a href="#versiculo" onclick="closeMobileMenu()">La Palabra</a>
+        <a href="#temas" onclick="closeMobileMenu()">Enseñanzas</a>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+
+  <!-- HERO -->
+  <section id="inicio">
+    <div class="hero-bg-img" role="img" aria-label="Luz del amanecer sobre el horizonte"></div>
+    <div class="hero-content">
+      <div class="label">Bienvenido</div>
+      <h1>La Palabra de Dios<br/>para tu <em>vida de hoy</em></h1>
+      <p>Predicaciones, alabanzas y reflexiones bíblicas para fortalecer tu fe y acercarte a Dios cada día.</p>
+      <blockquote class="verse-highlight">
+        "Lámpara es a mis pies tu palabra, y lumbrera a mi camino."
+        <cite class="verse-ref">Salmos 119:105</cite>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- VERSÍCULO DEL DÍA -->
+  <div id="versiculo">
+    <div class="verse-banner">
+      <div class="label" style="justify-content:center">Versículo del día</div>
+      <blockquote>
+        Sabiendo que la prueba de vuestra fe produce paciencia. Mas tenga la paciencia su obra completa, para que seáis perfectos y cabales.
+      </blockquote>
+      <cite>Santiago 1:3-4</cite>
+    </div>
+  </div>
+
+  <!-- VIDEOS -->
+  <section id="videos">
+    <div class="videos-wrap">
+      <div class="section-header fade-in">
+        <div class="label">Predicaciones</div>
+        <h2>Mensajes que<br/><em>transforman vidas</em></h2>
+        <p>Videos seleccionados con enseñanzas bíblicas profundas para cada etapa de tu camino de fe.</p>
+      </div>
+
+      <div class="videos-grid">
+
+        <!-- VIDEO 1 — destacado -->
+        <div class="video-card fade-in">
+          <div class="video-embed">
+            <button type="button" class="video-cover" data-video-id="pBZU7CVIZJ8" data-title="El poder del silencio - Oscar Uncal" aria-label="Reproducir: El poder del silencio">
+              <span class="video-cover-content">
+                <span class="video-cover-kicker">Reproducir mensaje</span>
+                <span class="video-cover-title">El poder del silencio</span>
+              </span>
+              <span class="video-play" aria-hidden="true">
+                <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="var(--gold)"/><path d="M26 20v24l20-12z" fill="currentColor"/></svg>
+              </span>
+            </button>
+          </div>
+          <div class="video-body">
+            <div class="video-tag">Prédica destacada · Oscar Uncal</div>
+            <div class="video-title">El poder del silencio</div>
+            <div class="video-desc">En el silencio Dios habla con más claridad. Un mensaje profundo sobre aprender a escuchar la voz de Dios en medio del ruido del mundo.</div>
+          </div>
+        </div>
+
+        <!-- VIDEO 2 -->
+        <div class="video-card fade-in">
+          <div class="video-embed">
+            <button type="button" class="video-cover" data-video-id="5FPeMRjX-ME" data-title="Elías, el silbo apacible - Oscar Uncal" aria-label="Reproducir: Elías, el silbo apacible">
+              <span class="video-cover-content">
+                <span class="video-cover-kicker">Reproducir mensaje</span>
+                <span class="video-cover-title">Elías, el silbo apacible</span>
+              </span>
+              <span class="video-play" aria-hidden="true">
+                <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="var(--gold)"/><path d="M26 20v24l20-12z" fill="currentColor"/></svg>
+              </span>
+            </button>
+          </div>
+          <div class="video-body">
+            <div class="video-tag">Palabra · Oscar Uncal</div>
+            <div class="video-title">Elías, el silbo apacible</div>
+            <div class="video-desc">La historia de Elías nos enseña que Dios no siempre habla en el viento, el terremoto o el fuego, sino en una voz suave y delicada.</div>
+          </div>
+        </div>
+
+        <!-- VIDEO 3 -->
+        <div class="video-card fade-in">
+          <div class="video-embed">
+            <button type="button" class="video-cover" data-video-id="c3kLjALlnq4" data-title="Las dos simientes - Oscar Uncal" aria-label="Reproducir: Las dos simientes">
+              <span class="video-cover-content">
+                <span class="video-cover-kicker">Reproducir mensaje</span>
+                <span class="video-cover-title">Las dos simientes</span>
+              </span>
+              <span class="video-play" aria-hidden="true">
+                <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="var(--gold)"/><path d="M26 20v24l20-12z" fill="currentColor"/></svg>
+              </span>
+            </button>
+          </div>
+          <div class="video-body">
+            <div class="video-tag">Enseñanza · Oscar Uncal</div>
+            <div class="video-title">Las dos simientes</div>
+            <div class="video-desc">Un mensaje bíblico sobre la guerra espiritual entre la simiente de la serpiente y la simiente de la mujer, desde Génesis hasta el Apocalipsis.</div>
+          </div>
+        </div>
+
+        <!-- VIDEO 4 -->
+        <div class="video-card fade-in">
+          <div class="video-embed">
+            <button type="button" class="video-cover" data-video-id="HsPEFlC2SeU" data-title="El cordón de grana - Oscar Uncal" aria-label="Reproducir: El cordón de grana">
+              <span class="video-cover-content">
+                <span class="video-cover-kicker">Reproducir mensaje</span>
+                <span class="video-cover-title">El cordón de grana</span>
+              </span>
+              <span class="video-play" aria-hidden="true">
+                <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="var(--gold)"/><path d="M26 20v24l20-12z" fill="currentColor"/></svg>
+              </span>
+            </button>
+          </div>
+          <div class="video-body">
+            <div class="video-tag">Enseñanza · Oscar Uncal</div>
+            <div class="video-title">El cordón de grana</div>
+            <div class="video-desc">A través de la historia de Rahab y el cordón de grana, Oscar Uncal revela cómo la sangre de Cristo es nuestra única salvación y esperanza.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TEMAS -->
+  <section id="temas">
+    <div class="section">
+      <div class="section-header fade-in">
+        <div class="label">La Palabra</div>
+        <h2>Fundamentos de la <em>fe cristiana</em></h2>
+        <p>Hacé click en cada tema para leer la enseñanza bíblica completa.</p>
+      </div>
+      <div class="topics-list fade-in">
+
+        <!-- ORACIÓN -->
+        <div class="topic-item">
+          <button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false">
+            <div class="topic-trigger-left">
+              <div class="topic-icon">🙏</div>
+              <div>
+                <div class="topic-name">Cómo acercarse a Dios en oración</div>
+                <div class="topic-sub">La comunicación sincera con el Padre</div>
+              </div>
+            </div>
+            <span class="topic-arrow">▼</span>
+          </button>
+          <div class="topic-body">
+            <p class="topic-intro">Acercarse a Dios en oración es un acto de comunicación sincera y personal. Implica abrir el corazón con honestidad, orar con fe en cualquier lugar y momento, y buscar la voluntad divina sobre la nuestra propia. La clave es reconocer quién es Dios, agradecerle, pedirle perdón y su guía — siempre en el Nombre de Jesús.</p>
+            <div class="topic-subtitle">Esquema de la Oración</div>
+            <ul>
+              <li>1ro. Glorificamos al Padre</li>
+              <li>2do. Pedimos por su voluntad</li>
+              <li>3ro. Hacemos nuestras peticiones</li>
+              <li>4to. Pedimos perdón por nuestros pecados</li>
+            </ul>
+            <blockquote class="topic-verse">
+              "Lámpara es a mis pies tu palabra, y lumbrera a mi camino."
+              <cite>Salmos 119:105</cite>
+            </blockquote>
+          </div>
+        </div>
+
+        <!-- SALVACIÓN -->
+        <div class="topic-item">
+          <button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false">
+            <div class="topic-trigger-left">
+              <div class="topic-icon">✝️</div>
+              <div>
+                <div class="topic-name">Plan de salvación</div>
+                <div class="topic-sub">El regalo de la gracia de Dios</div>
+              </div>
+            </div>
+            <span class="topic-arrow">▼</span>
+          </button>
+          <div class="topic-body">
+            <p class="topic-intro">El plan de salvación es un regalo de Dios a la humanidad llamado gracia. Jesucristo se hizo hombre y murió en la cruz para rescatarnos del pecado y la muerte eterna. La gracia se recibe no por obras, sino mediante la fe en Jesús como Salvador, arrepintiéndose y confesándolo como Señor.</p>
+            <div class="topic-subtitle">Puntos clave</div>
+            <ul>
+              <li><strong>La Necesidad (el pecado):</strong> Todos han pecado y están destituidos de la gloria de Dios (Romanos 3:23, 6:23).</li>
+              <li><strong>La Provisión (Jesucristo):</strong> Dios, por amor, envió a su Hijo Jesús para morir en la cruz (Juan 3:16).</li>
+              <li><strong>El Medio (fe y gracia):</strong> La salvación es un regalo inmerecido que se recibe únicamente a través de la fe.</li>
+              <li><strong>La Respuesta (arrepentimiento):</strong> Reconocer el pecado, arrepentirse y aceptar a Jesús como Salvador (Hechos 16:31).</li>
+            </ul>
+            <blockquote class="topic-verse">
+              "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna."
+              <cite>Juan 3:16</cite>
+            </blockquote>
+          </div>
+        </div>
+
+        <!-- FE Y PRUEBAS -->
+        <div class="topic-item">
+          <button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false">
+            <div class="topic-trigger-left">
+              <div class="topic-icon">💪</div>
+              <div>
+                <div class="topic-name">La fe y las pruebas</div>
+                <div class="topic-sub">Fortaleza y propósito en los tiempos difíciles</div>
+              </div>
+            </div>
+            <span class="topic-arrow">▼</span>
+          </button>
+          <div class="topic-body">
+            <p class="topic-intro">Las pruebas no son para destrucción, sino para refinar y fortalecer la fe. Dios permite estas dificultades con propósitos divinos, prometiendo estar presente y asegurar que la prueba no exceda la capacidad del creyente. La fe bíblica se prueba para demostrar que es real y para fortalecer el carácter espiritual.</p>
+            <div class="topic-subtitle">Puntos clave</div>
+            <ul>
+              <li><strong>Propósito de las pruebas:</strong> Purificar la fe, más valiosa que el oro, y desarrollar un carácter semejante al de Cristo.</li>
+              <li><strong>Actitud ante la prueba:</strong> Considerarlas con "sumo gozo", ya que producen paciencia y madurez (Santiago 1:2-4).</li>
+              <li><strong>Perseverancia y recompensa:</strong> El que persevera bajo la prueba recibirá la "corona de vida".</li>
+              <li><strong>El respaldo divino:</strong> Dios nunca abandona al creyente; está más cerca en los momentos difíciles.</li>
+            </ul>
+            <blockquote class="topic-verse">
+              "Nos gloriamos en las tribulaciones, sabiendo que la tribulación produce paciencia; y la paciencia, prueba; y la prueba, esperanza."
+              <cite>Romanos 5:3-4</cite>
+            </blockquote>
+          </div>
+        </div>
+
+        <!-- AMOR Y FAMILIA -->
+        <div class="topic-item">
+          <button class="topic-trigger" onclick="toggleTopic(this)" aria-expanded="false">
+            <div class="topic-trigger-left">
+              <div class="topic-icon">❤️</div>
+              <div>
+                <div class="topic-name">El amor y la familia</div>
+                <div class="topic-sub">Instituciones divinas para reflejar el amor de Dios</div>
+              </div>
+            </div>
+            <span class="topic-arrow">▼</span>
+          </button>
+          <div class="topic-body">
+            <p class="topic-intro">El amor y la familia son instituciones divinas diseñadas para reflejar el amor incondicional de Dios. El amor bíblico —el ágape— es paciente, bondadoso y desinteresado. La familia es el refugio más significativo después de la relación con Dios, y su base es la unidad, el respeto y la fidelidad.</p>
+            <div class="topic-subtitle">Fundamentos bíblicos</div>
+            <ul>
+              <li><strong>Fundamento divino:</strong> La familia fue creada por Dios (Génesis 2:24), el vínculo más significativo después de la relación con Él.</li>
+              <li><strong>El amor ágape:</strong> Paciente, bondadoso, no envidioso, no orgulloso, no egoísta ni rencoroso (1 Corintios 13:4-5).</li>
+              <li><strong>Matrimonio:</strong> Dos se convierten en "una sola carne", una unión que Dios ha unido (Marcos 10:6-9).</li>
+              <li><strong>Hijos:</strong> Llamados a honrar, obedecer y respetar a sus padres (Efesios 6:1).</li>
+              <li><strong>Amor fraternal:</strong> Amarse unos a otros respetándose y honrándose mutuamente (Romanos 12:10).</li>
+            </ul>
+            <blockquote class="topic-verse">
+              "El amor es sufrido, es benigno; el amor no tiene envidia, el amor no es jactancioso, no se envanece; no hace nada indebido, no busca lo suyo."
+              <cite>1 Corintios 13:4-5</cite>
+            </blockquote>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA NEWSLETTER -->
+  <div class="cta-band">
+    <div class="cta-inner fade-in">
+      <div class="label" style="justify-content:center;margin-bottom:1rem">Comunidad</div>
+      <h2>Recibí tu devocional<br/>en tu <em>email</em></h2>
+      <p>Suscribite y empezá cada mañana con una palabra de aliento directa a tu bandeja de entrada.</p>
+      <form class="cta-form" onsubmit="handleSub(event)">
+        <label for="sub-email" class="visually-hidden">Tu email</label>
+        <input id="sub-email" type="email" placeholder="tu@email.com" autocomplete="email" required/>
+        <button type="submit" class="btn-gold">Suscribirme</button>
+      </form>
+    </div>
+  </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">Betel<span> · Oscar Uncal</span></div>
+        <p class="footer-tagline">Enseñanzas bíblicas de Oscar Uncal para fortalecer tu fe y crecer en el conocimiento de la Palabra de Dios.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Secciones</h5>
+        <ul>
+          <li><a href="#videos">Predicaciones</a></li>
+          <li><a href="#temas">Temas</a></li>
+          <li><a href="#versiculo">La Palabra</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Pastores</h5>
+        <ul>
+          <li><a href="#">Danilo Montero</a></li>
+          <li><a href="#">Marco Barrientos</a></li>
+          <li><a href="#">Ezequiel Molina</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Betel · Oscar Uncal. Hecho con fe.</p>
+      <p>"La fe es la certeza de lo que se espera." — Heb 11:1</p>
+    </div>
+  </footer>
+
+  <script>
+    /* Scroll fade-in */
+    (function() {
+      if (!('IntersectionObserver' in window)) {
+        document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
+        return;
+      }
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+    })();
+
+    /* Menú mobile */
+    var mobileLastFocus = null;
+    var MOBILE_FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    function handleMobileOverlay(e) {
+      if (e.target === document.getElementById('mobileMenu')) closeMobileMenu();
+    }
+
+    function openMobileMenu() {
+      var menu = document.getElementById('mobileMenu');
+      var btn = document.getElementById('nav-hamburger');
+      mobileLastFocus = document.activeElement;
+      menu.classList.add('open');
+      menu.setAttribute('aria-hidden', 'false');
+      btn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      var first = menu.querySelector(MOBILE_FOCUSABLE);
+      if (first) first.focus();
+    }
+
+    function closeMobileMenu() {
+      var menu = document.getElementById('mobileMenu');
+      var btn = document.getElementById('nav-hamburger');
+      menu.classList.remove('open');
+      menu.setAttribute('aria-hidden', 'true');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      if (mobileLastFocus && typeof mobileLastFocus.focus === 'function') {
+        mobileLastFocus.focus();
+        mobileLastFocus = null;
+      }
+    }
+
+    document.addEventListener('keydown', function(e) {
+      var menu = document.getElementById('mobileMenu');
+      if (!menu || !menu.classList.contains('open')) return;
+      if (e.key === 'Escape') {
+        closeMobileMenu();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      var focusables = Array.prototype.slice.call(menu.querySelectorAll(MOBILE_FOCUSABLE))
+        .filter(function(el) { return el.offsetParent !== null; });
+      if (!focusables.length) return;
+      var first = focusables[0];
+      var last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); first.focus();
+      }
+    });
+
+    /* Acordeón de temas */
+    document.querySelectorAll('.topic-item').forEach(function(item, index) {
+      var btn = item.querySelector('.topic-trigger');
+      var panel = item.querySelector('.topic-body');
+      if (!btn || !panel) return;
+      var id = panel.id || 'topic-panel-' + (index + 1);
+      panel.id = id;
+      btn.setAttribute('aria-controls', id);
+    });
+
+    function toggleTopic(btn) {
+      var item = btn.closest('.topic-item');
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.topic-item.open').forEach(function(el) {
+        el.classList.remove('open');
+        el.querySelector('.topic-trigger').setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    /* Videos: carga YouTube solo después del click */
+    document.querySelectorAll('.video-cover').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var id = btn.getAttribute('data-video-id');
+        var title = btn.getAttribute('data-title') || 'Video';
+        var iframe = document.createElement('iframe');
+        iframe.src = 'https://www.youtube.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0';
+        iframe.title = title;
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        btn.parentElement.replaceChildren(iframe);
+      }, { once: true });
+    });
+
+    /* Suscripción simple */
+    function handleSub(e) {
+      e.preventDefault();
+      var btn = e.target.querySelector('button');
+      btn.textContent = '¡Gracias! 🙏';
+      btn.style.background = '#4a7c59';
+      setTimeout(() => {
+        btn.textContent = 'Suscribirme';
+        btn.style.background = '';
+        e.target.reset();
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
