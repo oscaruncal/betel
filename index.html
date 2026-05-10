@@ -11,6 +11,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
+  <script src="countries.js" defer></script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1006,10 +1008,34 @@
       margin: 0 auto;
     }
     .cta-form #sub-email,
-    .cta-form #sub-city,
     .cta-form textarea,
     .cta-form .cta-check { grid-column: span 2; }
     .cta-form button[type="submit"] { grid-column: span 2; justify-self: stretch; }
+
+    .cta-form select {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.85rem 1.2rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      border-radius: 2px;
+      outline: 2px solid transparent;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3e%3cpath d='M1 1L6 6L11 1' stroke='%237B5EA7' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+      transition: border-color var(--duration-fast) var(--ease-standard), outline-color var(--duration-fast) var(--ease-standard);
+    }
+    .cta-form select:focus { border-color: var(--gold); }
+    .cta-form select:focus-visible { outline-color: var(--gold); }
+    .cta-form select.is-invalid { border-color: #b94a4a; background-color: rgba(185, 74, 74, 0.06); }
+    .cta-form select:invalid { color: var(--muted2); }
+    .cta-form select option { color: var(--text); }
+    .cta-form select option:disabled { color: var(--muted2); }
 
     .cta-form textarea {
       background: var(--bg2);
@@ -1942,8 +1968,12 @@
         <input id="sub-surname" name="apellido" type="text" placeholder="Apellido" autocomplete="family-name" required/>
         <label for="sub-email" class="visually-hidden" id="t-cta-input-label">Tu email</label>
         <input id="sub-email" name="email" type="email" placeholder="tu@email.com" autocomplete="email" required/>
-        <label for="sub-city" class="visually-hidden" id="t-cta-city-label">Ciudad y país</label>
-        <input id="sub-city" name="ciudad" type="text" placeholder="Ciudad, país" autocomplete="address-level2" required/>
+        <label for="sub-city" class="visually-hidden" id="t-cta-city-label">Ciudad</label>
+        <input id="sub-city" name="ciudad" type="text" placeholder="Ciudad" autocomplete="address-level2" required/>
+        <label for="sub-country" class="visually-hidden" id="t-cta-country-label">País</label>
+        <select id="sub-country" name="pais" required>
+          <option value="" disabled selected>País</option>
+        </select>
         <label for="sub-msg" class="visually-hidden" id="t-cta-msg-label">Tu pedido (opcional)</label>
         <textarea id="sub-msg" name="pedido" rows="4" placeholder="Pedido de oración (opcional)"></textarea>
         <button type="submit" class="btn-gold" id="t-cta-btn">Enviar</button>
@@ -2142,7 +2172,8 @@
         't-cta-input-label': 'Tu email',
         't-cta-name-label': 'Nombre',
         't-cta-surname-label': 'Apellido',
-        't-cta-city-label': 'Ciudad y país',
+        't-cta-city-label': 'Ciudad',
+        't-cta-country-label': 'País',
         't-cta-msg-label': 'Tu pedido (opcional)',
         't-cta-verse': '"Confesaos vuestras ofensas unos a otros, y orad unos por otros, para que seáis sanados."',
         't-cta-verse-ref': 'Santiago 5:16',
@@ -2270,7 +2301,8 @@
         't-cta-input-label': 'Your email',
         't-cta-name-label': 'Name',
         't-cta-surname-label': 'Surname',
-        't-cta-city-label': 'City and country',
+        't-cta-city-label': 'City',
+        't-cta-country-label': 'Country',
         't-cta-msg-label': 'Your request (optional)',
         't-cta-verse': '"Therefore confess your sins to each other and pray for each other so that you may be healed."',
         't-cta-verse-ref': 'James 5:16',
@@ -2336,8 +2368,12 @@
         if (phName) phName.placeholder = (lang === 'en') ? 'Name' : 'Nombre';
         if (phSurname) phSurname.placeholder = (lang === 'en') ? 'Surname' : 'Apellido';
         if (phEmail) phEmail.placeholder = (lang === 'en') ? 'you@email.com' : 'tu@email.com';
-        if (phCity) phCity.placeholder = (lang === 'en') ? 'City, country' : 'Ciudad, país';
+        if (phCity) phCity.placeholder = (lang === 'en') ? 'City' : 'Ciudad';
         if (phMsg) phMsg.placeholder = (lang === 'en') ? 'Prayer request (optional)' : 'Pedido de oración (opcional)';
+        var phCountry = document.getElementById('sub-country');
+        if (phCountry && typeof window.populateCountrySelect === 'function') {
+          window.populateCountrySelect(phCountry, lang);
+        }
 
         document.getElementById('btn-es').classList.toggle('active', lang === 'es');
         document.getElementById('btn-en').classList.toggle('active', lang === 'en');
@@ -2357,10 +2393,15 @@
       }, 200);
     }
 
-    // Inicializar idioma guardado
+    // Inicializar idioma guardado (espera a que defer-scripts como countries.js terminen)
     (function() {
       var saved = localStorage.getItem('betel-lang') || 'es';
-      setLang(saved);
+      var initLang = function() { setLang(saved); };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initLang);
+      } else {
+        initLang();
+      }
     })();
 
     /* Scroll fade-in */
@@ -2517,6 +2558,7 @@
       var surnameI = document.getElementById('sub-surname');
       var emailI = document.getElementById('sub-email');
       var cityI = document.getElementById('sub-city');
+      var countryI = document.getElementById('sub-country');
       var msgI = document.getElementById('sub-msg');
       var btn = form.querySelector('button');
       var status = document.getElementById('formStatus');
@@ -2524,7 +2566,7 @@
 
       var msgs = {
         es: {
-          required: 'Completá nombre, apellido, email y ciudad.',
+          required: 'Completá nombre, apellido, email, ciudad y país.',
           invalidEmail: 'Ingresá un email válido.',
           sending: 'Enviando…',
           okWithPrayer: '¡Gracias! Quedaste suscripto y vamos a estar orando por tu pedido.',
@@ -2532,7 +2574,7 @@
           err: 'No pudimos enviar el formulario. Intentá de nuevo en unos minutos.'
         },
         en: {
-          required: 'Please complete name, surname, email and city.',
+          required: 'Please complete name, surname, email, city and country.',
           invalidEmail: 'Please enter a valid email.',
           sending: 'Sending…',
           okWithPrayer: "Thank you! You're subscribed and we'll be praying for your request.",
@@ -2545,9 +2587,11 @@
       var apellido = (surnameI.value || '').trim();
       var email = (emailI.value || '').trim();
       var ciudad = (cityI.value || '').trim();
+      var paisCode = countryI.value || '';
+      var paisNombre = paisCode && window.countryNameByCode ? window.countryNameByCode(paisCode, lang) : paisCode;
       var pedido = (msgI.value || '').trim();
 
-      var fields = [nameI, surnameI, emailI, cityI, msgI];
+      var fields = [nameI, surnameI, emailI, cityI, countryI, msgI];
       fields.forEach(function(el) {
         el.classList.remove('is-invalid');
         el.removeAttribute('aria-invalid');
@@ -2559,6 +2603,7 @@
       if (!apellido) invalid.push(surnameI);
       if (!email) invalid.push(emailI);
       if (!ciudad) invalid.push(cityI);
+      if (!paisCode) invalid.push(countryI);
 
       if (invalid.length) {
         invalid.forEach(function(el) {
@@ -2593,6 +2638,7 @@
         Apellido: apellido,
         Email: email,
         Ciudad: ciudad,
+        País: paisNombre,
         'Pedido de oración': pedido || '—',
         _subject: subject,
         _template: 'table',
