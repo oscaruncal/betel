@@ -396,6 +396,11 @@
       min-height: 80px;
       font-family: var(--font-body);
     }
+    .admin-field textarea.admin-email-list {
+      min-height: 180px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      line-height: 1.45;
+    }
     .admin-field input:focus,
     .admin-field textarea:focus { border-color: var(--gold); }
     .admin-field input:focus-visible,
@@ -598,10 +603,37 @@
         </form>
       </article>
 
+      <article class="admin-card is-active" id="card-emails">
+        <div class="admin-card-icon" aria-hidden="true">✉️</div>
+        <div class="admin-card-info">
+          <h3>Emails de comunidad</h3>
+          <p>Guardá y copiá una lista simple con un email por línea.</p>
+        </div>
+        <button type="button" class="admin-btn" id="btn-edit-emails">Editar</button>
+
+        <div class="admin-card-status" id="emails-status">
+          <strong>Total:</strong> <span id="emails-current">cargando…</span>
+        </div>
+
+        <form class="admin-editor" id="editor-emails" hidden novalidate>
+          <div class="admin-field">
+            <label for="emails-list">Emails</label>
+            <textarea id="emails-list" class="admin-email-list" placeholder="persona@email.com&#10;otra@email.com" autocomplete="off" spellcheck="false"></textarea>
+            <span class="hint">Pegá un email por línea. Al guardar se limpian duplicados y formatos inválidos.</span>
+          </div>
+          <div class="admin-editor-actions">
+            <button type="button" class="admin-btn-secondary" id="btn-copy-emails">Copiar emails</button>
+            <button type="submit" class="admin-btn" id="btn-save-emails">Publicar lista</button>
+            <button type="button" class="admin-btn-secondary" id="btn-cancel-emails">Cancelar</button>
+          </div>
+          <p class="admin-status" id="emails-msg" role="status" aria-live="polite"></p>
+        </form>
+      </article>
+
     </div>
 
     <p class="admin-note">
-      <strong>Nota:</strong> el acceso de publicación queda guardado solo en este navegador. Si usás otro dispositivo, vas a tener que conectarlo de nuevo.
+      <strong>Nota:</strong> el acceso de publicación queda guardado solo en este navegador. Si usás otro dispositivo, vas a tener que conectarlo de nuevo. La lista de emails se guarda en un archivo del sitio y puede ser accesible públicamente si el sitio o repositorio son públicos.
     </p>
   </main>
 
@@ -611,6 +643,7 @@
     var REPO_NAME  = 'betel';
     var BRANCH     = 'main';
     var FILE_PATH  = 'data/featured-videos.json';
+    var EMAILS_PATH = 'data/community-emails.txt';
     var TOKEN_KEY  = 'betel-admin-token';
 
     /* ── AUTH CONFIG ── */
@@ -750,6 +783,52 @@
       catch (_) { return ''; }
     }
 
+    function githubFileUrl(path) {
+      return 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path;
+    }
+
+    function githubHeaders(token) {
+      return { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' };
+    }
+
+    function getGithubFile(path, token) {
+      return fetch(githubFileUrl(path) + '?ref=' + BRANCH, { headers: githubHeaders(token) })
+        .then(function(r) {
+          if (r.status === 404) return null;
+          if (r.status === 401) throw new Error('TOKEN_INVALID');
+          if (!r.ok) throw new Error('GET_FAILED:' + r.status);
+          return r.json();
+        });
+    }
+
+    function putGithubFile(path, content, message, token) {
+      return getGithubFile(path, token).then(function(file) {
+        var body = {
+          message: message,
+          content: utf8ToB64(content),
+          branch: BRANCH
+        };
+        if (file && file.sha) body.sha = file.sha;
+
+        return fetch(githubFileUrl(path), {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+      }).then(function(r) {
+        if (!r) throw new Error('NO_RESPONSE');
+        if (r.status === 401) throw new Error('TOKEN_INVALID');
+        if (r.status === 403) throw new Error('FORBIDDEN');
+        if (r.status === 422) throw new Error('CONFLICT');
+        if (!r.ok) throw new Error('PUT_FAILED:' + r.status);
+        return r.json();
+      });
+    }
+
     /* ── TOKEN UI ── */
     function refreshTokenUI() {
       var has = !!getToken();
@@ -787,6 +866,7 @@
     /* ── ESTADO ACTUAL DEL DEVOCIONAL ── */
     var currentSha = null;
     var currentData = null;
+    var currentEmails = [];
 
     function loadCurrentFeatured() {
       // Intento por API si tengo token (trae el SHA, necesario para guardar después)
@@ -830,6 +910,153 @@
         $('featured-current').textContent = 'todavía no hay devocional publicado';
       }
     }
+
+    /* ── EMAILS DE COMUNIDAD ── */
+    function normalizeEmailList(raw) {
+      var seen = {};
+      return String(raw || '')
+        .split(/[\n,; \t]+/)
+        .map(function(v) { return v.trim().toLowerCase(); })
+        .filter(function(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); })
+        .filter(function(v) {
+          if (seen[v]) return false;
+          seen[v] = true;
+          return true;
+        })
+        .sort();
+    }
+
+    function renderEmailsCurrent() {
+      var total = currentEmails.length;
+      $('emails-current').textContent = total === 1 ? '1 email guardado' : total + ' emails guardados';
+      if (!$('editor-emails').hidden) {
+        $('emails-list').value = currentEmails.join('\n');
+      }
+    }
+
+    function loadCurrentEmails() {
+      var token = getToken();
+      if (token) {
+        return getGithubFile(EMAILS_PATH, token).then(function(data) {
+          var text = data && data.content ? b64ToUtf8(data.content || '') : '';
+          currentEmails = normalizeEmailList(text);
+          renderEmailsCurrent();
+        }).catch(function() {
+          fallbackLoadEmailsRaw();
+        });
+      }
+      return fallbackLoadEmailsRaw();
+    }
+
+    function fallbackLoadEmailsRaw() {
+      return fetch('../' + EMAILS_PATH + '?v=' + Date.now(), { cache: 'no-store' })
+        .then(function(r) { return r.ok ? r.text() : ''; })
+        .then(function(text) {
+          currentEmails = normalizeEmailList(text);
+          renderEmailsCurrent();
+        })
+        .catch(function() {
+          $('emails-current').textContent = '(no se pudo cargar la lista)';
+        });
+    }
+
+    function openEmailsEditor() {
+      $('emails-list').value = currentEmails.join('\n');
+      $('emails-msg').textContent = '';
+      $('emails-msg').className = 'admin-status';
+      $('editor-emails').hidden = false;
+      $('btn-edit-emails').textContent = 'Cerrar';
+      setTimeout(function() { $('emails-list').focus(); }, 50);
+    }
+
+    function closeEmailsEditor() {
+      $('editor-emails').hidden = true;
+      $('btn-edit-emails').textContent = 'Editar';
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
+      }
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); }
+      finally { document.body.removeChild(ta); }
+      return Promise.resolve();
+    }
+
+    $('btn-edit-emails').addEventListener('click', function() {
+      if ($('editor-emails').hidden) openEmailsEditor();
+      else closeEmailsEditor();
+    });
+
+    $('btn-cancel-emails').addEventListener('click', closeEmailsEditor);
+
+    $('btn-copy-emails').addEventListener('click', function() {
+      var msg = $('emails-msg');
+      msg.className = 'admin-status';
+      var emails = normalizeEmailList($('emails-list').value || currentEmails.join('\n'));
+      if (!emails.length) {
+        msg.textContent = 'No hay emails para copiar.';
+        msg.classList.add('is-error');
+        return;
+      }
+      copyText(emails.join('\n')).then(function() {
+        msg.textContent = '✓ Emails copiados al portapapeles.';
+        msg.classList.add('is-success');
+      }).catch(function() {
+        msg.textContent = 'No se pudo copiar automáticamente. Seleccioná la lista y copiala manualmente.';
+        msg.classList.add('is-error');
+      });
+    });
+
+    $('editor-emails').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var token = getToken();
+      var msg = $('emails-msg');
+      msg.className = 'admin-status';
+
+      if (!token) {
+        msg.textContent = 'Primero conectá el acceso de publicación.';
+        msg.classList.add('is-error');
+        return;
+      }
+
+      var emails = normalizeEmailList($('emails-list').value);
+      var content = emails.join('\n') + (emails.length ? '\n' : '');
+      var btn = $('btn-save-emails');
+      var origLabel = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Guardando…';
+      msg.textContent = '';
+
+      putGithubFile(EMAILS_PATH, content, 'Update community emails', token).then(function() {
+        currentEmails = emails;
+        renderEmailsCurrent();
+        msg.textContent = '✓ Lista publicada. Puede tardar alrededor de 1 minuto en actualizarse.';
+        msg.classList.add('is-success');
+      }).catch(function(err) {
+        var code = (err && err.message) || '';
+        if (code === 'TOKEN_INVALID') {
+          msg.textContent = 'El acceso de publicación no es válido o venció. Pegá una clave nueva.';
+        } else if (code === 'FORBIDDEN') {
+          msg.textContent = 'Esta clave no tiene permiso para publicar cambios en el sitio.';
+        } else if (code === 'CONFLICT') {
+          msg.textContent = 'La lista cambió mientras editabas. Recargá la página y volvé a intentar.';
+        } else {
+          msg.textContent = 'No se pudo publicar la lista. Probá de nuevo en un momento.';
+        }
+        msg.classList.add('is-error');
+      }).then(function() {
+        btn.disabled = false;
+        btn.textContent = origLabel;
+      });
+    });
 
     /* ── EDITOR DE DEVOCIONAL ── */
     function openEditor() {
@@ -964,6 +1191,7 @@
       appInitialized = true;
       refreshTokenUI();
       loadCurrentFeatured();
+      loadCurrentEmails();
     }
 
     if (isLoggedIn()) {

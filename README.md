@@ -29,7 +29,8 @@ Desde `admin/index.html` se puede:
 - iniciar sesión con las credenciales configuradas en el propio archivo;
 - conectar un token de GitHub;
 - cargar un link de YouTube;
-- publicar el devocional editando `data/featured-videos.json` vía GitHub API.
+- publicar el devocional editando `data/featured-videos.json` vía GitHub API;
+- editar, publicar y copiar la lista de emails de `data/community-emails.txt`.
 
 El acceso de publicación se guarda solo en el navegador del usuario mediante `localStorage`.
 
@@ -46,6 +47,7 @@ El acceso de publicación se guarda solo en el navegador del usuario mediante `l
 ├── css/
 │   └── styles.css
 ├── data/
+│   ├── community-emails.txt
 │   └── featured-videos.json
 ├── js/
 │   ├── countries.js
@@ -69,6 +71,7 @@ El sitio no usa bundler, framework ni gestor de paquetes. Los archivos se sirven
 - `js/verses.js`: listado de versículos.
 - `js/countries.js`: datos y helpers del selector de país.
 - `data/featured-videos.json`: video destacado del devocional.
+- `data/community-emails.txt`: lista simple de emails de comunidad, un email por línea.
 - `admin/index.html`: panel administrativo autocontenido.
 - `palabraviva/index.html`: página estática independiente de contenido bíblico.
 
@@ -137,6 +140,8 @@ La implementación:
 
 El endpoint está definido en `FORMSUBMIT_ENDPOINT` dentro de `js/main.js`.
 
+El formulario público no escribe directamente en `data/community-emails.txt`. En un sitio estático, escribir archivos desde el navegador requeriría exponer un token o usar un backend. La lista de emails se administra desde `admin/index.html` pegando los emails recibidos por FormSubmit y publicando el archivo vía GitHub API.
+
 ### YouTube
 
 La carga de videos se implementa en `js/main.js` con la YouTube Data API.
@@ -197,7 +202,7 @@ Si el JSON no existe, no responde o no tiene `id`, la sección `#devocional-hoy`
 
 ### Panel Admin
 
-`admin/index.html` es una página autocontenida: HTML, CSS y JavaScript viven en el mismo archivo. Permite actualizar `data/featured-videos.json` en GitHub sin backend propio.
+`admin/index.html` es una página autocontenida: HTML, CSS y JavaScript viven en el mismo archivo. Permite actualizar `data/featured-videos.json` y `data/community-emails.txt` en GitHub sin backend propio.
 
 Configuración interna:
 
@@ -205,6 +210,7 @@ Configuración interna:
 - `REPO_NAME`: nombre del repositorio.
 - `BRANCH`: rama objetivo.
 - `FILE_PATH`: archivo actualizado, actualmente `data/featured-videos.json`.
+- `EMAILS_PATH`: archivo de emails, actualmente `data/community-emails.txt`.
 - `TOKEN_KEY`: clave de `localStorage` donde se guarda el token.
 - `AUTH_USER`: email autorizado para entrar.
 - `AUTH_PASS_HASH`: hash SHA-256 de la contraseña.
@@ -228,14 +234,27 @@ Flujo de publicación:
 6. Envía un `PUT` a la GitHub Contents API con `message`, `content` en base64, `branch` y `sha` si el archivo ya existe.
 7. Actualiza el estado visual del admin y avisa que GitHub Pages puede demorar alrededor de 1 minuto.
 
+La tarjeta **Emails de comunidad** permite:
+
+- cargar el contenido actual de `data/community-emails.txt`;
+- editar una lista con un email por línea;
+- normalizar la lista a minúsculas;
+- descartar emails con formato inválido;
+- eliminar duplicados;
+- ordenar alfabéticamente;
+- copiar todos los emails al portapapeles;
+- publicar la lista actualizada vía GitHub API.
+
 Este admin no reemplaza seguridad del lado servidor: las credenciales y la lógica están visibles en el cliente. Su objetivo es restringir operación básica para usuarios conocidos, mientras la autorización real de escritura depende del token de GitHub.
+
+Importante: `data/community-emails.txt` es un archivo del sitio. Si GitHub Pages o el repositorio son públicos, la lista puede ser accesible públicamente aunque no esté enlazada desde la navegación.
 
 ### Integraciones
 
 - **YouTube Data API**: carga videos, estadísticas y publicaciones recientes de los canales configurados en `js/main.js`.
 - **YouTube embeds**: reproduce el devocional destacado y enlaza a videos externos.
 - **FormSubmit**: envía suscripciones y pedidos de oración por email.
-- **GitHub API**: usada por `admin/index.html` para actualizar `data/featured-videos.json`.
+- **GitHub API**: usada por `admin/index.html` para actualizar `data/featured-videos.json` y `data/community-emails.txt`.
 - **PayPal**: enlace externo para donaciones.
 - **Mercado Pago / transferencia**: muestra CVU y permite copiarlo.
 - **Spotify y Facebook**: enlaces externos a plataformas del ministerio.
@@ -274,6 +293,7 @@ Los estilos principales están en `css/styles.css`. El diseño usa variables CSS
 Archivos activos:
 
 - `data/featured-videos.json`: devocional que consume la home y actualiza el admin.
+- `data/community-emails.txt`: lista manual de emails de comunidad que administra el admin.
 - `js/countries.js`: países activos del formulario.
 - `css/styles.css`: estilos activos de la home.
 
@@ -293,6 +313,7 @@ Para publicar:
 2. Configurar GitHub Pages desde la rama deseada.
 3. Mantener `index.html` en la raíz del repositorio.
 4. Verificar que `data/featured-videos.json` exista, porque la página principal y el admin dependen de ese archivo.
+5. Verificar que `data/community-emails.txt` exista si se usa la tarjeta de emails del admin.
 
 No subir carpetas `.git` internas dentro de subcarpetas, porque pueden generar problemas como repositorios embebidos o submódulos accidentales.
 
@@ -303,3 +324,4 @@ No subir carpetas `.git` internas dentro de subcarpetas, porque pueden generar p
 - Modificar estilos en `css/styles.css`.
 - Ajustar comportamiento en `js/main.js`.
 - Actualizar el devocional destacado en `data/featured-videos.json` o desde `admin/index.html`.
+- Actualizar/copiar emails de comunidad desde la tarjeta correspondiente en `admin/index.html`.
