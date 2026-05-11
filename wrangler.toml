@@ -1,0 +1,10 @@
+name = "betel-community-signup"
+main = "api/community-signup-worker.js"
+compatibility_date = "2026-05-11"
+
+[vars]
+REPO_OWNER = "oscaruncal"
+REPO_NAME = "betel"
+BRANCH = "main"
+EMAILS_PATH = "data/community-emails.txt"
+FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/devocionales001@gmail.com"

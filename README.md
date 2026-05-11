@@ -289,6 +289,25 @@ var COMMUNITY_SIGNUP_ENDPOINT = 'https://tu-worker.tu-subdominio.workers.dev';
 
 Mientras esa variable esté vacía, el sitio conserva el comportamiento anterior y solo envía el formulario por FormSubmit.
 
+Preparación de secrets:
+
+1. Copiar `.dev.vars.example` a `.dev.vars`.
+2. Pegar el token real en `.dev.vars` reemplazando `PEGAR_TOKEN_DE_GITHUB_ACA`.
+3. No commitear `.dev.vars`; está ignorado por Git.
+4. Subir el token a Cloudflare Workers:
+
+```bash
+npx wrangler secret put GITHUB_TOKEN
+```
+
+Cuando la terminal pida el valor, pegar el mismo token. Luego desplegar:
+
+```bash
+npx wrangler deploy
+```
+
+Wrangler mostrará la URL pública del Worker. Esa URL es la que debe ir en `COMMUNITY_SIGNUP_ENDPOINT`.
+
 ### Integraciones
 
 - **YouTube Data API**: carga videos, estadísticas y publicaciones recientes de los canales configurados en `js/main.js`.
