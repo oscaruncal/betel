@@ -610,7 +610,7 @@
     var REPO_OWNER = 'oscaruncal';
     var REPO_NAME  = 'betel';
     var BRANCH     = 'main';
-    var FILE_PATH  = 'featured-videos.json';
+    var FILE_PATH  = 'data/featured-videos.json';
     var TOKEN_KEY  = 'betel-admin-token';
 
     /* ── AUTH CONFIG ── */
@@ -811,7 +811,7 @@
     }
 
     function fallbackLoadRaw() {
-      return fetch('../featured-videos.json?v=' + Date.now(), { cache: 'no-store' })
+      return fetch('../data/featured-videos.json?v=' + Date.now(), { cache: 'no-store' })
         .then(function(r) { return r.ok ? r.json() : {}; })
         .then(function(data) {
           currentData = data || {};
