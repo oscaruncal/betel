@@ -401,6 +401,10 @@
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       line-height: 1.45;
     }
+    .admin-field textarea.admin-email-list[readonly] {
+      color: var(--muted);
+      cursor: default;
+    }
     .admin-field input:focus,
     .admin-field textarea:focus { border-color: var(--gold); }
     .admin-field input:focus-visible,
@@ -607,27 +611,26 @@
         <div class="admin-card-icon" aria-hidden="true">✉️</div>
         <div class="admin-card-info">
           <h3>Emails de comunidad</h3>
-          <p>Guardá y copiá una lista simple con un email por línea.</p>
+          <p>Copiá los emails que ingresaron desde el formulario.</p>
         </div>
-        <button type="button" class="admin-btn" id="btn-edit-emails">Editar</button>
+        <button type="button" class="admin-btn" id="btn-view-emails">Ver emails</button>
 
         <div class="admin-card-status" id="emails-status">
           <strong>Total:</strong> <span id="emails-current">cargando…</span>
         </div>
 
-        <form class="admin-editor" id="editor-emails" hidden novalidate>
+        <div class="admin-editor" id="viewer-emails" hidden>
           <div class="admin-field">
             <label for="emails-list">Emails</label>
-            <textarea id="emails-list" class="admin-email-list" placeholder="persona@email.com&#10;otra@email.com" autocomplete="off" spellcheck="false"></textarea>
-            <span class="hint">Pegá un email por línea. Al guardar se limpian duplicados y formatos inválidos.</span>
+            <textarea id="emails-list" class="admin-email-list" readonly placeholder="Todavía no hay emails guardados."></textarea>
+            <span class="hint">Esta lista se actualiza con los emails que entran por el formulario.</span>
           </div>
           <div class="admin-editor-actions">
             <button type="button" class="admin-btn-secondary" id="btn-copy-emails">Copiar emails</button>
-            <button type="submit" class="admin-btn" id="btn-save-emails">Publicar lista</button>
-            <button type="button" class="admin-btn-secondary" id="btn-cancel-emails">Cancelar</button>
+            <button type="button" class="admin-btn-secondary" id="btn-refresh-emails">Actualizar</button>
           </div>
           <p class="admin-status" id="emails-msg" role="status" aria-live="polite"></p>
-        </form>
+        </div>
       </article>
 
     </div>
@@ -929,7 +932,7 @@
     function renderEmailsCurrent() {
       var total = currentEmails.length;
       $('emails-current').textContent = total === 1 ? '1 email guardado' : total + ' emails guardados';
-      if (!$('editor-emails').hidden) {
+      if (!$('viewer-emails').hidden) {
         $('emails-list').value = currentEmails.join('\n');
       }
     }
@@ -960,18 +963,18 @@
         });
     }
 
-    function openEmailsEditor() {
+    function openEmailsViewer() {
       $('emails-list').value = currentEmails.join('\n');
       $('emails-msg').textContent = '';
       $('emails-msg').className = 'admin-status';
-      $('editor-emails').hidden = false;
-      $('btn-edit-emails').textContent = 'Cerrar';
-      setTimeout(function() { $('emails-list').focus(); }, 50);
+      $('viewer-emails').hidden = false;
+      $('btn-view-emails').textContent = 'Cerrar';
+      setTimeout(function() { $('btn-copy-emails').focus(); }, 50);
     }
 
-    function closeEmailsEditor() {
-      $('editor-emails').hidden = true;
-      $('btn-edit-emails').textContent = 'Editar';
+    function closeEmailsViewer() {
+      $('viewer-emails').hidden = true;
+      $('btn-view-emails').textContent = 'Ver emails';
     }
 
     function copyText(text) {
@@ -990,17 +993,15 @@
       return Promise.resolve();
     }
 
-    $('btn-edit-emails').addEventListener('click', function() {
-      if ($('editor-emails').hidden) openEmailsEditor();
-      else closeEmailsEditor();
+    $('btn-view-emails').addEventListener('click', function() {
+      if ($('viewer-emails').hidden) openEmailsViewer();
+      else closeEmailsViewer();
     });
-
-    $('btn-cancel-emails').addEventListener('click', closeEmailsEditor);
 
     $('btn-copy-emails').addEventListener('click', function() {
       var msg = $('emails-msg');
       msg.className = 'admin-status';
-      var emails = normalizeEmailList($('emails-list').value || currentEmails.join('\n'));
+      var emails = currentEmails.slice();
       if (!emails.length) {
         msg.textContent = 'No hay emails para copiar.';
         msg.classList.add('is-error');
@@ -1015,42 +1016,20 @@
       });
     });
 
-    $('editor-emails').addEventListener('submit', function(e) {
-      e.preventDefault();
-      var token = getToken();
+    $('btn-refresh-emails').addEventListener('click', function() {
       var msg = $('emails-msg');
-      msg.className = 'admin-status';
-
-      if (!token) {
-        msg.textContent = 'Primero conectá el acceso de publicación.';
-        msg.classList.add('is-error');
-        return;
-      }
-
-      var emails = normalizeEmailList($('emails-list').value);
-      var content = emails.join('\n') + (emails.length ? '\n' : '');
-      var btn = $('btn-save-emails');
+      var btn = $('btn-refresh-emails');
       var origLabel = btn.textContent;
+      msg.className = 'admin-status';
       btn.disabled = true;
-      btn.textContent = 'Guardando…';
+      btn.textContent = 'Actualizando…';
       msg.textContent = '';
 
-      putGithubFile(EMAILS_PATH, content, 'Update community emails', token).then(function() {
-        currentEmails = emails;
-        renderEmailsCurrent();
-        msg.textContent = '✓ Lista publicada. Puede tardar alrededor de 1 minuto en actualizarse.';
+      loadCurrentEmails().then(function() {
+        msg.textContent = '✓ Lista actualizada.';
         msg.classList.add('is-success');
-      }).catch(function(err) {
-        var code = (err && err.message) || '';
-        if (code === 'TOKEN_INVALID') {
-          msg.textContent = 'El acceso de publicación no es válido o venció. Pegá una clave nueva.';
-        } else if (code === 'FORBIDDEN') {
-          msg.textContent = 'Esta clave no tiene permiso para publicar cambios en el sitio.';
-        } else if (code === 'CONFLICT') {
-          msg.textContent = 'La lista cambió mientras editabas. Recargá la página y volvé a intentar.';
-        } else {
-          msg.textContent = 'No se pudo publicar la lista. Probá de nuevo en un momento.';
-        }
+      }).catch(function() {
+        msg.textContent = 'No se pudo actualizar la lista.';
         msg.classList.add('is-error');
       }).then(function() {
         btn.disabled = false;

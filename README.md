@@ -30,7 +30,7 @@ Desde `admin/index.html` se puede:
 - conectar un token de GitHub;
 - cargar un link de YouTube;
 - publicar el devocional editando `data/featured-videos.json` vía GitHub API;
-- editar, publicar y copiar la lista de emails de `data/community-emails.txt`.
+- ver y copiar la lista de emails de `data/community-emails.txt`.
 
 El acceso de publicación se guarda solo en el navegador del usuario mediante `localStorage`.
 
@@ -245,13 +245,10 @@ Flujo de publicación:
 La tarjeta **Emails de comunidad** permite:
 
 - cargar el contenido actual de `data/community-emails.txt`;
-- editar una lista con un email por línea;
-- normalizar la lista a minúsculas;
-- descartar emails con formato inválido;
-- eliminar duplicados;
-- ordenar alfabéticamente;
+- ver la lista en modo solo lectura;
+- actualizar la vista desde el archivo publicado;
 - copiar todos los emails al portapapeles;
-- publicar la lista actualizada vía GitHub API.
+- consultar el total de emails guardados.
 
 Este admin no reemplaza seguridad del lado servidor: las credenciales y la lógica están visibles en el cliente. Su objetivo es restringir operación básica para usuarios conocidos, mientras la autorización real de escritura depende del token de GitHub.
 
@@ -368,4 +365,4 @@ No subir carpetas `.git` internas dentro de subcarpetas, porque pueden generar p
 - Modificar estilos en `css/styles.css`.
 - Ajustar comportamiento en `js/main.js`.
 - Actualizar el devocional destacado en `data/featured-videos.json` o desde `admin/index.html`.
-- Actualizar/copiar emails de comunidad desde la tarjeta correspondiente en `admin/index.html`.
+- Copiar emails de comunidad desde la tarjeta correspondiente en `admin/index.html`.
