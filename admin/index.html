@@ -607,7 +607,7 @@
         </form>
       </article>
 
-      <article class="admin-card is-active" id="card-emails">
+      <article class="admin-card is-active" id="card-emails" hidden>
         <div class="admin-card-icon" aria-hidden="true">✉️</div>
         <div class="admin-card-info">
           <h3>Emails de comunidad</h3>
@@ -1170,7 +1170,7 @@
       appInitialized = true;
       refreshTokenUI();
       loadCurrentFeatured();
-      loadCurrentEmails();
+      // loadCurrentEmails(); // oculto temporalmente
     }
 
     if (isLoggedIn()) {
