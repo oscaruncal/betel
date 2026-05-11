@@ -44,6 +44,8 @@ El acceso de publicación se guarda solo en el navegador del usuario mediante `l
 ├── featured-videos.json
 ├── admin/
 │   └── index.html
+├── api/
+│   └── community-signup-worker.js
 ├── css/
 │   └── styles.css
 ├── data/
@@ -72,6 +74,7 @@ El sitio no usa bundler, framework ni gestor de paquetes. Los archivos se sirven
 - `js/countries.js`: datos y helpers del selector de país.
 - `data/featured-videos.json`: video destacado del devocional.
 - `data/community-emails.txt`: lista simple de emails de comunidad, un email por línea.
+- `api/community-signup-worker.js`: Worker serverless para guardar emails en GitHub y reenviar el formulario.
 - `admin/index.html`: panel administrativo autocontenido.
 - `palabraviva/index.html`: página estática independiente de contenido bíblico.
 
@@ -140,7 +143,12 @@ La implementación:
 
 El endpoint está definido en `FORMSUBMIT_ENDPOINT` dentro de `js/main.js`.
 
-El formulario público no escribe directamente en `data/community-emails.txt`. En un sitio estático, escribir archivos desde el navegador requeriría exponer un token o usar un backend. La lista de emails se administra desde `admin/index.html` pegando los emails recibidos por FormSubmit y publicando el archivo vía GitHub API.
+El formulario puede trabajar de dos maneras:
+
+- Si `COMMUNITY_SIGNUP_ENDPOINT` está vacío, envía directo a `FORMSUBMIT_ENDPOINT`, como fallback.
+- Si `COMMUNITY_SIGNUP_ENDPOINT` tiene una URL, envía el alta al endpoint propio. Ese backend guarda el email en `data/community-emails.txt` vía GitHub API y reenvía la notificación a FormSubmit.
+
+El archivo `api/community-signup-worker.js` contiene una implementación lista para Cloudflare Workers. Ese Worker necesita un token de GitHub guardado como variable secreta del entorno, no en el navegador.
 
 ### YouTube
 
@@ -249,11 +257,47 @@ Este admin no reemplaza seguridad del lado servidor: las credenciales y la lógi
 
 Importante: `data/community-emails.txt` es un archivo del sitio. Si GitHub Pages o el repositorio son públicos, la lista puede ser accesible públicamente aunque no esté enlazada desde la navegación.
 
+### Worker De Altas De Comunidad
+
+`api/community-signup-worker.js` resuelve el alta automática de comunidad sin exponer credenciales en el frontend.
+
+Responsabilidades:
+
+- recibir el JSON del formulario público;
+- validar campos obligatorios y formato de email;
+- normalizar el email a minúsculas;
+- leer `data/community-emails.txt` desde GitHub;
+- agregar el email, deduplicar y ordenar la lista;
+- publicar el archivo actualizado vía GitHub Contents API;
+- reenviar la notificación por FormSubmit.
+
+Variables requeridas:
+
+- `GITHUB_TOKEN`: token fino de GitHub con permiso `Contents: Read and write`.
+- `REPO_OWNER`: dueño del repositorio.
+- `REPO_NAME`: nombre del repositorio.
+
+Variables opcionales:
+
+- `BRANCH`: rama destino, default `main`.
+- `EMAILS_PATH`: archivo de emails, default `data/community-emails.txt`.
+- `FORMSUBMIT_ENDPOINT`: endpoint de FormSubmit, default `https://formsubmit.co/ajax/devocionales001@gmail.com`.
+- `ALLOWED_ORIGIN`: origen permitido por CORS. En producción conviene configurarlo con la URL pública del sitio.
+
+Para activar el guardado automático, desplegar el Worker y configurar en `js/main.js`:
+
+```js
+var COMMUNITY_SIGNUP_ENDPOINT = 'https://tu-worker.tu-subdominio.workers.dev';
+```
+
+Mientras esa variable esté vacía, el sitio conserva el comportamiento anterior y solo envía el formulario por FormSubmit.
+
 ### Integraciones
 
 - **YouTube Data API**: carga videos, estadísticas y publicaciones recientes de los canales configurados en `js/main.js`.
 - **YouTube embeds**: reproduce el devocional destacado y enlaza a videos externos.
 - **FormSubmit**: envía suscripciones y pedidos de oración por email.
+- **Cloudflare Worker**: opcional para guardar automáticamente emails de comunidad en el repo.
 - **GitHub API**: usada por `admin/index.html` para actualizar `data/featured-videos.json` y `data/community-emails.txt`.
 - **PayPal**: enlace externo para donaciones.
 - **Mercado Pago / transferencia**: muestra CVU y permite copiarlo.

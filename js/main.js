@@ -262,6 +262,7 @@ function toggleTopic(btn) {
 
 /* Pedido de oración → notificación por email vía FormSubmit */
 var FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/devocionales001@gmail.com';
+var COMMUNITY_SIGNUP_ENDPOINT = '';
 
 function handleSub(e) {
   e.preventDefault();
@@ -358,8 +359,9 @@ function handleSub(e) {
   };
 
   var okMsg = pedido ? t.okWithPrayer : t.okSubscribe;
+  var submitEndpoint = COMMUNITY_SIGNUP_ENDPOINT || FORMSUBMIT_ENDPOINT;
 
-  fetch(FORMSUBMIT_ENDPOINT, {
+  fetch(submitEndpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify(payload)
