@@ -41,6 +41,8 @@ function setLang(lang) {
     if (phEmail) phEmail.placeholder = (lang === 'en') ? 'you@email.com' : 'tu@email.com';
     if (phCity) phCity.placeholder = (lang === 'en') ? 'City' : 'Ciudad';
     if (phMsg) phMsg.placeholder = (lang === 'en') ? 'Prayer request (optional)' : 'Pedido de oración (opcional)';
+    var videoSearch = document.getElementById('yt-rec-search');
+    if (videoSearch) videoSearch.placeholder = (lang === 'en') ? 'Faith, prayer, family...' : 'Fe, oración, familia...';
     var phCountry = document.getElementById('sub-country');
     if (phCountry && typeof window.populateCountrySelect === 'function') {
       window.populateCountrySelect(phCountry, lang);
@@ -417,7 +419,7 @@ var YT_PER_PAGE = 9;
 var ytCurrentLang = null;
 
 var ytState = {
-  rec: { videos: [], page: 0, perPage: 6 }
+  rec: { allVideos: [], videos: [], page: 0, perPage: 6, query: '' }
 };
 
 function ytPlayIcon() {
@@ -460,6 +462,31 @@ function ytBuildMeta(v) {
   if (v.publishedAt) parts.push('<span class="vm-date">' + ytFormatDate(v.publishedAt) + '</span>');
   if (v.views) parts.push('<span class="vm-views">' + ytFormatViews(v.views) + '</span>');
   return parts.length ? '<div class="video-meta">' + parts.join('<span class="vm-sep">·</span>') + '</div>' : '';
+}
+
+function ytEscape(value) {
+  return String(value || '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+function ytNormalize(value) {
+  return String(value || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function ytMatchesQuery(video, query) {
+  if (!query) return true;
+  var haystack = ytNormalize([video.title, video.description].join(' '));
+  return query.split(' ').every(function(term) {
+    return haystack.indexOf(term) !== -1;
+  });
 }
 
 function ytBuildDesc(v) {
@@ -507,11 +534,12 @@ function ytRender(key) {
   var perPage = s.perPage || YT_PER_PAGE;
   var start = s.page * perPage;
   var slice = s.videos.slice(start, start + perPage);
+  var empty = document.getElementById('yt-' + key + '-empty');
 
   grid.innerHTML = slice.map(function(v, i) {
     var id = v.videoId;
-    var title = v.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    var titleAttr = v.title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    var title = ytEscape(v.title);
+    var titleAttr = ytEscape(v.title);
     var thumb = v.thumb || ('https://i.ytimg.com/vi/' + id + '/hqdefault.jpg');
     var isFirst = (s.page === 0 && i === 0);
     var isNew = ytIsNew(v.publishedAt);
@@ -544,6 +572,7 @@ function ytRender(key) {
   var info = document.getElementById('yt-' + key + '-info');
   var prev = document.getElementById('yt-' + key + '-prev');
   var next = document.getElementById('yt-' + key + '-next');
+  if (empty) empty.hidden = total > 0;
   if (totalPages > 1) {
     pag.style.display = 'flex';
     info.textContent = (s.page + 1) + ' / ' + totalPages;
@@ -551,6 +580,49 @@ function ytRender(key) {
     next.disabled = s.page >= totalPages - 1;
   } else {
     pag.style.display = 'none';
+  }
+}
+
+function ytSearchStatusText(count, total, query) {
+  var en = ytLang() === 'en';
+  if (!query) return en ? total + ' videos loaded' : total + ' videos cargados';
+  if (count === 1) return en ? '1 result' : '1 resultado';
+  return en ? count + ' results' : count + ' resultados';
+}
+
+function ytApplySearch(key) {
+  var s = ytState[key];
+  var input = document.getElementById('yt-' + key + '-search');
+  var clear = document.getElementById('yt-' + key + '-search-clear');
+  var status = document.getElementById('yt-' + key + '-search-status');
+  var query = ytNormalize(input ? input.value : '');
+
+  s.query = query;
+  s.page = 0;
+  s.videos = s.allVideos.filter(function(video) {
+    return ytMatchesQuery(video, query);
+  });
+
+  if (clear) clear.hidden = !query;
+  if (status) status.textContent = ytSearchStatusText(s.videos.length, s.allVideos.length, query);
+  ytRender(key);
+}
+
+function ytSetupSearch() {
+  var input = document.getElementById('yt-rec-search');
+  var clear = document.getElementById('yt-rec-search-clear');
+  if (!input || input.dataset.bound === 'true') return;
+
+  input.dataset.bound = 'true';
+  input.addEventListener('input', function() {
+    ytApplySearch('rec');
+  });
+  if (clear) {
+    clear.addEventListener('click', function() {
+      input.value = '';
+      input.focus();
+      ytApplySearch('rec');
+    });
   }
 }
 
@@ -694,8 +766,18 @@ async function ytLoadForLang(lang) {
   recGrid.innerHTML = '';
   recError.style.display = 'none';
   recLoading.style.display = 'flex';
-  ytState.rec = { videos: [], page: 0 };
+  ytState.rec = { allVideos: [], videos: [], page: 0, perPage: 6, query: '' };
   document.getElementById('yt-rec-pag').style.display = 'none';
+  var recSearchWrap = document.getElementById('yt-rec-search-wrap');
+  var recSearchInput = document.getElementById('yt-rec-search');
+  var recSearchStatus = document.getElementById('yt-rec-search-status');
+  var recSearchClear = document.getElementById('yt-rec-search-clear');
+  var recEmpty = document.getElementById('yt-rec-empty');
+  if (recSearchWrap) recSearchWrap.hidden = true;
+  if (recSearchInput) recSearchInput.value = '';
+  if (recSearchStatus) recSearchStatus.textContent = '';
+  if (recSearchClear) recSearchClear.hidden = true;
+  if (recEmpty) recEmpty.hidden = true;
 
   try {
     var allVideos = ytCacheGet(lang);
@@ -721,9 +803,13 @@ async function ytLoadForLang(lang) {
     });
 
     recLoading.style.display = 'none';
-    ytState.rec.videos = allVideos.slice().sort(function(a, b) {
+    ytState.rec.allVideos = allVideos.slice().sort(function(a, b) {
       return new Date(b.publishedAt) - new Date(a.publishedAt);
     });
+    ytState.rec.videos = ytState.rec.allVideos.slice();
+    ytSetupSearch();
+    if (recSearchWrap) recSearchWrap.hidden = false;
+    if (recSearchStatus) recSearchStatus.textContent = ytSearchStatusText(ytState.rec.videos.length, ytState.rec.allVideos.length, '');
     ytRender('rec');
 
     var withViews = allVideos.slice().sort(function(a, b) { return b.views - a.views; });

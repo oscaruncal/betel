@@ -647,6 +647,82 @@ nav {
   padding: 0.2rem 0.8rem;
 }
 
+.video-search {
+  max-width: 720px;
+  margin: -2rem auto 2.5rem;
+}
+
+.video-search label {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: var(--gold);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.video-search-field {
+  position: relative;
+}
+
+.video-search input {
+  width: 100%;
+  min-height: 3.1rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg3);
+  color: var(--text);
+  font: inherit;
+  padding: 0.8rem 3rem 0.8rem 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.video-search input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(190, 146, 78, 0.14);
+}
+
+.video-search input::placeholder {
+  color: var(--muted2);
+}
+
+.video-search button {
+  position: absolute;
+  top: 50%;
+  right: 0.65rem;
+  width: 2rem;
+  height: 2rem;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.video-search button:hover {
+  color: var(--gold);
+}
+
+.video-search-status {
+  min-height: 1.2rem;
+  margin-top: 0.6rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.yt-empty {
+  padding: 2.5rem 1rem;
+  color: var(--muted);
+  text-align: center;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+}
+
 /* Botón Ver en YouTube */
 .yt-channel-btn {
   display: inline-flex;

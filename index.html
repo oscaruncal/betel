@@ -159,6 +159,14 @@
         <p id="t-rec-p">Los últimos mensajes subidos al canal de Oscar Uncal.</p>
         <span class="yt-total" id="yt-rec-total" style="display:none"></span>
       </div>
+      <div class="video-search" id="yt-rec-search-wrap" hidden>
+        <label for="yt-rec-search" id="t-video-search-label">Buscar por tema</label>
+        <div class="video-search-field">
+          <input type="search" id="yt-rec-search" autocomplete="off" placeholder="Fe, oración, familia..." />
+          <button type="button" id="yt-rec-search-clear" aria-label="Limpiar búsqueda" hidden>&times;</button>
+        </div>
+        <p class="video-search-status" id="yt-rec-search-status" aria-live="polite"></p>
+      </div>
       <div id="yt-rec-loading" class="yt-loading">
         <div class="yt-spinner"></div>
         <p>Cargando videos...</p>
@@ -167,6 +175,9 @@
         <p>No se pudieron cargar los videos. <a href="https://www.youtube.com/@beteldeoscaruncal2876" target="_blank" rel="noopener">Ver canal →</a></p>
       </div>
       <div class="videos-grid" id="yt-rec-grid"></div>
+      <div class="yt-empty" id="yt-rec-empty" hidden>
+        <p id="t-video-search-empty">No encontramos videos para esa búsqueda.</p>
+      </div>
       <div class="yt-pagination" id="yt-rec-pag" style="display:none">
         <button class="yt-prev" id="yt-rec-prev" onclick="ytPage('rec',-1)" disabled>← <span>Anterior</span></button>
         <span class="yt-page-info" id="yt-rec-info"></span>
