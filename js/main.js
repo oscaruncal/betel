@@ -58,13 +58,6 @@ function setLang(lang) {
     var announce = document.getElementById('lang-announce');
     if (announce) announce.textContent = lang === 'es' ? 'Idioma cambiado a español' : 'Language changed to English';
     if (typeof ytLoadForLang === 'function') ytLoadForLang(lang);
-    var tiktokUrl = lang === 'en'
-      ? 'https://www.tiktok.com/@betel.de.oscar.un7'
-      : 'https://www.tiktok.com/@betel.de.oscar.un';
-    ['t-drop-tt-link', 't-lc-tt-link', 't-footer-tt'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) el.href = tiktokUrl;
-    });
     var v = (VERSES[lang] || VERSES.es)[verseIndex];
     var vt = document.getElementById('t-verse-text');
     var vr = document.getElementById('t-verse-ref');
